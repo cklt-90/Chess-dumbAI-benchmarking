@@ -1,0 +1,66 @@
+{
+  "names": [
+    "L5-ab-blind",
+    "L5-ab-blind+eval",
+    "L5-ab-prior",
+    "L5-ab-prior+eval"
+  ],
+  "seconds": 1346.3400110999937,
+  "skipped": {},
+  "matches": [
+    {
+      "a": "L5-ab-blind",
+      "b": "L5-ab-blind+eval",
+      "seconds": 85.89958880000631,
+      "wins": 3,
+      "draws": 0,
+      "losses": 3,
+      "unfinished": 0
+    },
+    {
+      "a": "L5-ab-blind",
+      "b": "L5-ab-prior",
+      "seconds": 90.60458479999215,
+      "wins": 1,
+      "draws": 2,
+      "losses": 1,
+      "unfinished": 2
+    },
+    {
+      "a": "L5-ab-blind",
+      "b": "L5-ab-prior+eval",
+      "seconds": 206.295508900017,
+      "wins": 3,
+      "draws": 0,
+      "losses": 3,
+      "unfinished": 0
+    },
+    {
+      "a": "L5-ab-blind+eval",
+      "b": "L5-ab-prior",
+      "seconds": 26.723706199991284,
+      "wins": 0,
+      "draws": 0,
+      "losses": 6,
+      "unfinished": 0
+    },
+    {
+      "a": "L5-ab-blind+eval",
+      "b": "L5-ab-prior+eval",
+      "seconds": 771.6960957999981,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
+      "unfinished": 6
+    },
+    {
+      "a": "L5-ab-prior",
+      "b": "L5-ab-prior+eval",
+      "seconds": 162.72048150000046,
+      "wins": 3,
+      "draws": 0,
+      "losses": 3,
+      "unfinished": 0
+    }
+  ]
+}

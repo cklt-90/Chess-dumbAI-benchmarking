@@ -1,0 +1,20 @@
+# Virtualenv and tooling caches -- never part of the benchmark.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest-tmp/
+.mypy_cache/
+.ruff_cache/
+
+# Fitted / generated artefacts.
+#
+# bench/ensemble.json is the *output* of `python -m bench.ensemble_run`; it is
+# regenerated every run and its numbers depend on --games / --seed, so it is a
+# result, not source. The dated result files are deliberately NOT ignored: a
+# committed results-*.json is a citable measurement, and the README quotes them.
+bench/ensemble.json
+
+# Torch checkpoints (L4/L5) are large binaries.
+*.pt
+*.pth

@@ -112,6 +112,29 @@ tests -- keep it correct, including castling rights and the en-passant target.
 - Piece-square tables are written White's-perspective and every lookup must
   rank-mirror for Black, **including the king**, which is in a separate branch.
   Forgetting it made the start position evaluate to +50.
+
+### Special moves: legal, but underplayed (measured 2026-10-02)
+
+- Masks admit **everything** (castling, en passant, all 4 promotions) because
+  `legal_move_mask` is built from `board.legal_moves`. There is no legality gap.
+- `value.evaluate()` is **material + PST only** — no castling term, no en-passant
+  term, no mobility term. Castling is rewarded only incidentally via the king PST,
+  so the rooks' connectivity, the pawn shield and the tempo cost are invisible.
+- `encode.py` CHANNELS (22 binary) has **no castling-rights channel**. En passant
+  is channel 21; promotion ranks 19/20. `has_castling_rights` appears only as one
+  scalar in `board_context_features`, so a learner cannot express "I may still
+  castle kingside" as a board pattern. Likely a partial cause of underplay.
+- Measured self-play census: L2-d2 castles **3/3 games**; material 3/6; random
+  1/6; L1 and L3 **1 each**. En passant: 2 total across all L1/L3 games, 0 for
+  material/random/L2. So searching levels castle, blind/untrained ones do not —
+  castling needs a *reason*, and only search has one.
+- Verified **not** a bug: the `en_passant` plane canonicalises correctly
+  (black f6 -> plane f3 after rank reflection; `encode(pos) ==
+  encode(colour_mirror(pos))` exactly 0.0). Promotion slots have **no queen
+  bias** — uniform logits give 0.25 each over N/B/R/Q.
+- Fixing this means appending channels (append-only rule) — a castling-rights
+  plane per colour, and if castling is to be *preferred*, an eval term, since
+  PST alone will not do it.
 - Unfinished games (ply cap, no-progress cap) must not be scored as draws; that
   teaches a naive policy that shuffling equals winning. `GameResult.score_for`
   returns 0 for them and `is_finished` is False.

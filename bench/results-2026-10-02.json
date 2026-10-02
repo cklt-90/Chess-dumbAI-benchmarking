@@ -1,0 +1,204 @@
+{
+  "names": [
+    "random",
+    "material",
+    "L1",
+    "L2-d1",
+    "L2-d2",
+    "L2-d3",
+    "L3"
+  ],
+  "seconds": 423.92713140000706,
+  "skipped": {},
+  "matches": [
+    {
+      "a": "random",
+      "b": "material",
+      "seconds": 0.39853050000965595,
+      "wins": 0,
+      "draws": 0,
+      "losses": 5,
+      "unfinished": 1
+    },
+    {
+      "a": "random",
+      "b": "L1",
+      "seconds": 0.19501240001409315,
+      "wins": 0,
+      "draws": 0,
+      "losses": 1,
+      "unfinished": 5
+    },
+    {
+      "a": "random",
+      "b": "L2-d1",
+      "seconds": 0.9195859000028577,
+      "wins": 0,
+      "draws": 0,
+      "losses": 6,
+      "unfinished": 0
+    },
+    {
+      "a": "random",
+      "b": "L2-d2",
+      "seconds": 3.4604259000043385,
+      "wins": 0,
+      "draws": 0,
+      "losses": 6,
+      "unfinished": 0
+    },
+    {
+      "a": "random",
+      "b": "L2-d3",
+      "seconds": 8.566926900006365,
+      "wins": 0,
+      "draws": 0,
+      "losses": 6,
+      "unfinished": 0
+    },
+    {
+      "a": "random",
+      "b": "L3",
+      "seconds": 0.4810173999867402,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
+      "unfinished": 6
+    },
+    {
+      "a": "material",
+      "b": "L1",
+      "seconds": 0.25532350002322346,
+      "wins": 3,
+      "draws": 0,
+      "losses": 3,
+      "unfinished": 0
+    },
+    {
+      "a": "material",
+      "b": "L2-d1",
+      "seconds": 0.5964946000021882,
+      "wins": 0,
+      "draws": 2,
+      "losses": 4,
+      "unfinished": 0
+    },
+    {
+      "a": "material",
+      "b": "L2-d2",
+      "seconds": 3.154178500000853,
+      "wins": 0,
+      "draws": 0,
+      "losses": 6,
+      "unfinished": 0
+    },
+    {
+      "a": "material",
+      "b": "L2-d3",
+      "seconds": 28.972682699997677,
+      "wins": 0,
+      "draws": 0,
+      "losses": 6,
+      "unfinished": 0
+    },
+    {
+      "a": "material",
+      "b": "L3",
+      "seconds": 1.8464804000104778,
+      "wins": 3,
+      "draws": 0,
+      "losses": 3,
+      "unfinished": 0
+    },
+    {
+      "a": "L1",
+      "b": "L2-d1",
+      "seconds": 2.7192172999784816,
+      "wins": 0,
+      "draws": 0,
+      "losses": 6,
+      "unfinished": 0
+    },
+    {
+      "a": "L1",
+      "b": "L2-d2",
+      "seconds": 15.05993839999428,
+      "wins": 0,
+      "draws": 0,
+      "losses": 6,
+      "unfinished": 0
+    },
+    {
+      "a": "L1",
+      "b": "L2-d3",
+      "seconds": 83.3109316000191,
+      "wins": 0,
+      "draws": 0,
+      "losses": 6,
+      "unfinished": 0
+    },
+    {
+      "a": "L1",
+      "b": "L3",
+      "seconds": 3.606575999991037,
+      "wins": 0,
+      "draws": 0,
+      "losses": 1,
+      "unfinished": 5
+    },
+    {
+      "a": "L2-d1",
+      "b": "L2-d2",
+      "seconds": 38.99803720001364,
+      "wins": 0,
+      "draws": 5,
+      "losses": 1,
+      "unfinished": 0
+    },
+    {
+      "a": "L2-d1",
+      "b": "L2-d3",
+      "seconds": 167.74993259998155,
+      "wins": 0,
+      "draws": 3,
+      "losses": 3,
+      "unfinished": 0
+    },
+    {
+      "a": "L2-d1",
+      "b": "L3",
+      "seconds": 0.8318915999843739,
+      "wins": 3,
+      "draws": 1,
+      "losses": 2,
+      "unfinished": 0
+    },
+    {
+      "a": "L2-d2",
+      "b": "L2-d3",
+      "seconds": 44.46918059999007,
+      "wins": 0,
+      "draws": 4,
+      "losses": 1,
+      "unfinished": 1
+    },
+    {
+      "a": "L2-d2",
+      "b": "L3",
+      "seconds": 4.768198499979917,
+      "wins": 3,
+      "draws": 0,
+      "losses": 3,
+      "unfinished": 0
+    },
+    {
+      "a": "L2-d3",
+      "b": "L3",
+      "seconds": 13.464185499993619,
+      "wins": 3,
+      "draws": 0,
+      "losses": 3,
+      "unfinished": 0
+    }
+  ]
+}
