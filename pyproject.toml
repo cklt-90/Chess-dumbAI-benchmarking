@@ -1,0 +1,31 @@
+[project]
+name = "chess-rl-bench"
+version = "0.1.0"
+description = "A harness for benchmarking naive RL approaches to chess"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.0",
+    "chess>=1.11",
+]
+
+[project.optional-dependencies]
+# The L4/L5 levels are the only things that need torch. Kept optional so the
+# L0-L3 benchmark stays installable in seconds and without a 2GB download.
+torch = ["torch>=2.2"]
+dev = ["pytest>=8.0", "pytest-cov>=5.0"]
+
+[project.scripts]
+chessrl = "chessrl.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]
+addopts = "-q --strict-markers"
+filterwarnings = ["error::RuntimeWarning"]

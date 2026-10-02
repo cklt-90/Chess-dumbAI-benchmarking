@@ -1,0 +1,9 @@
+# L0-L3 only. Install with:  pip install -r requirements.txt
+numpy>=2.0
+chess>=1.11
+pytest>=8.0
+pytest-cov>=5.0
+
+# L4/L5 additionally need torch. Uncomment when you reach that level; it is a
+# large download and nothing before L4 imports it.
+# torch>=2.2
