@@ -348,3 +348,52 @@ def test_material_policy_does_not_mutate_board():
 def test_policies_expose_a_name():
     assert RandomPolicy().name == "random"
     assert MaterialPolicy().name == "greedy-material"
+
+
+# --------------------------------------------------------------------------
+# G5 audit: the legality guard must be exercised, not just present
+# --------------------------------------------------------------------------
+
+def test_play_game_rejects_an_illegal_first_move():
+    """The loop, not the policy, is the legality gatekeeper.
+
+    Every policy is *supposed* to return legal moves, but the loop must not
+    trust that: an illegal ``select`` would corrupt the board and the recorded
+    game silently. ``play_game`` validates the returned move against
+    ``board.legal_moves`` and raises rather than committing it. A refactor that
+    dropped the guard would make this fail loudly instead of poisoning a
+    training run.
+    """
+
+    class IllegalMover:
+        name = "illegal-mover"
+
+        def select(self, board):
+            # e2e5: a pawn cannot move three squares -- illegal in any position.
+            return chess.Move.from_uci("e2e5")
+
+    with pytest.raises(ValueError, match=r"illegal-mover returned illegal move e2e5"):
+        play_game(IllegalMover(), RandomPolicy(), rng=random.Random(0))
+
+
+def test_play_game_rejects_an_illegal_move_after_legal_ones():
+    """The guard runs every ply, so a mid-game illegal move is caught too.
+
+    The stub plays a legal e2e4 as White, then -- asked to move as Black --
+    returns e2e4 again, which Black cannot play (there is no black pawn on e2).
+    The first, legal move must be committed before the guard fires, which is
+    what distinguishes "rejected mid-game" from "rejected immediately".
+    """
+
+    class LegalThenIllegal:
+        name = "legal-then-illegal"
+
+        def __init__(self):
+            self.calls = 0
+
+        def select(self, board):
+            self.calls += 1
+            return chess.Move.from_uci("e2e4")  # legal for White, illegal for Black
+
+    with pytest.raises(ValueError, match=r"legal-then-illegal returned illegal move"):
+        play_game(LegalThenIllegal(), LegalThenIllegal(), rng=random.Random(0))

@@ -173,3 +173,51 @@ def test_symmetry_holds_across_a_whole_random_game():
         src = chess.Board(fen)
         mirror = colour_mirror(fen)
         assert np.array_equal(E.encode(src), E.encode(mirror)), fen
+
+
+# --------------------------------------------------------------------------
+# public coordinate / colour helpers (G1 audit: previously untested public API)
+# --------------------------------------------------------------------------
+
+def test_square_to_rc_matches_the_convention():
+    """Row is rank-1, col is file-1: a1 -> (0,0), d5 -> (3,4), h8 -> (7,7)."""
+    assert B.square_to_rc(chess.A1) == (0, 0)
+    assert B.square_to_rc(chess.D5) == (4, 3)  # rank 5 -> row 4, file d -> col 3
+    assert B.square_to_rc(chess.H8) == (7, 7)
+
+
+def test_rc_to_square_inverts_square_to_rc():
+    for sq in range(64):
+        assert B.rc_to_square(*B.square_to_rc(sq)) == sq
+
+
+def test_squares_to_mask_sets_exactly_those_squares():
+    mask = B.squares_to_mask([chess.A1, chess.D4, chess.H8])
+    assert mask.shape == (8, 8)
+    assert mask.dtype == np.bool_
+    # d4 is rank 4, file 4 -> row 3, col 3.
+    assert mask[0, 0] and mask[3, 3] and mask[7, 7]
+    assert mask.sum() == 3
+
+
+def test_flip_colour_swaps_only_the_two_colour_blocks():
+    """``flip_colour`` is the colour-swap half of canonical, restricted to the
+    leading ``2 * block`` planes; anything stacked beyond them must be left alone.
+    """
+    planes = np.arange(12, dtype=np.float64).reshape(12, 1, 1)
+    flipped = B.flip_colour(planes)
+    # White block now holds what was Black and vice versa.
+    assert np.array_equal(flipped[:6], planes[6:12])
+    assert np.array_equal(flipped[6:12], planes[:6])
+
+    # Stacking extra (side-relative) channels must not disturb them.
+    planes16 = np.arange(16, dtype=np.float64).reshape(16, 1, 1)
+    flipped16 = B.flip_colour(planes16)
+    assert np.array_equal(flipped16[:6], planes16[6:12])
+    assert np.array_equal(flipped16[6:12], planes16[:6])
+    assert np.array_equal(flipped16[12:], planes16[12:])
+
+
+def test_flip_colour_is_an_involution():
+    planes = np.arange(24, dtype=np.float64).reshape(24, 1, 1)
+    assert np.array_equal(B.flip_colour(B.flip_colour(planes)), planes)

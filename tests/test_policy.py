@@ -428,3 +428,49 @@ def test_uniform_over_mask_is_uniform_and_normalised():
     assert probs.sum() == pytest.approx(1.0)
     assert probs[0] == pytest.approx(0.25)
     assert probs[1] == 0.0
+
+
+# --------------------------------------------------------------------------
+# the standard gate, for L1 (G2 audit: blind had no dedicated full-game test)
+# --------------------------------------------------------------------------
+
+def test_factored_softmax_plays_a_full_legal_game_to_a_real_result():
+    """The repo's gate, applied to L1.
+
+    A blind policy playing itself shuffles and almost always reaches a cap;
+    that is fine. What must hold is that the game stopped for a real reason,
+    every move it recorded was legal, and a capped game is reported as
+    unfinished rather than as a draw. Previously L1 was only exercised as an
+    opponent inside other levels' tests; this is the first test where the
+    blind policy is the subject.
+    """
+    import random
+
+    from chessrl.game import play_game
+
+    policy = FactoredSoftmaxPolicy(seed=1)
+    result = play_game(policy, policy, max_plies=60, rng=random.Random(1))
+
+    assert result.reason in {
+        "checkmate", "stalemate", "insufficient_material",
+        "seventyfive_moves", "fivefold_repetition", "fifty_moves",
+        "max_plies", "no_progress",
+    }, f"unexpected termination reason: {result.reason}"
+    assert result.plies == len(result.moves)
+
+    if result.result == "unfinished":
+        assert not result.is_finished
+        assert result.score_for(chess.WHITE) == 0
+    else:
+        assert result.is_finished
+
+    # The real assertion: replay the SAN record and confirm every move was
+    # legal, so a policy that returned an illegal move is caught rather than
+    # silently corrupting the board.
+    replay = chess.Board()
+    for san in result.moves:
+        move = replay.parse_san(san)
+        assert move in replay.legal_moves, f"{san} not legal in {replay.fen()}"
+        replay.push(move)
+    assert len(result.fens) == len(result.moves) + 1
+    assert replay.fen() == result.fens[-1]

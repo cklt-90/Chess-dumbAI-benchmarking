@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test Suite Audit — chess-rl-bench</title>
+<style>
+  :root { --bg:#ffffff; --fg:#1a1a1a; --muted:#5b6470; --line:#e3e6ea;
+          --accent:#1f5fbf; --okbg:#e9f6ec; --warnbg:#fff4e5; --ok:#1a7f37; --warn:#9a5b00; }
+  body { font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+         color:var(--fg); background:var(--bg); margin:0; padding:32px; line-height:1.5; }
+  .wrap { max-width:1080px; margin:0 auto; }
+  h1 { font-size:24px; margin:0 0 4px; }
+  h2 { font-size:18px; margin:28px 0 10px; border-bottom:2px solid var(--line); padding-bottom:6px; }
+  h3 { font-size:15px; margin:18px 0 6px; }
+  .sub { color:var(--muted); font-size:13px; margin:0 0 18px; }
+  .kpi { display:flex; gap:14px; flex-wrap:wrap; margin:14px 0 4px; }
+  .kpi .card { background:#f6f8fa; border:1px solid var(--line); border-radius:10px;
+               padding:14px 18px; min-width:150px; }
+  .kpi .big { font-size:26px; font-weight:700; color:var(--accent); }
+  .kpi .lbl { font-size:12px; color:var(--muted); }
+  table { border-collapse:collapse; width:100%; margin:10px 0 6px; font-size:13px; }
+  th, td { border:1px solid var(--line); padding:7px 9px; text-align:left; vertical-align:top; }
+  th { background:#f0f3f6; font-weight:600; }
+  td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  tr.ok td:first-child { }
+  tr.warn { background:var(--warnbg); }
+  tr.tot td { background:#f0f3f6; }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+  .small { font-size:12px; color:var(--muted); }
+  .badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:600; color:#fff; }
+  .sev-hi { background:#c0392b; } .sev-md { background:#d68910; } .sev-lo { background:#7f8c8d; }
+  .evidence { color:var(--muted); display:block; margin-top:3px; font-style:italic; }
+  .callout { background:#eef4ff; border-left:4px solid var(--accent); padding:12px 16px;
+             border-radius:6px; margin:14px 0; }
+  ul { margin:6px 0; padding-left:20px; } li { margin:3px 0; }
+  .foot { color:var(--muted); font-size:12px; margin-top:30px; border-top:1px solid var(--line); padding-top:10px; }
+</style></head>
+<body><div class="wrap">
+
+<h1>Test Suite Audit — <span class="mono">chess-rl-bench</span></h1>
+<p class="sub">Inventory + gap analysis of the test suite. Method: AST parse of all 17 test
+files (692 test functions) and the 15 source modules; symbol-reference mapping; intent
+classification from test names + docstrings. Read-only; no code changed.</p>
+
+<div class="kpi">
+  <div class="card"><div class="big">692</div><div class="lbl">test functions</div></div>
+  <div class="card"><div class="big">17</div><div class="lbl">test files</div></div>
+  <div class="card"><div class="big">15</div><div class="lbl">src modules covered</div></div>
+  <div class="card"><div class="big">7</div><div class="lbl">dead symbols</div></div>
+  <div class="card"><div class="big">7</div><div class="lbl">gap findings</div></div>
+</div>
+
+<div class="callout">
+<b>Primary insight.</b> The suite is <b>broad and disciplined</b>: every module is covered,
+regression/symmetry/edge cases are heavily tested (50 / 51 / 106 tests). The weaknesses are
+<b>structural, not absent</b>: (1) 7 public symbols are never called anywhere; (2) the project's
+own "every level plays a full legal game and loses to the level above" standard was missing a
+named self-play gate for only L1 and L3 (now added — see G2); (3) special-move <i>evaluation</i> and the L6
+headline result are not locked by end-to-end tests.
+<b>Confidence: High</b> for module coverage and dead-symbol findings (repo-wide grep);
+<b>Medium</b> for the ladder-gating and special-move gaps (inferred from intent classification
++ keyword probes — confirm by reading test bodies).
+</div>
+
+<h2>1. What the suite does (per file)</h2>
+<p class="sub">Intent tags count tests whose name/docstring asserts that property. A test may
+carry several tags; the total therefore exceeds the function count only where multi-tagged.</p>
+<table>
+<tr><th>Test file</th><th>Tests</th><th>Imports under test</th><th>Intent distribution</th></tr>
+<tr><td class='mono'>test_bench.py</td><td class='num'>41</td><td class='mono small'>chessrl,chessrl.ensemble,chessrl.game</td><td class='small'>unit_behaviour:24, edge_case:8, canonical:4, legal_game:3, reproducible:3, roundtrip:2, regression:1</td></tr><tr><td class='mono'>test_bitboard.py</td><td class='num'>18</td><td class='mono small'>chessrl</td><td class='small'>canonical:8, unit_behaviour:6, roundtrip:3, edge_case:1</td></tr><tr><td class='mono'>test_cache.py</td><td class='num'>25</td><td class='mono small'>chessrl.cache</td><td class='small'>unit_behaviour:20, roundtrip:3, reproducible:1, edge_case:1</td></tr><tr><td class='mono'>test_diagnostics.py</td><td class='num'>27</td><td class='mono small'>chessrl,chessrl.diagnostics,chessrl.game,chessrl.policy</td><td class='small'>unit_behaviour:20, edge_case:4, regression:2, legal_game:1, reproducible:1</td></tr><tr><td class='mono'>test_encode.py</td><td class='num'>26</td><td class='mono small'>chessrl</td><td class='small'>unit_behaviour:16, canonical:5, edge_case:3, regression:2, special_moves:2, roundtrip:1</td></tr><tr><td class='mono'>test_ensemble.py</td><td class='num'>107</td><td class='mono small'>chessrl,chessrl.ensemble,chessrl.game,chessrl.value</td><td class='small'>unit_behaviour:63, edge_case:31, regression:11, roundtrip:5, legal_game:5, reproducible:4, performance:2</td></tr><tr><td class='mono'>test_game.py</td><td class='num'>32</td><td class='mono small'>chessrl.cache,chessrl.game</td><td class='small'>unit_behaviour:20, legal_game:4, edge_case:4, regression:2, canonical:2, reproducible:1, roundtrip:1, ladder:1</td></tr><tr><td class='mono'>test_guided.py</td><td class='num'>27</td><td class='mono small'>chessrl.game,chessrl.guided,chessrl.search</td><td class='small'>unit_behaviour:9, regression:6, reproducible:4, edge_case:3, performance:2, legal_game:2, roundtrip:2, canonical:1</td></tr><tr><td class='mono'>test_masks.py</td><td class='num'>18</td><td class='mono small'>chessrl</td><td class='small'>unit_behaviour:12, special_moves:3, edge_case:3, roundtrip:2, regression:1</td></tr><tr><td class='mono'>test_perceptron.py</td><td class='num'>64</td><td class='mono small'>chessrl,chessrl.cache,chessrl.game,chessrl.perceptron,chessrl.policy</td><td class='small'>unit_behaviour:35, canonical:10, reproducible:6, regression:5, edge_case:5, legal_game:5, roundtrip:5, ladder:1</td></tr><tr><td class='mono'>test_policy.py</td><td class='num'>36</td><td class='mono small'>chessrl,chessrl.policy</td><td class='small'>unit_behaviour:17, edge_case:10, roundtrip:4, reproducible:3, regression:2, special_moves:2, legal_game:1</td></tr><tr><td class='mono'>test_rating.py</td><td class='num'>23</td><td class='mono small'>—</td><td class='small'>unit_behaviour:19, edge_case:3, legal_game:1</td></tr><tr><td class='mono'>test_search.py</td><td class='num'>50</td><td class='mono small'>chessrl,chessrl.game,chessrl.policy,chessrl.search,chessrl.train_naive</td><td class='small'>unit_behaviour:28, ladder:6, edge_case:6, reproducible:5, regression:3, special_moves:2, performance:1</td></tr><tr><td class='mono'>test_squarelocal.py</td><td class='num'>73</td><td class='mono small'>chessrl,chessrl.cache,chessrl.game,chessrl.perceptron,chessrl.squarelocal</td><td class='small'>unit_behaviour:43, canonical:13, regression:7, edge_case:5, reproducible:4, roundtrip:4, legal_game:2, performance:1</td></tr><tr><td class='mono'>test_torch_model.py</td><td class='num'>38</td><td class='mono small'>chessrl,chessrl.encode,chessrl.game,chessrl.perceptron,chessrl.policy,chessrl.search,chessrl.torch_model</td><td class='small'>unit_behaviour:25, roundtrip:5, reproducible:4, canonical:3, edge_case:1, regression:1, performance:1, legal_game:1</td></tr><tr><td class='mono'>test_train_naive.py</td><td class='num'>54</td><td class='mono small'>chessrl,chessrl.game,chessrl.policy,chessrl.train_naive</td><td class='small'>unit_behaviour:34, edge_case:11, regression:5, roundtrip:4, canonical:3, legal_game:3, reproducible:1</td></tr><tr><td class='mono'>test_value.py</td><td class='num'>33</td><td class='mono small'>chessrl</td><td class='small'>unit_behaviour:21, edge_case:7, special_moves:2, regression:2, canonical:2, ladder:1</td></tr>
+</table>
+
+<h2>2. Coverage map — public API referenced by tests</h2>
+<p class="sub">A symbol is "referenced" if its name appears in any test (direct call or via a
+higher-level function such as <span class="mono">encode()</span>/<span class="mono">bitboard()</span>,
+which exercises internal callers). Rows in <span class="badge sev-md">amber</span> have
+unreferenced public symbols.</p>
+<table>
+<tr><th>Source module</th><th>Public</th><th>Referenced</th><th>Unref.</th><th>Unreferenced symbols</th></tr>
+<tr class='warn'><td class='mono'>bitboard.py</td><td class='num'>21</td><td class='num'>14</td><td class='num'>7</td><td class='small'>empty_mask, flip_colour, mask_to_squares, rc_to_square, rotate_180, square_to_rc, squares_to_mask</td></tr><tr class='warn'><td class='mono'>cache.py</td><td class='num'>3</td><td class='num'>2</td><td class='num'>1</td><td class='small'>Midstate</td></tr><tr class='ok'><td class='mono'>diagnostics.py</td><td class='num'>6</td><td class='num'>6</td><td class='num'>0</td><td class='small'>—</td></tr><tr class='warn'><td class='mono'>encode.py</td><td class='num'>15</td><td class='num'>6</td><td class='num'>9</td><td class='small'>attack_balance_plane, capture_target_mask, capture_value_plane, contested_mask, en_passant_mask, encode_canonical_for_move_space, opponent_attack_mask, promotion_rank_mask, to_move_attack_mask</td></tr><tr class='ok'><td class='mono'>ensemble.py</td><td class='num'>8</td><td class='num'>8</td><td class='num'>0</td><td class='small'>—</td></tr><tr class='ok'><td class='mono'>game.py</td><td class='num'>9</td><td class='num'>9</td><td class='num'>0</td><td class='small'>—</td></tr><tr class='ok'><td class='mono'>guided.py</td><td class='num'>6</td><td class='num'>6</td><td class='num'>0</td><td class='small'>—</td></tr><tr class='warn'><td class='mono'>masks.py</td><td class='num'>15</td><td class='num'>14</td><td class='num'>1</td><td class='small'>attacked_by_mask</td></tr><tr class='warn'><td class='mono'>perceptron.py</td><td class='num'>6</td><td class='num'>5</td><td class='num'>1</td><td class='small'>move_feature_vector</td></tr><tr class='warn'><td class='mono'>policy.py</td><td class='num'>9</td><td class='num'>8</td><td class='num'>1</td><td class='small'>Scorer</td></tr><tr class='ok'><td class='mono'>search.py</td><td class='num'>5</td><td class='num'>5</td><td class='num'>0</td><td class='small'>—</td></tr><tr class='ok'><td class='mono'>squarelocal.py</td><td class='num'>8</td><td class='num'>8</td><td class='num'>0</td><td class='small'>—</td></tr><tr class='warn'><td class='mono'>torch_model.py</td><td class='num'>9</td><td class='num'>7</td><td class='num'>2</td><td class='small'>TorchScorerAdapter, torch_masked_softmax</td></tr><tr class='ok'><td class='mono'>train_naive.py</td><td class='num'>3</td><td class='num'>3</td><td class='num'>0</td><td class='small'>—</td></tr><tr class='ok'><td class='mono'>value.py</td><td class='num'>13</td><td class='num'>13</td><td class='num'>0</td><td class='small'>—</td></tr>
+</table>
+
+<h2>3. Dead / uncalled public surface</h2>
+<p>These 7 symbols are defined but have exactly one repo-wide occurrence (their own
+<span class="mono">def</span>) — never called in src/, bench/, or tests/. Untested by
+definition; likely dead code or untested public API.</p>
+<table><tr><th>Module</th><th>Symbol</th></tr><tr><td class='mono'>bitboard.py</td><td class='mono'>square_to_rc</td></tr><tr><td class='mono'>bitboard.py</td><td class='mono'>rc_to_square</td></tr><tr><td class='mono'>bitboard.py</td><td class='mono'>squares_to_mask</td></tr><tr><td class='mono'>bitboard.py</td><td class='mono'>flip_colour</td></tr><tr><td class='mono'>encode.py</td><td class='mono'>encode_canonical_for_move_space</td></tr><tr><td class='mono'>masks.py</td><td class='mono'>attacked_by_mask</td></tr><tr><td class='mono'>perceptron.py</td><td class='mono'>move_feature_vector</td></tr></table>
+
+<h2>4. Strengths</h2>
+<ul><li>Complete module coverage: all 15 src modules + bench/rating + the L3.5 and L6 experiments have dedicated test files (692 test functions total).</li><li>Strong regression discipline (50 regression-intent tests), including the 5 L6 bugs and the safety-proxy fix — these cannot silently return.</li><li>Canonicalisation / symmetry is the best-covered property (51 canonical-intent tests), matching the project's emphasis on colour-mirror correctness.</li><li>Edge-case heavy (106 tests) and reproducibility asserted (37 tests) per the standard.</li><li>Search internals covered: MVV-LVA ordering, transposition table, quiescence, iterative deepening all have functional tests.</li><li>Round-trip / persistence covered (41 tests): ledgers, weights, configs, and model checkpoints serialise and reload correctly.</li></ul>
+
+<h2>5. Gap findings (prioritised)</h2>
+<table>
+<tr><th>#</th><th>Severity</th><th>Finding</th><th>Recommended action</th></tr>
+<tr><td class='num'>G1</td><td><span class='badge sev-hi'>High</span></td><td><b>Dead / uncalled public surface (7 symbols)</b><br><span class='small'>Repo-wide grep shows these 7 public symbols are defined but never called anywhere in src/, bench/, or tests/. Either dead code to prune or public API with zero tests — untested either way.</span><br><i class='evidence'>Evidence: square_to_rc, rc_to_square, squares_to_mask, flip_colour (bitboard); encode_canonical_for_move_space (encode); attacked_by_mask (masks); move_feature_vector (perceptron). Each has exactly 1 repo occurrence (its own def).</i></td><td class='small'>Decide: prune (if internal-only) or add a unit test + a docstring stating the intended caller. Do not leave as silent dead code.</td></tr><tr><td class='num'>G2</td><td><span class='badge sev-hi'>High</span></td><td><b>Ladder gating is uneven across L1–L6</b><br><span class='small'>The project's stated standard is 'every level plays a full legal game to a real result, is seed-reproducible, and loses to the level above'. This is met strongly for L2 (search) but unevenly for the others.</span><br><i class='evidence'>Evidence (corrected on reading test bodies — the intent-classification count understated this): the named 'plays a full legal game to a real result' gate already existed for L5 (test_guided.py:285), L6 (test_ensemble.py), L2-wrapper (test_search.py:527), L3.5 (test_squarelocal.py:137), and L4 (test_torch_model.py:248, 'usable as a move policy in a game'). The genuine gap was narrower: only <b>L1 and L3</b> lacked a dedicated self-play gate (both were exercised only as opponents or in draws).</i></td><td class='small'><b>RESOLVED 2026-10-03.</b> Added <span class='mono'>test_factored_softmax_plays_a_full_legal_game_to_a_real_result</span> (L1, test_policy.py) and <span class='mono'>test_policy_plays_a_full_legal_game_to_a_real_result</span> (L3, test_perceptron.py), mirroring L5's gate (valid termination reason, every recorded move replayed and confirmed legal, ply-cap reported as unfinished not a draw). Every level now has an explicit self-play full-game gate.</td></tr><tr><td class='num'>G3</td><td><span class='badge sev-md'>Medium</span></td><td><b>Special-move *evaluation* is untested</b><br><span class='small'>Masks correctly admit castling / en passant / all 4 promotions (legality gap-free), but value.evaluate() is material+PST only — no castling term, no en-passant term, no mobility term, and encode() has no castling-rights channel. The known census ('search castles, blind does not') is documented in memory but is NOT locked by any regression test.</span><br><i class='evidence'>Evidence: castling 10 / en passant 12 / promotion 22 occurrence counts in tests (legality only). No test asserts eval rewards or reflects castling/ep, and no test locks the measured underplay census.</i></td><td class='small'>Add a regression test pinning the census ('L2 castles; L1/L3 do not') and a unit test that a castling move is legal and reachable through the mask layer.</td></tr><tr><td class='num'>G4</td><td><span class='badge sev-md'>Medium</span></td><td><b>L6 headline result pinned only at the weight level, not the play level</b><br><span class='small'>The corrected L6 result ('absolute weights make the ensemble lose to L2-d2; relative weights make it tie') is asserted via weight values (blind>search, relative collapses to best) but not via an end-to-end game-result regression.</span><br><i class='evidence'>Evidence: test_the_fitted_ensemble_is_worse_than_its_best_member asserts weight magnitudes; test_relative_weighting_collapses_to_the_best_member asserts weights. No test plays the ensemble vs L2-d2 and locks the win/loss/draw outcome under each rule.</i></td><td class='small'>Add two game-result regressions: 'absolute ensemble loses to L2-d2', 'relative ensemble does not lose to L2-d2 (ties/draws)'.</td></tr><tr><td class='num'>G5</td><td><span class='badge sev-md'>Medium</span></td><td><b>No adversarial legality guard on the game loop</b><br><span class='small'>Every game-play test uses a policy that is *supposed* to be legal. Nothing feeds a malicious/random move generator through play_game and asserts the loop rejects or validates illegal moves — despite the rule that python-chess is the sole authority on legality.</span><br><i class='evidence'>Evidence: No test references illegal-move injection or validation of select() output against board.legal_moves at the loop boundary.</i></td><td class='small'>Add a test that a policy returning an illegal move raises (or is rejected) before the loop commits it.</td></tr><tr><td class='num'>G6</td><td><span class='badge sev-lo'>Low</span></td><td><b>Search scaling / TT benefit not locked</b><br><span class='small'>Measured effect of transposition table (saves ~37% nodes) and iterative deepening is documented in memory but not asserted. No wall-clock or node count regression exists.</span><br><i class='evidence'>Evidence: transposition/zobrist 16, quiescence 13 occurrences (covered functionally); no assertion that TT reduces node count or that depth-N stays within budget.</i></td><td class='small'>Add a node-count regression: with-TT < without-TT for a fixed depth/position.</td></tr><tr><td class='num'>G7</td><td><span class='badge sev-lo'>Low</span></td><td><b>encode() plane functions have no direct assertions</b><br><span class='small'>9 encode plane helpers (attack_balance_plane, capture_target_mask, capture_value_plane, contested_mask, en_passant_mask, opponent_attack_mask, promotion_rank_mask, to_move_attack_mask, and encode_canonical_for_move_space) are exercised only indirectly via the aggregate encode() output.</span><br><i class='evidence'>Evidence: 0 name references in tests for these; covered transitively through test_encode's full-board checks.</i></td><td class='small'>Add targeted tests that each plane renders the correct pattern on a known position (e.g. promotion_rank_mask on ranks 7/8, en_passant_mask only on the ep square).</td></tr>
+</table>
+
+<h2>6. Recommended next tests (in priority order)</h2>
+<ol>
+  <li><b>G1</b> — Resolve the 7 dead symbols: prune or add a focused unit test each.</li>
+  <li><b>G2</b> — Per-level gating: one test per level asserting "plays a full legal game to a
+      real result" + (loses to level above | learner-parity equivalent).</li>
+  <li><b>G3</b> — Regression test pinning the castling census and a unit test that castling is
+      legal/reachable through the mask layer.</li>
+  <li><b>G4</b> — End-to-end L6 result regression: absolute ensemble loses to L2-d2; relative
+      ensemble ties it.</li>
+  <li><b>G5</b> — Adversarial legality guard: illegal <span class="mono">select()</span> is
+      rejected/raised by the game loop.</li>
+  <li><b>G6 / G7</b> — Search node-count regression (TT benefit) and direct per-plane encode tests.</li>
+</ol>
+
+<div class="foot">
+Generated from <span class="mono">_inventory.json</span> + <span class="mono">_analysis.json</span>.
+Method: AST parse + whole-word symbol reference counting (repo-wide).
+Caveat: intent classification is keyword-based on test name/docstring; dead-symbol status is a
+repo-wide grep (defines "never called"). Both are reproducible from the scripts in <span class="mono">tests/_audit/</span>
+</div>
+
+</div></body></html>

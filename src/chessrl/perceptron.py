@@ -531,26 +531,11 @@ class L3Policy(FactoredSoftmaxPolicy):
 # training
 # --------------------------------------------------------------------------
 
-def move_feature_vector(board: chess.Board, move: chess.Move) -> np.ndarray:
-    """Move-level features used to *score* a move during credit assignment.
-
-    Deliberately distinct from the board-local features: when the trainer
-    nudges the destination head, it needs a fixed-length description of the
-    move that does not depend on which square it happened to be.
-    """
-    fr, ff = move.from_square >> 3, move.from_square & 7
-    tr, tf = move.to_square >> 3, move.to_square & 7
-    return np.array([
-        1.0,
-        (tr - fr) / 7.0,
-        abs(tf - ff) / 7.0,
-        (tf - ff) / 7.0,
-        ((tr - fr) ** 2 + (tf - ff) ** 2) ** 0.5 / 9.9,
-        1.0 if fr == tr else 0.0,
-        1.0 if ff == tf else 0.0,
-        abs(tr - fr) == abs(tf - ff),
-        tr / 7.0,
-    ], dtype=np.float32)
+# NOTE (G1 audit): ``move_feature_vector`` was removed. It was a public helper
+# describing a "credit assignment" move-scoring scheme that was never wired in;
+# the real destination/promotion scoring lives in ``_move_features`` (used at
+# lines ~321 and ~646). Nothing referenced it anywhere in the repo, so it was
+# dead code duplicating, conceptually, the actual mechanism.
 
 
 @dataclass

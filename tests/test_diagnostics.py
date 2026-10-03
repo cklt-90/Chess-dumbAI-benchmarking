@@ -274,3 +274,49 @@ def test_format_comparison_is_rectangular():
     lines = format_comparison(table).splitlines()
     # header + rule + one line per policy
     assert len(lines) == 2 + len(table)
+
+
+# --------------------------------------------------------------------------
+# G3 audit: the castling census, locked ("search castles; blind does not")
+# --------------------------------------------------------------------------
+
+def _castles(result):
+    return sum(1 for san in result.moves if san.startswith("O-O"))
+
+
+def test_the_castling_census_search_castles_blind_does_not():
+    """The known special-move census, pinned so a change in it is noticed.
+
+    Measured over fixed-seed self-play: a depth-2 search castles in every game
+    (it has a *reason* to -- king safety is visible to a minimax), while the
+    blind L1 and the untrained perceptron L3 never castle (nothing in their
+    features rewards it). This is a *characteristic*, not a correctness
+    requirement: ``value.evaluate`` is material+PST only and ``encode`` has no
+    castling-rights plane, so the underplay is a documented limitation. If a
+    future eval/encode change makes the learners castle, this test fails on
+    purpose and should be updated to the new expectation.
+    """
+    import random
+
+    from chessrl.game import play_game
+    from chessrl.search import MinimaxPolicy
+    from chessrl.perceptron import L3Policy
+
+    def total_castles(make_policy, games, max_plies):
+        total = 0
+        for seed in range(games):
+            result = play_game(make_policy(), make_policy(),
+                               max_plies=max_plies, rng=random.Random(seed))
+            total += _castles(result)
+        return total
+
+    games, max_plies = 3, 80
+    search_castles = total_castles(lambda: MinimaxPolicy(depth=2), games, max_plies)
+    blind_castles = total_castles(
+        lambda: FactoredSoftmaxPolicy(seed=1), games, max_plies)
+    perceptron_castles = total_castles(lambda: L3Policy(seed=1), games, max_plies)
+
+    # The search has a reason to castle; the blind and untrained learners do not.
+    assert search_castles >= 1, "a depth-2 search should castle in self-play"
+    assert blind_castles == 0, "the blind policy should not castle"
+    assert perceptron_castles == 0, "the untrained perceptron should not castle"

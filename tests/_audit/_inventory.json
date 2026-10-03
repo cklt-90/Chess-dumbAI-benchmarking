@@ -1,0 +1,4715 @@
+{
+  "src_api": {
+    "bitboard.py": {
+      "public": [
+        "apply_canonical",
+        "attack_map",
+        "board_to_planes",
+        "canonical",
+        "defended_map",
+        "empty_mask",
+        "empty_planes",
+        "flip_colour",
+        "flip_ranks",
+        "int_to_planes",
+        "mask_to_squares",
+        "occupancy",
+        "pack_planes",
+        "planes_to_board",
+        "planes_to_int",
+        "rc_to_square",
+        "rotate_180",
+        "square_names",
+        "square_to_rc",
+        "squares_to_mask",
+        "unpack_planes"
+      ]
+    },
+    "cache.py": {
+      "public": [
+        "Midstate",
+        "MidstateStore",
+        "PositionCache"
+      ]
+    },
+    "diagnostics.py": {
+      "public": [
+        "PlayDiagnostics",
+        "action_coverage",
+        "compare_policies",
+        "diagnose_games",
+        "format_comparison",
+        "policy_sharpness"
+      ]
+    },
+    "encode.py": {
+      "public": [
+        "attack_balance_plane",
+        "board_context_features",
+        "capture_target_mask",
+        "capture_value_plane",
+        "contested_mask",
+        "danger_value_plane",
+        "en_passant_mask",
+        "encode",
+        "encode_canonical_for_move_space",
+        "encode_move_feature",
+        "opponent_attack_mask",
+        "own_danger_plane",
+        "promotion_rank_mask",
+        "summarise",
+        "to_move_attack_mask"
+      ]
+    },
+    "ensemble.py": {
+      "public": [
+        "EnsembleConfig",
+        "EnsemblePolicy",
+        "MemberAccuracy",
+        "MemberKind",
+        "MemberSpec",
+        "OutcomeLedger",
+        "accuracy_weights",
+        "score_member_opinions"
+      ]
+    },
+    "game.py": {
+      "public": [
+        "DistributionPolicy",
+        "GameResult",
+        "MaterialPolicy",
+        "MovePolicy",
+        "RandomPolicy",
+        "generate_games",
+        "play_game",
+        "play_match",
+        "summarise_games"
+      ]
+    },
+    "guided.py": {
+      "public": [
+        "GuidedConfig",
+        "GuidedEngine",
+        "GuidedModel",
+        "GuidedPolicy",
+        "GuidedTrainConfig",
+        "GuidedTrainer"
+      ]
+    },
+    "masks.py": {
+      "public": [
+        "attack_balance_mask",
+        "attacked_by_mask",
+        "can_move_to_mask",
+        "empty_squares_mask",
+        "flatten_mask_tensor",
+        "index_to_move",
+        "legal_dest_mask",
+        "legal_from_mask",
+        "legal_move_mask",
+        "legal_to_mask",
+        "mask_density",
+        "move_to_index",
+        "moves_to_indices",
+        "occupied_mask",
+        "stack_masks"
+      ]
+    },
+    "perceptron.py": {
+      "public": [
+        "L3Config",
+        "L3Policy",
+        "L3Trainer",
+        "PerceptronConfig",
+        "PerceptronScorer",
+        "move_feature_vector"
+      ]
+    },
+    "policy.py": {
+      "public": [
+        "BlindScorer",
+        "FactoredSoftmaxPolicy",
+        "ProbCounter",
+        "Scorer",
+        "entropy",
+        "masked_softmax",
+        "move_probability",
+        "perplexity",
+        "uniform_over_mask"
+      ]
+    },
+    "search.py": {
+      "public": [
+        "InformedMinimaxPolicy",
+        "MinimaxEngine",
+        "MinimaxPolicy",
+        "order_moves",
+        "score_move"
+      ]
+    },
+    "squarelocal.py": {
+      "public": [
+        "L35Config",
+        "L35Policy",
+        "L35Trainer",
+        "LEAN_H_CTX",
+        "SquareLocalConfig",
+        "SquareLocalScorer",
+        "implemented_fraction_of",
+        "parameter_count"
+      ]
+    },
+    "torch_model.py": {
+      "public": [
+        "TorchConfig",
+        "TorchPolicy",
+        "TorchScorer",
+        "TorchScorerAdapter",
+        "TorchTrainConfig",
+        "TorchTrainer",
+        "canonical_squares",
+        "geometry_table",
+        "torch_masked_softmax"
+      ]
+    },
+    "train_naive.py": {
+      "public": [
+        "FactoredSoftmaxTrainer",
+        "TrainConfig",
+        "credit_curve"
+      ]
+    },
+    "value.py": {
+      "public": [
+        "capture_value",
+        "evaluate",
+        "evaluate_for",
+        "game_phase",
+        "hanging_value",
+        "material_balance",
+        "material_ratio",
+        "material_value",
+        "outcome_score",
+        "phase_name",
+        "phase_weights",
+        "piece_square_score",
+        "recapture_risk"
+      ]
+    }
+  },
+  "tests": {
+    "conftest.py": {
+      "functions": [],
+      "n_lines": 118,
+      "imports_chessrl": [],
+      "imports_modules": []
+    },
+    "test_bench.py": {
+      "functions": [
+        {
+          "name": "test_match_plays_an_even_number_of_games",
+          "doc": "An odd request is rounded up, because an odd count biases a colour.",
+          "decos": [],
+          "lineno": 76
+        },
+        {
+          "name": "test_match_alternates_colours",
+          "doc": "The two policies must each get exactly half the white games. Detected from outside the game loop, using the book: game *i* starts from ``OPENING_BOOK[i]``, so the policy that opens is whichever one was assigned",
+          "decos": [],
+          "lineno": 83
+        },
+        {
+          "name": "test_match_uses_distinct_openings",
+          "doc": "Six games must start from six books, not one FEN six times.",
+          "decos": [],
+          "lineno": 110
+        },
+        {
+          "name": "test_a_shorter_match_than_the_book_still_varies",
+          "doc": "",
+          "decos": [],
+          "lineno": 118
+        },
+        {
+          "name": "test_opening_book_entries_are_all_playable",
+          "doc": "",
+          "decos": [],
+          "lineno": 124
+        },
+        {
+          "name": "test_opening_book_entries_are_white_to_move",
+          "doc": "The book invariant. A Black-to-move entry inverts the colour assignment silently, so the match is colour-biased while looking balanced.",
+          "decos": [],
+          "lineno": 131
+        },
+        {
+          "name": "test_opening_book_positions_are_distinct",
+          "doc": "",
+          "decos": [],
+          "lineno": 141
+        },
+        {
+          "name": "test_a_fresh_policy_is_built_per_match",
+          "doc": "The factory must be called again for each match, not once per run. The check is on call *count*: a spec whose factory counts invocations must show one call per match it plays, which is what guarantees no cache crosses",
+          "decos": [],
+          "lineno": 148
+        },
+        {
+          "name": "test_record_totals_match_the_games_played",
+          "doc": "",
+          "decos": [],
+          "lineno": 172
+        },
+        {
+          "name": "test_unfinished_games_are_counted_separately",
+          "doc": "Two policies that shuffle forever must produce unfinished, not draws. ``first`` vs ``last`` on a bare-kings-ish line is not guaranteed to shuffle, so use a position where both sides only have king moves that repeat: the",
+          "decos": [],
+          "lineno": 179
+        },
+        {
+          "name": "test_zero_evidence_match_contributes_nothing_to_the_fit",
+          "doc": "An all-unfinished match must not move any rating.",
+          "decos": [],
+          "lineno": 197
+        },
+        {
+          "name": "test_round_robin_plays_every_pair_once",
+          "doc": "",
+          "decos": [],
+          "lineno": 215
+        },
+        {
+          "name": "test_round_robin_single_entrant_plays_nothing",
+          "doc": "",
+          "decos": [],
+          "lineno": 224
+        },
+        {
+          "name": "test_unavailable_entrants_are_skipped_and_reported",
+          "doc": "A factory that raises must drop the entrant, not the run.",
+          "decos": [],
+          "lineno": 230
+        },
+        {
+          "name": "test_build_reports_missing_torch_without_raising",
+          "doc": "",
+          "decos": [],
+          "lineno": 249
+        },
+        {
+          "name": "test_matrix_is_antisymmetric",
+          "doc": "",
+          "decos": [],
+          "lineno": 258
+        },
+        {
+          "name": "test_report_contains_every_required_block",
+          "doc": "",
+          "decos": [],
+          "lineno": 279
+        },
+        {
+          "name": "test_report_states_the_anchor",
+          "doc": "",
+          "decos": [],
+          "lineno": 288
+        },
+        {
+          "name": "test_report_marks_provisional_ratings",
+          "doc": "Two games each way is below the evidence threshold and must be flagged.",
+          "decos": [],
+          "lineno": 294
+        },
+        {
+          "name": "test_ratings_table_carries_evidence_columns",
+          "doc": "",
+          "decos": [],
+          "lineno": 302
+        },
+        {
+          "name": "test_matrix_reports_unfinished_games",
+          "doc": "",
+          "decos": [],
+          "lineno": 310
+        },
+        {
+          "name": "test_empty_report_degrades_gracefully",
+          "doc": "",
+          "decos": [],
+          "lineno": 319
+        },
+        {
+          "name": "test_game_count_does_not_depend_on_the_replay_log",
+          "doc": "A report re-rendered from saved counts must state the same game totals. ``MatchOutcome.games`` holds the ``GameResult`` objects and is dropped by a JSON round-trip, because only the counts are persisted. Deriving the game",
+          "decos": [],
+          "lineno": 325
+        },
+        {
+          "name": "test_report_is_plain_ascii",
+          "doc": "The report has to survive a terminal and a commit message.",
+          "decos": [],
+          "lineno": 349
+        },
+        {
+          "name": "test_ablation_table_marks_the_baseline",
+          "doc": "The all-off variant must be present and be the reference row.",
+          "decos": [],
+          "lineno": 356
+        },
+        {
+          "name": "test_ablation_roster_covers_all_four_seam_combinations",
+          "doc": "",
+          "decos": [],
+          "lineno": 380
+        },
+        {
+          "name": "test_default_roster_names_are_unique",
+          "doc": "",
+          "decos": [],
+          "lineno": 392
+        },
+        {
+          "name": "test_the_L35_experiment_registers_all_three_arms",
+          "doc": "Spec \u00a78: the experiment is the three arms, so a missing one measures nothing. ``L3-flat`` in particular is not optional -- without it, a win by L3.5 is indistinguishable from \"any change from L3 helps\".",
+          "decos": [],
+          "lineno": 399
+        },
+        {
+          "name": "test_the_three_experiment_arms_all_build",
+          "doc": "",
+          "decos": [],
+          "lineno": 420
+        },
+        {
+          "name": "test_the_experiment_arms_share_one_opening_book_and_seed_convention",
+          "doc": "Both arms must be driven identically or the difference is not architecture. The book and the seeds are supplied by the runner rather than the level, so this asserts that the three factories are all zero-argument and therefore",
+          "decos": [],
+          "lineno": 439
+        },
+        {
+          "name": "test_L6_is_registered_as_a_ladder_entrant",
+          "doc": "",
+          "decos": [],
+          "lineno": 465
+        },
+        {
+          "name": "test_L6_does_not_need_torch",
+          "doc": "Its members are L1, L3 and L2-d2, none of which needs torch. This is asserted rather than assumed because the obvious way to build an L6 is to include L4 or L5, which would silently make the whole ensemble",
+          "decos": [],
+          "lineno": 474
+        },
+        {
+          "name": "test_L6_builds_and_is_a_distribution_policy",
+          "doc": "",
+          "decos": [],
+          "lineno": 488
+        },
+        {
+          "name": "test_L6_contains_both_blendable_and_voting_members",
+          "doc": "The ensemble's two-stage combination is only exercised if it has both. L1 and L3 expose ``move_distribution``; L2-d2 exposes only ``select``. If a future edit dropped the search member, the voting path would become dead",
+          "decos": [],
+          "lineno": 498
+        },
+        {
+          "name": "test_L6_starts_as_a_uniform_mixture",
+          "doc": "No ledger yet, so the bench row must be an unweighted, honest mixture. Reporting a fitted ensemble in the matrix would be circular -- its weights would come from games the matrix has not played.",
+          "decos": [],
+          "lineno": 513
+        },
+        {
+          "name": "test_L6_produces_a_valid_distribution_from_the_opening",
+          "doc": "",
+          "decos": [],
+          "lineno": 527
+        },
+        {
+          "name": "test_the_ensemble_driver_agrees_with_the_bench_roster",
+          "doc": "The driver and the bench row must describe the same compositional policy. They are separate code paths by necessity -- the driver needs fitted weights, the bench needs a zero-argument factory -- so the composition is duplicated.",
+          "decos": [],
+          "lineno": 540
+        },
+        {
+          "name": "test_the_fitted_ensemble_is_worse_than_its_best_member",
+          "doc": "A recorded negative result, locked in so it cannot be forgotten. The absolute weighting rule (the default) scores members on agreement with the played move. Under it the two blind/weak members, each just above chance, each",
+          "decos": [],
+          "lineno": 556
+        },
+        {
+          "name": "test_relative_weighting_collapses_to_the_best_member",
+          "doc": "The structural fix: relative mode must not let a mediocre pair dilute one competent member. With the same corrected accuracies as the test above, ``relative=True`` scales",
+          "decos": [],
+          "lineno": 596
+        },
+        {
+          "name": "test_an_ensemble_with_one_member_weighted_reproduces_that_member",
+          "doc": "The property that makes the negative result meaningful. Giving the search member all the weight must reproduce it exactly -- which is what shows the ensemble *could* have been as good as its best member, and",
+          "decos": [],
+          "lineno": 626
+        },
+        {
+          "name": "test_json_round_trip_preserves_the_counts_and_the_ratings",
+          "doc": "Saving and reloading must reproduce the ratings exactly. This is the property that makes the saved matrix worth keeping: a rating table can be recomputed after a fix to the fit without replaying a game. If",
+          "decos": [],
+          "lineno": 656
+        }
+      ],
+      "n_lines": 688,
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.ensemble.EnsemblePolicy",
+        "chessrl.ensemble.OutcomeLedger",
+        "chessrl.ensemble.accuracy_weights",
+        "chessrl.game.DistributionPolicy"
+      ],
+      "imports_modules": [
+        "chessrl",
+        "chessrl.ensemble",
+        "chessrl.game"
+      ]
+    },
+    "test_bitboard.py": {
+      "functions": [
+        {
+          "name": "test_plane_count_matches_order",
+          "doc": "",
+          "decos": [],
+          "lineno": 25
+        },
+        {
+          "name": "test_start_position_placement",
+          "doc": "",
+          "decos": [],
+          "lineno": 30
+        },
+        {
+          "name": "test_planes_to_board_roundtrip",
+          "doc": "",
+          "decos": [],
+          "lineno": 40
+        },
+        {
+          "name": "test_occupancy_by_colour",
+          "doc": "",
+          "decos": [],
+          "lineno": 47
+        },
+        {
+          "name": "test_pack_roundtrip_and_size",
+          "doc": "",
+          "decos": [],
+          "lineno": 58
+        },
+        {
+          "name": "test_int_roundtrip",
+          "doc": "",
+          "decos": [],
+          "lineno": 67
+        },
+        {
+          "name": "test_pack_distinguishes_positions",
+          "doc": "",
+          "decos": [],
+          "lineno": 72
+        },
+        {
+          "name": "test_canonical_is_identity_for_white_to_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 82
+        },
+        {
+          "name": "test_canonical_maps_pieces_to_mirrored_squares",
+          "doc": "Black's queen on d8 must land on d1, king e8 on e1, pawns on rank 2. This is the specific assertion that fails if the transform is a 180 rotation instead of a rank reflection: d8 would land on e1, not d1.",
+          "decos": [],
+          "lineno": 87
+        },
+        {
+          "name": "test_canonical_is_an_involution",
+          "doc": "",
+          "decos": [],
+          "lineno": 101
+        },
+        {
+          "name": "test_flip_ranks_preserves_files",
+          "doc": "",
+          "decos": [],
+          "lineno": 109
+        },
+        {
+          "name": "test_apply_canonical_is_self_inverse_and_file_preserving",
+          "doc": "",
+          "decos": [],
+          "lineno": 117
+        },
+        {
+          "name": "test_apply_canonical_accepts_3d_arrays",
+          "doc": "",
+          "decos": [],
+          "lineno": 125
+        },
+        {
+          "name": "test_attack_map_start_position",
+          "doc": "",
+          "decos": [],
+          "lineno": 135
+        },
+        {
+          "name": "test_defended_map_start_position",
+          "doc": "",
+          "decos": [],
+          "lineno": 142
+        },
+        {
+          "name": "test_attack_map_on_empty_board",
+          "doc": "",
+          "decos": [],
+          "lineno": 150
+        },
+        {
+          "name": "test_canonical_survives_colour_mirror",
+          "doc": "Encoding a position and its colour mirror must agree exactly.",
+          "decos": [
+            "pytest.mark.parametrize"
+          ],
+          "lineno": 160
+        },
+        {
+          "name": "test_symmetry_holds_across_a_whole_random_game",
+          "doc": "",
+          "decos": [],
+          "lineno": 169
+        }
+      ],
+      "n_lines": 175,
+      "imports_chessrl": [
+        "chessrl.B",
+        "chessrl.E",
+        "chessrl.PLANE_ORDER"
+      ],
+      "imports_modules": [
+        "chessrl"
+      ]
+    },
+    "test_cache.py": {
+      "functions": [
+        {
+          "name": "test_zobrist_is_stable_across_push_pop",
+          "doc": "",
+          "decos": [],
+          "lineno": 20
+        },
+        {
+          "name": "test_zobrist_ignores_move_order",
+          "doc": "Transpositions must collide: that is the entire point of the cache.",
+          "decos": [],
+          "lineno": 28
+        },
+        {
+          "name": "test_zobrist_differs_for_different_positions",
+          "doc": "",
+          "decos": [],
+          "lineno": 43
+        },
+        {
+          "name": "test_zobrist_distinguishes_side_to_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 50
+        },
+        {
+          "name": "test_cache_hit_and_miss_accounting",
+          "doc": "",
+          "decos": [],
+          "lineno": 61
+        },
+        {
+          "name": "test_get_or_compute_only_computes_once",
+          "doc": "",
+          "decos": [],
+          "lineno": 72
+        },
+        {
+          "name": "test_cache_evicts_least_recently_used",
+          "doc": "",
+          "decos": [],
+          "lineno": 86
+        },
+        {
+          "name": "test_cache_capacity_is_respected",
+          "doc": "",
+          "decos": [],
+          "lineno": 106
+        },
+        {
+          "name": "test_cache_contains_and_len",
+          "doc": "",
+          "decos": [],
+          "lineno": 113
+        },
+        {
+          "name": "test_cache_stats_shape",
+          "doc": "",
+          "decos": [],
+          "lineno": 122
+        },
+        {
+          "name": "test_cache_makes_transposition_search_cheap",
+          "doc": "A repeated lookup over a real move sequence should hit every time.",
+          "decos": [],
+          "lineno": 131
+        },
+        {
+          "name": "test_midstate_records_a_game",
+          "doc": "",
+          "decos": [],
+          "lineno": 150
+        },
+        {
+          "name": "test_midstate_board_rebuilds_exactly",
+          "doc": "",
+          "decos": [],
+          "lineno": 159
+        },
+        {
+          "name": "test_midstate_capacity_ring_wraps",
+          "doc": "",
+          "decos": [],
+          "lineno": 171
+        },
+        {
+          "name": "test_midstate_phase_bucketing",
+          "doc": "",
+          "decos": [],
+          "lineno": 182
+        },
+        {
+          "name": "test_midstate_phase_rejects_unknown_label",
+          "doc": "",
+          "decos": [],
+          "lineno": 193
+        },
+        {
+          "name": "test_midstate_sample_respects_mix",
+          "doc": "",
+          "decos": [],
+          "lineno": 199
+        },
+        {
+          "name": "test_midstate_sample_more_than_available",
+          "doc": "",
+          "decos": [],
+          "lineno": 215
+        },
+        {
+          "name": "test_midstate_sample_empty_store",
+          "doc": "",
+          "decos": [],
+          "lineno": 223
+        },
+        {
+          "name": "test_midstate_sample_boards_are_playable",
+          "doc": "",
+          "decos": [],
+          "lineno": 227
+        },
+        {
+          "name": "test_midstate_corpus_roundtrip",
+          "doc": "",
+          "decos": [],
+          "lineno": 237
+        },
+        {
+          "name": "test_midstate_corpus_roundtrip_preserves_ratio",
+          "doc": "",
+          "decos": [],
+          "lineno": 252
+        },
+        {
+          "name": "test_midstate_load_skips_blank_lines",
+          "doc": "",
+          "decos": [],
+          "lineno": 265
+        },
+        {
+          "name": "test_midstate_stats_shape",
+          "doc": "",
+          "decos": [],
+          "lineno": 277
+        },
+        {
+          "name": "test_whole_game_records_every_ply",
+          "doc": "",
+          "decos": [],
+          "lineno": 287
+        }
+      ],
+      "n_lines": 296,
+      "imports_chessrl": [
+        "chessrl.cache.MidstateStore",
+        "chessrl.cache.PositionCache"
+      ],
+      "imports_modules": [
+        "chessrl.cache"
+      ]
+    },
+    "test_diagnostics.py": {
+      "functions": [
+        {
+          "name": "test_empty_diagnostics_reports_zero_rather_than_dividing_by_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 33
+        },
+        {
+          "name": "test_informative_rate_counts_only_decisive_results",
+          "doc": "",
+          "decos": [],
+          "lineno": 40
+        },
+        {
+          "name": "test_finished_rate_counts_draws_as_finished",
+          "doc": "",
+          "decos": [],
+          "lineno": 46
+        },
+        {
+          "name": "test_contact_rate_is_captures_per_hundred_plies",
+          "doc": "",
+          "decos": [],
+          "lineno": 52
+        },
+        {
+          "name": "test_summary_has_every_expected_key",
+          "doc": "",
+          "decos": [],
+          "lineno": 57
+        },
+        {
+          "name": "test_diagnose_games_runs_the_requested_number",
+          "doc": "",
+          "decos": [],
+          "lineno": 75
+        },
+        {
+          "name": "test_diagnose_games_is_reproducible",
+          "doc": "",
+          "decos": [],
+          "lineno": 83
+        },
+        {
+          "name": "test_recorded_captures_are_plausible_for_random_play",
+          "doc": "Random play does make contact; the count must not be stuck at zero.",
+          "decos": [],
+          "lineno": 90
+        },
+        {
+          "name": "test_greedy_material_reaches_more_decisive_games_than_random",
+          "doc": "A control: the diagnostic must be able to tell these apart at all. If the two produce the same numbers, the diagnostic is measuring nothing.",
+          "decos": [],
+          "lineno": 96
+        },
+        {
+          "name": "test_diagnose_games_accepts_start_fens",
+          "doc": "",
+          "decos": [],
+          "lineno": 106
+        },
+        {
+          "name": "test_blind_policy_has_low_contact_and_few_decisive_games",
+          "doc": "The L1 characteristic, pinned so a change in it is noticed.",
+          "decos": [],
+          "lineno": 114
+        },
+        {
+          "name": "test_sharpness_of_an_untrained_policy_is_high",
+          "doc": "A zero-logit blind policy is uniform, so perplexity ~ legal move count.",
+          "decos": [],
+          "lineno": 127
+        },
+        {
+          "name": "test_sharpness_probes_cover_every_probe_fen_that_is_playable",
+          "doc": "",
+          "decos": [],
+          "lineno": 134
+        },
+        {
+          "name": "test_sharpness_reports_perplexity_never_above_legal_moves",
+          "doc": "A uniform policy is the maximum-entropy case; nothing can exceed it.",
+          "decos": [],
+          "lineno": 143
+        },
+        {
+          "name": "test_uniformity_is_at_most_one_for_an_untrained_policy",
+          "doc": "Zero logits are uniform *per factor*, not uniform over the move set. This is a real property of the factorised model and worth pinning down. The chain is ``P(from) * P(to|from) * P(promo)``. With zero logits the origin",
+          "decos": [],
+          "lineno": 150
+        },
+        {
+          "name": "test_uniformity_drops_below_one_when_origins_have_unequal_choice",
+          "doc": "The counterpart to the test above, on a position where it must bite.",
+          "decos": [],
+          "lineno": 174
+        },
+        {
+          "name": "test_sharpness_falls_after_deliberate_sharpening",
+          "doc": "",
+          "decos": [],
+          "lineno": 181
+        },
+        {
+          "name": "test_sharpness_is_unavailable_for_a_select_only_policy",
+          "doc": "RandomPolicy has no distribution; that is not an error, it is a fact.",
+          "decos": [],
+          "lineno": 191
+        },
+        {
+          "name": "test_sharpness_accepts_a_custom_probe_set",
+          "doc": "",
+          "decos": [],
+          "lineno": 199
+        },
+        {
+          "name": "test_sharpness_skips_game_over_probes",
+          "doc": "",
+          "decos": [],
+          "lineno": 206
+        },
+        {
+          "name": "test_action_coverage_reports_the_full_space_size",
+          "doc": "",
+          "decos": [],
+          "lineno": 217
+        },
+        {
+          "name": "test_action_coverage_only_ever_takes_offered_actions",
+          "doc": "",
+          "decos": [],
+          "lineno": 222
+        },
+        {
+          "name": "test_action_coverage_offers_far_more_than_it_takes",
+          "doc": "Most of the action space is legal somewhere but rarely sampled.",
+          "decos": [],
+          "lineno": 227
+        },
+        {
+          "name": "test_compare_policies_returns_one_entry_per_policy",
+          "doc": "",
+          "decos": [],
+          "lineno": 238
+        },
+        {
+          "name": "test_compare_policies_marks_sharpness_unavailable_where_it_is",
+          "doc": "",
+          "decos": [],
+          "lineno": 249
+        },
+        {
+          "name": "test_format_comparison_renders_a_row_per_policy",
+          "doc": "",
+          "decos": [],
+          "lineno": 256
+        },
+        {
+          "name": "test_format_comparison_is_rectangular",
+          "doc": "",
+          "decos": [],
+          "lineno": 269
+        }
+      ],
+      "n_lines": 276,
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.diagnostics.PROBE_FENS",
+        "chessrl.diagnostics.PlayDiagnostics",
+        "chessrl.diagnostics.action_coverage",
+        "chessrl.diagnostics.compare_policies",
+        "chessrl.diagnostics.diagnose_games",
+        "chessrl.diagnostics.format_comparison",
+        "chessrl.diagnostics.policy_sharpness",
+        "chessrl.game.MaterialPolicy",
+        "chessrl.game.RandomPolicy",
+        "chessrl.policy.FactoredSoftmaxPolicy"
+      ],
+      "imports_modules": [
+        "chessrl",
+        "chessrl.diagnostics",
+        "chessrl.game",
+        "chessrl.policy"
+      ]
+    },
+    "test_encode.py": {
+      "functions": [
+        {
+          "name": "test_channel_layout_is_pinned",
+          "doc": "Freeze the channel order. Changing this invalidates saved weights.",
+          "decos": [],
+          "lineno": 30
+        },
+        {
+          "name": "test_colour_paired_channels_point_at_real_colour_channels",
+          "doc": "",
+          "decos": [],
+          "lineno": 44
+        },
+        {
+          "name": "test_encode_shape_and_dtype",
+          "doc": "",
+          "decos": [],
+          "lineno": 56
+        },
+        {
+          "name": "test_encode_values_are_in_range",
+          "doc": "",
+          "decos": [],
+          "lineno": 62
+        },
+        {
+          "name": "test_encode_into_preallocated_buffer",
+          "doc": "",
+          "decos": [],
+          "lineno": 69
+        },
+        {
+          "name": "test_preallocated_buffer_is_fully_overwritten",
+          "doc": "A stale buffer must not leak values from the previous position.",
+          "decos": [],
+          "lineno": 76
+        },
+        {
+          "name": "test_encode_does_not_mutate_the_board",
+          "doc": "",
+          "decos": [],
+          "lineno": 83
+        },
+        {
+          "name": "test_piece_planes_match_the_board",
+          "doc": "",
+          "decos": [],
+          "lineno": 94
+        },
+        {
+          "name": "test_promotion_rank_channels",
+          "doc": "",
+          "decos": [],
+          "lineno": 100
+        },
+        {
+          "name": "test_en_passant_channel_is_empty_without_en_passant",
+          "doc": "",
+          "decos": [],
+          "lineno": 109
+        },
+        {
+          "name": "test_en_passant_channel_marks_the_target",
+          "doc": "",
+          "decos": [],
+          "lineno": 114
+        },
+        {
+          "name": "test_contested_channel_is_an_intersection",
+          "doc": "",
+          "decos": [],
+          "lineno": 121
+        },
+        {
+          "name": "test_capture_target_channel_tracks_legal_captures",
+          "doc": "",
+          "decos": [],
+          "lineno": 130
+        },
+        {
+          "name": "test_capture_value_plane_is_zero_when_nothing_to_take",
+          "doc": "",
+          "decos": [],
+          "lineno": 137
+        },
+        {
+          "name": "test_own_danger_plane_flags_a_hanging_piece",
+          "doc": "",
+          "decos": [],
+          "lineno": 142
+        },
+        {
+          "name": "test_attack_balance_plane_is_binary",
+          "doc": "",
+          "decos": [],
+          "lineno": 150
+        },
+        {
+          "name": "test_white_to_move_values_are_not_reflected",
+          "doc": "The white-to-move path must be a no-op on the value planes. This is the specific bug that the unconditional-reflection guard caused: white-to-move positions had their value planes flipped, which looked fine",
+          "decos": [],
+          "lineno": 160
+        },
+        {
+          "name": "test_values_survive_colour_mirror",
+          "doc": "",
+          "decos": [
+            "pytest.mark.parametrize"
+          ],
+          "lineno": 174
+        },
+        {
+          "name": "test_values_survive_colour_mirror_across_a_game",
+          "doc": "",
+          "decos": [],
+          "lineno": 183
+        },
+        {
+          "name": "test_canonical_false_keeps_absolute_coordinates",
+          "doc": "",
+          "decos": [],
+          "lineno": 193
+        },
+        {
+          "name": "test_move_feature_length_and_finiteness",
+          "doc": "",
+          "decos": [],
+          "lineno": 204
+        },
+        {
+          "name": "test_move_feature_marks_captures",
+          "doc": "",
+          "decos": [],
+          "lineno": 212
+        },
+        {
+          "name": "test_move_feature_marks_castling",
+          "doc": "",
+          "decos": [],
+          "lineno": 220
+        },
+        {
+          "name": "test_context_features_length_and_range",
+          "doc": "",
+          "decos": [],
+          "lineno": 227
+        },
+        {
+          "name": "test_context_features_detect_check",
+          "doc": "",
+          "decos": [],
+          "lineno": 234
+        },
+        {
+          "name": "test_summarise_reports_every_channel",
+          "doc": "",
+          "decos": [],
+          "lineno": 240
+        }
+      ],
+      "n_lines": 242,
+      "imports_chessrl": [
+        "chessrl.E",
+        "chessrl.V"
+      ],
+      "imports_modules": [
+        "chessrl"
+      ]
+    },
+    "test_ensemble.py": {
+      "functions": [
+        {
+          "name": "test_a_member_exposing_move_distribution_is_blendable",
+          "doc": "",
+          "decos": [],
+          "lineno": 139
+        },
+        {
+          "name": "test_a_member_without_move_distribution_is_a_voter",
+          "doc": "",
+          "decos": [],
+          "lineno": 145
+        },
+        {
+          "name": "test_kind_is_detected_from_the_policy_not_declared_by_the_caller",
+          "doc": "A caller who mislabels a member must not be able to lie to the blend. The ensemble's whole job is to know which members it may average. If that were a caller-supplied flag, a typo would silently put a single move into a",
+          "decos": [],
+          "lineno": 151
+        },
+        {
+          "name": "test_a_negative_weight_is_rejected",
+          "doc": "",
+          "decos": [],
+          "lineno": 162
+        },
+        {
+          "name": "test_a_zero_weight_is_allowed",
+          "doc": "Zero is a legitimate weight: it is how a member is parked, not removed.",
+          "decos": [],
+          "lineno": 167
+        },
+        {
+          "name": "test_never_asked_is_none_not_zero",
+          "doc": "The single most important distinction in the ledger. A member that has never been exercised has *unknown* accuracy. Recording it as 0.0 would conflate \"we don't know\" with \"it is always wrong\", and the",
+          "decos": [],
+          "lineno": 176
+        },
+        {
+          "name": "test_accuracy_is_none_until_the_first_prediction",
+          "doc": "",
+          "decos": [],
+          "lineno": 189
+        },
+        {
+          "name": "test_accuracy_is_the_simple_ratio",
+          "doc": "",
+          "decos": [],
+          "lineno": 197
+        },
+        {
+          "name": "test_note_many_records_each_result",
+          "doc": "",
+          "decos": [],
+          "lineno": 202
+        },
+        {
+          "name": "test_len_counts_only_members_that_were_asked",
+          "doc": "",
+          "decos": [],
+          "lineno": 208
+        },
+        {
+          "name": "test_total_predicted_sums_across_members",
+          "doc": "",
+          "decos": [],
+          "lineno": 214
+        },
+        {
+          "name": "test_registration_order_is_preserved",
+          "doc": "",
+          "decos": [],
+          "lineno": 219
+        },
+        {
+          "name": "test_ledger_round_trips_through_json",
+          "doc": "",
+          "decos": [],
+          "lineno": 224
+        },
+        {
+          "name": "test_ledger_file_is_readable_json",
+          "doc": "The ledger is a report as much as a cache; it must be eyeball-able.",
+          "decos": [],
+          "lineno": 237
+        },
+        {
+          "name": "test_no_members_gives_no_weights",
+          "doc": "",
+          "decos": [],
+          "lineno": 250
+        },
+        {
+          "name": "test_weighting_a_single_member_gives_it_everything",
+          "doc": "",
+          "decos": [],
+          "lineno": 254
+        },
+        {
+          "name": "test_zero_evidence_member_gets_the_average",
+          "doc": "Rule 1: an untried member is average, not zero and not one. Exact by hand under ``w = acc / chance_equivalent``: the tried member has accuracy 0.8 and so is worth 0.8/0.5 = 1.6 votes; the untried member is",
+          "decos": [],
+          "lineno": 259
+        },
+        {
+          "name": "test_an_untried_member_outscores_a_perfectly_bad_one",
+          "doc": "The concrete consequence of the previous test, stated as an ordering.",
+          "decos": [],
+          "lineno": 274
+        },
+        {
+          "name": "test_all_untried_members_split_evenly",
+          "doc": "",
+          "decos": [],
+          "lineno": 282
+        },
+        {
+          "name": "test_weights_always_sum_to_one",
+          "doc": "",
+          "decos": [],
+          "lineno": 288
+        },
+        {
+          "name": "test_better_accuracy_means_more_weight",
+          "doc": "Rule 3: monotone in accuracy. Nothing else is claimed.",
+          "decos": [],
+          "lineno": 293
+        },
+        {
+          "name": "test_relative_weighting_collapses_to_the_above_mean_member",
+          "doc": "The whole point of the mode: a mediocre pair cannot pool to beat one good. good=0.9, mid=0.5, poor=0.1; mean = 0.5. Relative raw = (0.4, 0.0, 0.0) after the max(0, ...) clamp, so after the floor+normalise the whole weight",
+          "decos": [],
+          "lineno": 306
+        },
+        {
+          "name": "test_relative_weighting_still_discriminates_between_two_above_mean_members",
+          "doc": "Not just \"best wins\": two genuinely good members share the weight. good=0.8, better=1.0, poor=0.0; mean = 0.6. Relative raw = (0.2, 0.4, 0.0), so ``better`` should carry roughly twice ``good`` and ``poor`` nothing.",
+          "decos": [],
+          "lineno": 319
+        },
+        {
+          "name": "test_relative_weighting_is_independent_of_an_absolute_shift",
+          "doc": "Relative mode should not care that every member scored 20% higher. Absolute mode *does* care (a 0.7 vs 0.9 spread reads as \"more decisive\" than 0.5 vs 0.7). Relative mode only reads the spread *within* the set, so shifting",
+          "decos": [],
+          "lineno": 332
+        },
+        {
+          "name": "test_relative_weighting_never_produces_negative_weights",
+          "doc": "The max(0, acc - mean) clamp must hold even when every member is below the mean is impossible, but a single below-mean member must not go negative.",
+          "decos": [],
+          "lineno": 349
+        },
+        {
+          "name": "test_chance_accuracy_is_worth_exactly_the_average",
+          "doc": "Rule 2, stated exactly: ``chance_equivalent`` is the unit of accuracy. A member measuring exactly chance has done the job it was asked to do and no more, so it is worth precisely one mean vote -- the same as an untried",
+          "decos": [],
+          "lineno": 359
+        },
+        {
+          "name": "test_raising_chance_equivalent_shrinks_what_any_member_is_worth",
+          "doc": "The knob's actual effect: it sets how good \"one vote\" is. Only the *ratios* matter after normalisation, so raising the unit makes every member's score smaller relative to the mean 1.0 given to untried",
+          "decos": [],
+          "lineno": 374
+        },
+        {
+          "name": "test_below_chance_is_worth_less_than_at_chance",
+          "doc": "",
+          "decos": [],
+          "lineno": 390
+        },
+        {
+          "name": "test_a_uniformly_wrong_roster_is_still_a_valid_distribution",
+          "doc": "The degenerate case must not produce NaN or an all-zero vector.",
+          "decos": [],
+          "lineno": 396
+        },
+        {
+          "name": "test_a_perfect_member_against_a_uniformly_wrong_roster_is_not_total",
+          "doc": "No member may be starved to exactly zero by the rules alone.",
+          "decos": [],
+          "lineno": 406
+        },
+        {
+          "name": "test_a_zero_floor_still_discriminates",
+          "doc": "",
+          "decos": [],
+          "lineno": 414
+        },
+        {
+          "name": "test_a_high_floor_flattens_the_weights",
+          "doc": "",
+          "decos": [],
+          "lineno": 420
+        },
+        {
+          "name": "test_high_temperature_pulls_towards_uniform",
+          "doc": "",
+          "decos": [],
+          "lineno": 428
+        },
+        {
+          "name": "test_zero_temperature_is_rejected",
+          "doc": "",
+          "decos": [],
+          "lineno": 435
+        },
+        {
+          "name": "test_negative_temperature_is_rejected",
+          "doc": "",
+          "decos": [],
+          "lineno": 440
+        },
+        {
+          "name": "test_negative_floor_is_rejected",
+          "doc": "",
+          "decos": [],
+          "lineno": 445
+        },
+        {
+          "name": "test_weighting_is_order_independent",
+          "doc": "The weight of a member must not depend on where it sits in the list.",
+          "decos": [],
+          "lineno": 450
+        },
+        {
+          "name": "test_chance_equivalent_is_a_declared_knob_not_a_hidden_constant",
+          "doc": "Raising the chance bar must lower what a 0.5 member is worth.",
+          "decos": [],
+          "lineno": 459
+        },
+        {
+          "name": "test_any_positive_temperature_produces_a_valid_distribution",
+          "doc": "Regression: a very small temperature used to crash, then produce NaN. ``temperature > 0`` is validated as legal, so the whole positive range must work. The original ``v ** (1/temperature)`` raised OverflowError at",
+          "decos": [
+            "pytest.mark.parametrize"
+          ],
+          "lineno": 472
+        },
+        {
+          "name": "test_a_very_small_temperature_saturates_to_the_best_member",
+          "doc": "The limit case, stated as behaviour rather than as absence of a crash. As temperature goes to zero, all weight should concentrate on the highest scoring member -- not on NaN, and not equally split. The default floor keeps",
+          "decos": [],
+          "lineno": 491
+        },
+        {
+          "name": "test_a_very_small_temperature_still_respects_the_floor",
+          "doc": "Sharpening must not be able to starve a member the floor protects.",
+          "decos": [],
+          "lineno": 506
+        },
+        {
+          "name": "test_sharpening_does_not_warn_about_overflow",
+          "doc": "The computation must be numerically clean, not merely non-crashing.",
+          "decos": [],
+          "lineno": 513
+        },
+        {
+          "name": "test_a_member_scored_at_zero_stays_at_zero_under_sharpening",
+          "doc": "Pinned zeros: log(0) is -inf, which must not poison the other members. A member whose accuracy is zero scores a raw weight of zero, and sharpening must leave it there rather than converting the whole vector to NaN. The floor",
+          "decos": [],
+          "lineno": 525
+        },
+        {
+          "name": "test_the_ensemble_is_a_distribution_policy",
+          "doc": "It must be a drop-in for the game loop and the bench, like L1 and L3.",
+          "decos": [],
+          "lineno": 545
+        },
+        {
+          "name": "test_the_output_is_normalised",
+          "doc": "",
+          "decos": [],
+          "lineno": 552
+        },
+        {
+          "name": "test_the_output_is_normalised_even_when_the_inputs_are_not",
+          "doc": "The regression this test exists for. Weights of 1.0 each are the natural thing for a caller to write, and they do not sum to one. The game loop takes the distribution on trust and samples",
+          "decos": [],
+          "lineno": 560
+        },
+        {
+          "name": "test_the_support_is_inside_the_legal_moves",
+          "doc": "",
+          "decos": [],
+          "lineno": 577
+        },
+        {
+          "name": "test_illegal_moves_get_no_mass",
+          "doc": "",
+          "decos": [],
+          "lineno": 588
+        },
+        {
+          "name": "test_each_member_of_the_support_carries_its_own_weight",
+          "doc": "Exact by hand: two point masses at equal weight split the mass in half.",
+          "decos": [],
+          "lineno": 598
+        },
+        {
+          "name": "test_an_unequal_weight_shifts_the_odds",
+          "doc": "",
+          "decos": [],
+          "lineno": 612
+        },
+        {
+          "name": "test_a_lone_member_is_reproduced_exactly",
+          "doc": "Weight-1 reduction: one member holding everything gives its own answer.",
+          "decos": [],
+          "lineno": 624
+        },
+        {
+          "name": "test_a_zero_weight_member_is_ignored_entirely",
+          "doc": "",
+          "decos": [],
+          "lineno": 635
+        },
+        {
+          "name": "test_contributions_are_reported_and_add_up",
+          "doc": "The explanation of a choice must total the probability assigned.",
+          "decos": [],
+          "lineno": 648
+        },
+        {
+          "name": "test_contributions_name_every_contributing_member",
+          "doc": "",
+          "decos": [],
+          "lineno": 657
+        },
+        {
+          "name": "test_a_member_contributing_less_mass_is_reported_as_such",
+          "doc": "A member's contribution is its weight times the mass it places. A member with a *smaller weight* places less mass, so its contribution is smaller -- and the report must reflect that, because the contribution is",
+          "decos": [],
+          "lineno": 665
+        },
+        {
+          "name": "test_a_spread_member_places_less_mass_on_its_favourite_move",
+          "doc": "The concrete difference between hedging and committing, in the output.",
+          "decos": [],
+          "lineno": 681
+        },
+        {
+          "name": "test_a_member_returning_the_wrong_shape_is_rejected",
+          "doc": "",
+          "decos": [],
+          "lineno": 694
+        },
+        {
+          "name": "test_a_move_only_member_still_influences_the_choice",
+          "doc": "",
+          "decos": [],
+          "lineno": 712
+        },
+        {
+          "name": "test_a_voter_is_listed_separately_from_the_blendable_members",
+          "doc": "",
+          "decos": [],
+          "lineno": 721
+        },
+        {
+          "name": "test_a_vote_is_weighted_like_a_blend",
+          "doc": "",
+          "decos": [],
+          "lineno": 729
+        },
+        {
+          "name": "test_an_illegal_vote_is_rejected_loudly",
+          "doc": "Silently dropping it would hide a member that had broken its contract.",
+          "decos": [],
+          "lineno": 741
+        },
+        {
+          "name": "test_a_zero_weight_voter_is_not_consulted",
+          "doc": "",
+          "decos": [],
+          "lineno": 750
+        },
+        {
+          "name": "test_a_distribution_member_is_always_more_than_a_vote",
+          "doc": "Blending is strictly more informative than voting, and this shows it. Two members with identical weight: one commits to e4, one spreads over the legal moves while mildly preferring e4. If the spread member were merely",
+          "decos": [],
+          "lineno": 759
+        },
+        {
+          "name": "test_greedy_selection_takes_the_arg_max",
+          "doc": "",
+          "decos": [],
+          "lineno": 783
+        },
+        {
+          "name": "test_sampling_selection_returns_a_legal_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 790
+        },
+        {
+          "name": "test_sampling_covers_the_support_over_many_draws",
+          "doc": "",
+          "decos": [],
+          "lineno": 799
+        },
+        {
+          "name": "test_selection_is_seed_reproducible",
+          "doc": "",
+          "decos": [],
+          "lineno": 808
+        },
+        {
+          "name": "test_different_seeds_give_different_sequences_eventually",
+          "doc": "",
+          "decos": [],
+          "lineno": 819
+        },
+        {
+          "name": "test_an_all_zero_weight_ensemble_refuses_to_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 830
+        },
+        {
+          "name": "test_an_ensemble_with_no_mass_refuses_to_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 837
+        },
+        {
+          "name": "test_a_finished_position_yields_no_mass",
+          "doc": "Checkmate has no legal moves; the ensemble must not invent one. The game loop stops before asking, but a caller can ask directly, and a crash here would be indistinguishable from a bug in the search. An empty",
+          "decos": [],
+          "lineno": 844
+        },
+        {
+          "name": "test_setting_weights_from_a_ledger_normalises_them",
+          "doc": "",
+          "decos": [],
+          "lineno": 862
+        },
+        {
+          "name": "test_a_better_rated_member_gets_more_of_the_blend",
+          "doc": "",
+          "decos": [],
+          "lineno": 871
+        },
+        {
+          "name": "test_a_member_missing_from_the_ledger_gets_the_average",
+          "doc": "A newly added member must be usable immediately, not frozen at zero.",
+          "decos": [],
+          "lineno": 884
+        },
+        {
+          "name": "test_an_empty_ledger_leaves_the_ensemble_uniform",
+          "doc": "",
+          "decos": [],
+          "lineno": 896
+        },
+        {
+          "name": "test_reweighting_leaves_the_distribution_valid",
+          "doc": "",
+          "decos": [],
+          "lineno": 905
+        },
+        {
+          "name": "test_state_dict_carries_the_weights_and_the_roster",
+          "doc": "",
+          "decos": [],
+          "lineno": 921
+        },
+        {
+          "name": "test_state_dict_does_not_duplicate_member_parameters",
+          "doc": "Members own their own checkpoints; copying them here would drift.",
+          "decos": [],
+          "lineno": 930
+        },
+        {
+          "name": "test_weights_round_trip_through_a_file",
+          "doc": "",
+          "decos": [],
+          "lineno": 938
+        },
+        {
+          "name": "test_weights_are_matched_by_name_not_by_position",
+          "doc": "The property that makes the roster safe to extend. The saved ensemble has a, b. The loading ensemble has an extra member inserted *first*. Positional matching would give the wrong weight to every",
+          "decos": [],
+          "lineno": 952
+        },
+        {
+          "name": "test_loading_a_missing_member_is_not_an_error",
+          "doc": "",
+          "decos": [],
+          "lineno": 977
+        },
+        {
+          "name": "test_saved_state_is_readable_json",
+          "doc": "",
+          "decos": [],
+          "lineno": 992
+        },
+        {
+          "name": "test_the_ensemble_plays_a_full_legal_game_as_white",
+          "doc": "",
+          "decos": [],
+          "lineno": 1005
+        },
+        {
+          "name": "test_the_ensemble_plays_a_full_legal_game_as_black",
+          "doc": "",
+          "decos": [],
+          "lineno": 1034
+        },
+        {
+          "name": "test_the_ensemble_is_deterministic_under_a_fixed_seed",
+          "doc": "",
+          "decos": [],
+          "lineno": 1054
+        },
+        {
+          "name": "test_scoring_counts_one_observation_per_non_terminal_position",
+          "doc": "",
+          "decos": [],
+          "lineno": 1105
+        },
+        {
+          "name": "test_scoring_records_a_hit_when_the_member_agrees_with_the_winner",
+          "doc": "White played e4 and won, so a member that would also play e4 is right about White's ply.",
+          "decos": [],
+          "lineno": 1114
+        },
+        {
+          "name": "test_agreeing_with_the_winner_scores_better_than_disagreeing",
+          "doc": "The ordering the scoring rule exists to produce, on one real game. A member that would play the winning side's own move must score better than one that would play something else. This is the property that makes the",
+          "decos": [],
+          "lineno": 1123
+        },
+        {
+          "name": "test_the_ledger_keeps_accumulating_across_games",
+          "doc": "",
+          "decos": [],
+          "lineno": 1140
+        },
+        {
+          "name": "test_max_positions_caps_the_work",
+          "doc": "",
+          "decos": [],
+          "lineno": 1148
+        },
+        {
+          "name": "test_a_game_with_no_recorded_positions_is_a_no_op",
+          "doc": "",
+          "decos": [],
+          "lineno": 1155
+        },
+        {
+          "name": "test_a_broken_member_does_not_kill_the_ledger",
+          "doc": "One member raising mid-game must not lose the other members' evidence.",
+          "decos": [],
+          "lineno": 1163
+        },
+        {
+          "name": "test_an_unfinished_game_scores_on_safety_not_on_agreement",
+          "doc": "There is no winner to agree with, so the rule must change. This is the branch that makes the ledger usable on this benchmark at all: the majority of games are ply-capped, and dropping them would leave almost",
+          "decos": [],
+          "lineno": 1179
+        },
+        {
+          "name": "test_scoring_a_quiet_move_in_an_unfinished_game_counts_as_safe",
+          "doc": "e4 hangs nothing, so it must score as a correct prediction.",
+          "decos": [],
+          "lineno": 1200
+        },
+        {
+          "name": "test_scoring_ignores_positions_where_the_game_is_already_over",
+          "doc": "A position after the final move has no legal continuation to be right about.",
+          "decos": [],
+          "lineno": 1214
+        },
+        {
+          "name": "test_a_random_member_scores_at_chance_on_a_decisive_game",
+          "doc": "The regression this exists for: the loser's plies must not be free hits. An earlier scoring rule gave a hit for *disagreeing* with the losing side's move, on the reasoning that agreeing with a losing move is not a correct",
+          "decos": [],
+          "lineno": 1258
+        },
+        {
+          "name": "test_the_loser_side_is_scored_like_every_other_side",
+          "doc": "A member that plays the actually-played move must be right on *any* ply. Stated as an identity rather than a rate, so it cannot be satisfied by accident: an oracle that always plays the move that is about to be played",
+          "decos": [],
+          "lineno": 1286
+        },
+        {
+          "name": "test_a_member_that_never_matches_scores_zero_on_a_decisive_game",
+          "doc": "The other end of the identity: maximal disagreement scores nothing. Before the fix, a member that never matched still scored ~half, because half the plies (the loser's) rewarded disagreement.",
+          "decos": [],
+          "lineno": 1320
+        },
+        {
+          "name": "test_the_safety_proxy_rejects_some_moves",
+          "doc": "The regression this exists for: ``_move_is_safe`` used to return True always. Its original form compared ``evaluate()`` before and after the move against a threshold of -100. Because ``evaluate`` is material + piece-square only, it",
+          "decos": [],
+          "lineno": 1347
+        },
+        {
+          "name": "test_the_safety_proxy_accepts_a_quiet_developing_move",
+          "doc": "The other half of the discriminator: it must not reject everything. A proxy that rejects all moves would pass the test above and be equally useless.",
+          "decos": [],
+          "lineno": 1388
+        },
+        {
+          "name": "test_the_safety_proxy_rejects_a_move_into_a_free_capture",
+          "doc": "A knight moved in front of an enemy pawn must be judged unsafe. The position has a black pawn on h6 and a white knight on f3, so Nf3g5 walks the knight onto a square an enemy pawn attacks with nothing to win in",
+          "decos": [],
+          "lineno": 1402
+        },
+        {
+          "name": "test_the_safety_proxy_is_blind_in_the_opening",
+          "doc": "A limitation to pin, not a bug to fix: in the opening it rejects nothing. ``recapture_risk`` needs something to be attackable. From the start position no enemy piece can capture on any destination, so every move is \"safe\" and",
+          "decos": [],
+          "lineno": 1421
+        },
+        {
+          "name": "test_unfinished_games_still_produce_discriminating_evidence",
+          "doc": "The property the safety proxy exists for, end to end. Unfinished games are the majority in this benchmark, so if their branch gives every member the same score the ledger carries no signal at all. This",
+          "decos": [],
+          "lineno": 1456
+        },
+        {
+          "name": "test_scoring_a_real_game_produces_evidence_for_every_member",
+          "doc": "End to end, with a real result from a real game.",
+          "decos": [],
+          "lineno": 1499
+        },
+        {
+          "name": "test_the_ensemble_module_imports_without_torch",
+          "doc": "L6 must stay importable on a machine with no torch. L4 and L5 are the only levels allowed to need it. If this module ever grows a top-level torch import, the whole bench becomes un-runnable for anyone who",
+          "decos": [],
+          "lineno": 1527
+        },
+        {
+          "name": "test_the_default_floor_keeps_members_alive",
+          "doc": "",
+          "decos": [],
+          "lineno": 1556
+        },
+        {
+          "name": "test_the_default_config_is_usable_with_no_evidence",
+          "doc": "A freshly built ensemble must be able to move before it has a ledger.",
+          "decos": [],
+          "lineno": 1560
+        }
+      ],
+      "n_lines": 1566,
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.ensemble.EnsembleConfig",
+        "chessrl.ensemble.EnsemblePolicy",
+        "chessrl.ensemble.MemberAccuracy",
+        "chessrl.ensemble.MemberKind",
+        "chessrl.ensemble.MemberSpec",
+        "chessrl.ensemble.OutcomeLedger",
+        "chessrl.ensemble._move_is_safe",
+        "chessrl.ensemble.accuracy_weights",
+        "chessrl.ensemble.score_member_opinions",
+        "chessrl.game.DistributionPolicy",
+        "chessrl.game._play",
+        "chessrl.game.play_game",
+        "chessrl.value.evaluate"
+      ],
+      "imports_modules": [
+        "chessrl",
+        "chessrl.ensemble",
+        "chessrl.game",
+        "chessrl.value"
+      ]
+    },
+    "test_game.py": {
+      "functions": [
+        {
+          "name": "test_play_game_always_terminates_with_a_reported_reason",
+          "doc": "Note: random play frequently does *not* finish within a ply cap. An earlier version of this test asserted ``game.is_finished`` here, which was wrong in two ways. First, random play reaches a decisive or drawn",
+          "decos": [],
+          "lineno": 27
+        },
+        {
+          "name": "test_random_play_finishes_for_at_least_some_games",
+          "doc": "The loop must be capable of reaching a real result, not just capping.",
+          "decos": [],
+          "lineno": 50
+        },
+        {
+          "name": "test_play_game_is_deterministic_given_seeded_policies",
+          "doc": "",
+          "decos": [],
+          "lineno": 61
+        },
+        {
+          "name": "test_play_game_records_moves_and_fens",
+          "doc": "",
+          "decos": [],
+          "lineno": 68
+        },
+        {
+          "name": "test_play_game_does_not_record_fens_when_disabled",
+          "doc": "",
+          "decos": [],
+          "lineno": 77
+        },
+        {
+          "name": "test_play_game_respects_max_plies",
+          "doc": "",
+          "decos": [],
+          "lineno": 85
+        },
+        {
+          "name": "test_play_game_from_a_start_fen",
+          "doc": "",
+          "decos": [],
+          "lineno": 93
+        },
+        {
+          "name": "test_no_progress_termination",
+          "doc": "A tiny position with no pawns or captures must terminate by shuffling.",
+          "decos": [],
+          "lineno": 101
+        },
+        {
+          "name": "test_no_progress_counter_resets_on_pawn_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 115
+        },
+        {
+          "name": "test_illegal_move_is_rejected",
+          "doc": "",
+          "decos": [],
+          "lineno": 123
+        },
+        {
+          "name": "test_on_ply_hook_receives_position_and_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 134
+        },
+        {
+          "name": "test_hook_position_matches_recorded_fen",
+          "doc": "",
+          "decos": [],
+          "lineno": 149
+        },
+        {
+          "name": "test_play_game_records_into_midstate",
+          "doc": "",
+          "decos": [],
+          "lineno": 165
+        },
+        {
+          "name": "test_midstate_boards_replay_the_game",
+          "doc": "",
+          "decos": [],
+          "lineno": 176
+        },
+        {
+          "name": "test_unfinished_scores_zero_for_both_sides",
+          "doc": "",
+          "decos": [],
+          "lineno": 191
+        },
+        {
+          "name": "test_decisive_scores_are_symmetric",
+          "doc": "",
+          "decos": [],
+          "lineno": 199
+        },
+        {
+          "name": "test_draw_scores_zero_but_counts_as_finished",
+          "doc": "",
+          "decos": [],
+          "lineno": 205
+        },
+        {
+          "name": "test_checkmate_result_assigns_the_winner",
+          "doc": "A scholar's mate stopped one move early, then mated, must be 0-1.",
+          "decos": [],
+          "lineno": 212
+        },
+        {
+          "name": "test_to_pgn_roundtrip",
+          "doc": "",
+          "decos": [],
+          "lineno": 223
+        },
+        {
+          "name": "test_play_match_alternates_colours",
+          "doc": "",
+          "decos": [],
+          "lineno": 238
+        },
+        {
+          "name": "test_play_match_scores_are_bounded",
+          "doc": "",
+          "decos": [],
+          "lineno": 246
+        },
+        {
+          "name": "test_greedy_beats_random_over_a_short_match",
+          "doc": "The reference policy must beat the floor, or the loop itself is broken. This is the single most valuable integration test in L0: it exercises the game loop, the evaluator and the search-free move selection together, and",
+          "decos": [],
+          "lineno": 254
+        },
+        {
+          "name": "test_play_match_with_fixed_openings",
+          "doc": "",
+          "decos": [],
+          "lineno": 268
+        },
+        {
+          "name": "test_play_match_same_policy_self_play_runs",
+          "doc": "",
+          "decos": [],
+          "lineno": 280
+        },
+        {
+          "name": "test_generate_games_count_and_progress",
+          "doc": "",
+          "decos": [],
+          "lineno": 290
+        },
+        {
+          "name": "test_generate_games_fills_midstate",
+          "doc": "",
+          "decos": [],
+          "lineno": 300
+        },
+        {
+          "name": "test_summarise_games_reports_rates",
+          "doc": "",
+          "decos": [],
+          "lineno": 307
+        },
+        {
+          "name": "test_summarise_games_handles_empty",
+          "doc": "",
+          "decos": [],
+          "lineno": 316
+        },
+        {
+          "name": "test_random_policy_always_returns_a_legal_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 324
+        },
+        {
+          "name": "test_material_policy_takes_a_free_queen",
+          "doc": "",
+          "decos": [],
+          "lineno": 331
+        },
+        {
+          "name": "test_material_policy_does_not_mutate_board",
+          "doc": "",
+          "decos": [],
+          "lineno": 341
+        },
+        {
+          "name": "test_policies_expose_a_name",
+          "doc": "",
+          "decos": [],
+          "lineno": 348
+        }
+      ],
+      "n_lines": 350,
+      "imports_chessrl": [
+        "chessrl.cache.MidstateStore",
+        "chessrl.game.GameResult",
+        "chessrl.game.MaterialPolicy",
+        "chessrl.game.RandomPolicy",
+        "chessrl.game._no_progress_plies",
+        "chessrl.game.generate_games",
+        "chessrl.game.play_game",
+        "chessrl.game.play_match",
+        "chessrl.game.summarise_games"
+      ],
+      "imports_modules": [
+        "chessrl.cache",
+        "chessrl.game"
+      ]
+    },
+    "test_guided.py": {
+      "functions": [
+        {
+          "name": "test_both_heads_read_the_same_trunk",
+          "doc": "The heads must differ *only* in their final projection. Checked by recomputing everything the two heads could plausibly do differently and confirming the public methods reproduce it exactly from",
+          "decos": [],
+          "lineno": 76
+        },
+        {
+          "name": "test_single_trunk_survives_a_gradient_step_through_either_head",
+          "doc": "A step on the eval loss must move the *decision* head's output too. If the trunk were not shared -- if the two heads sat on separate feature extractors -- then training the value head would leave the move",
+          "decos": [],
+          "lineno": 103
+        },
+        {
+          "name": "test_heads_work_at_trunk_widths_other_than_64",
+          "doc": "Every head must be correct at any trunk width, not just the default. This is the test that caught a real bug rather than a hypothetical one. Both the decision and destination heads wrote an ``unsqueeze`` in a place",
+          "decos": [],
+          "lineno": 134
+        },
+        {
+          "name": "test_destination_term_uses_the_origin_row_not_all_rows",
+          "doc": "The origin term must read one square's row, not sum over every square. Direct numerical check of the fix described in the previous test: with the origin-specific term zeroed out, the head's output must change by exactly",
+          "decos": [],
+          "lineno": 165
+        },
+        {
+          "name": "test_parameter_count_is_the_sum_of_its_parts",
+          "doc": "No hidden parameters: the module's count must match its own attributes. A cheap guard against a head growing a private layer without the docstring (or the benchmark's reported parameter count) noticing.",
+          "decos": [],
+          "lineno": 189
+        },
+        {
+          "name": "test_ordering_cannot_change_the_search_value",
+          "doc": "The structural claim, stated as an executable test. Same engine, same depth, ordering prior switched off and on. The value the search returns must be identical, because alpha-beta with a correct window",
+          "decos": [],
+          "lineno": 209
+        },
+        {
+          "name": "test_leaf_evaluation_does_change_the_value",
+          "doc": "The complement of the previous test, and the reason the two are separate. Swapping only the leaf evaluator -- ordering held identical on both sides by turning the prior off -- must move at least one search value off the static",
+          "decos": [],
+          "lineno": 228
+        },
+        {
+          "name": "test_shallow_search_still_sees_depth_one_tactics",
+          "doc": "A learned leaf value must not blind the search to a one-ply mate. The static evaluator and the model disagree about almost everything at this depth, so this checks the specific thing that must survive: mate scores",
+          "decos": [],
+          "lineno": 246
+        },
+        {
+          "name": "test_model_values_are_clamped_away_from_the_mate_band",
+          "doc": "No learned value may reach the mate band. If it did, the search would treat a merely nice position as a forced win and would prefer it over an actual mate found one ply deeper. The clamp is the",
+          "decos": [],
+          "lineno": 267
+        },
+        {
+          "name": "test_plays_a_full_legal_game_to_a_real_result",
+          "doc": "The gate every level in this repo passes: a real game, a real result. Depth 1 and a ply cap keep this bounded. An *unfinished* game is a legitimate outcome here -- the repo's convention is that a ply-capped game",
+          "decos": [],
+          "lineno": 285
+        },
+        {
+          "name": "test_seeded_search_is_reproducible",
+          "doc": "Same seed, same move. The engine uses no RNG itself, but this pins the property down so a future tie-break shortcut cannot quietly add one.",
+          "decos": [],
+          "lineno": 329
+        },
+        {
+          "name": "test_policy_exposes_no_distribution",
+          "doc": "L5 is a search policy, not a learner, and the L6 ensemble needs to know. A ``move_distribution`` would have to be invented -- either by searching once per legal move (not this level) or by exposing the prior alone (not a",
+          "decos": [],
+          "lineno": 337
+        },
+        {
+          "name": "test_value_cache_makes_repeated_evaluation_free",
+          "doc": "The cache is the difference between a usable engine and an unusable one. Counting the *forward passes* rather than the calls is the only honest way to assert this: the second evaluation of a position must not reach the",
+          "decos": [],
+          "lineno": 353
+        },
+        {
+          "name": "test_value_cache_returns_identical_values",
+          "doc": "",
+          "decos": [],
+          "lineno": 369
+        },
+        {
+          "name": "test_caches_are_bounded",
+          "doc": "Both caches must have a ceiling, or a long tournament grows without end. The clear-on-overflow policy is crude but bounded; what matters is that the bound exists and is enforced.",
+          "decos": [],
+          "lineno": 375
+        },
+        {
+          "name": "test_clear_caches_also_clears_the_transposition_table",
+          "doc": "",
+          "decos": [],
+          "lineno": 389
+        },
+        {
+          "name": "test_disabling_both_models_reproduces_l2_exactly",
+          "doc": "With both seams off, L5 must equal L2 -- not merely resemble it. This is the strongest form of \"the search is L2's\": if the model pathways are switched off and any difference remains, the override has changed the",
+          "decos": [],
+          "lineno": 401
+        },
+        {
+          "name": "test_model_prior_is_normalised_and_legal",
+          "doc": "The prior must be a distribution over exactly the legal moves. A prior that assigns mass to an illegal move would let the ordering machinery see moves the search cannot play; a prior that does not sum to one",
+          "decos": [],
+          "lineno": 417
+        },
+        {
+          "name": "test_model_prior_is_deterministic",
+          "doc": "",
+          "decos": [],
+          "lineno": 432
+        },
+        {
+          "name": "test_search_runs_single_threaded_and_restores",
+          "doc": "The thread count must be pinned *during* the search and restored after. PyTorch defaults to one OpenMP thread per core, and for a single-position trunk projection the fork/join cost exceeds the arithmetic. Getting this",
+          "decos": [],
+          "lineno": 446
+        },
+        {
+          "name": "test_single_threaded_restores_on_exception",
+          "doc": "",
+          "decos": [],
+          "lineno": 474
+        },
+        {
+          "name": "test_depth_three_middlegame_finishes_quickly",
+          "doc": "A budget, not a benchmark. L5's cost is dominated by one torch forward pass per distinct leaf, so the only way to keep it usable is to keep the leaf count down and the per-leaf",
+          "decos": [],
+          "lineno": 483
+        },
+        {
+          "name": "test_training_reduces_the_decision_loss",
+          "doc": "A training step must move the loss in the right direction on average. One step on one position is noisy, so this trains repeatedly on a fixed position and compares the first loss to a late one. A trainer that did not",
+          "decos": [],
+          "lineno": 505
+        },
+        {
+          "name": "test_credit_for_black_moves_the_features_inference_reads",
+          "doc": "Training on a black-to-move position must change black's prediction. The canonical frame means black's position is stored rank-reflected; if training updated one frame while inference read another, the loss would fall",
+          "decos": [],
+          "lineno": 523
+        },
+        {
+          "name": "test_value_training_ignores_unfinished_games",
+          "doc": "The repo-wide convention: an unfinished game is not a draw. Scoring a ply-capped game as 0.0 would teach the value head that shuffling is neutral, which is the single most damaging thing a naive evaluator can",
+          "decos": [],
+          "lineno": 547
+        },
+        {
+          "name": "test_save_and_load_round_trip",
+          "doc": "Weights must survive a save/load cycle bit-for-bit. L5's two heads make this less obvious than it looks: the file has to carry both, and the loaded model has to be usable as an engine without first",
+          "decos": [],
+          "lineno": 563
+        },
+        {
+          "name": "test_loaded_model_still_plays_a_legal_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 591
+        }
+      ],
+      "n_lines": 596,
+      "imports_chessrl": [
+        "chessrl.game.GameResult",
+        "chessrl.game.play_game",
+        "chessrl.guided.GuidedConfig",
+        "chessrl.guided.GuidedEngine",
+        "chessrl.guided.GuidedModel",
+        "chessrl.guided.GuidedPolicy",
+        "chessrl.guided.GuidedTrainConfig",
+        "chessrl.guided.GuidedTrainer",
+        "chessrl.guided._trunk_inputs",
+        "chessrl.search.INF",
+        "chessrl.search.MinimaxEngine"
+      ],
+      "imports_modules": [
+        "chessrl.game",
+        "chessrl.guided",
+        "chessrl.search"
+      ]
+    },
+    "test_masks.py": {
+      "functions": [
+        {
+          "name": "test_index_roundtrip_for_every_legal_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 26
+        },
+        {
+          "name": "test_index_roundtrip_across_full_games",
+          "doc": "",
+          "decos": [],
+          "lineno": 33
+        },
+        {
+          "name": "test_action_space_bounds",
+          "doc": "",
+          "decos": [],
+          "lineno": 40
+        },
+        {
+          "name": "test_queen_promotion_uses_the_last_slot",
+          "doc": "The slot table must not overflow the promotion axis. A queen promotion is the highest-indexed promotion, so it is the one that breaks if NUM_PROMO is too small. Asserting it explicitly pins the off-by-one",
+          "decos": [],
+          "lineno": 47
+        },
+        {
+          "name": "test_non_promotion_uses_slot_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 61
+        },
+        {
+          "name": "test_moves_to_indices_is_vectorised",
+          "doc": "",
+          "decos": [],
+          "lineno": 67
+        },
+        {
+          "name": "test_legal_mask_matches_legal_moves_exactly",
+          "doc": "",
+          "decos": [],
+          "lineno": 78
+        },
+        {
+          "name": "test_legal_mask_start_position",
+          "doc": "",
+          "decos": [],
+          "lineno": 86
+        },
+        {
+          "name": "test_legal_mask_all_slots_in_range",
+          "doc": "",
+          "decos": [],
+          "lineno": 94
+        },
+        {
+          "name": "test_legal_mask_promotion_position",
+          "doc": "",
+          "decos": [],
+          "lineno": 100
+        },
+        {
+          "name": "test_from_and_to_masks_are_consistent",
+          "doc": "",
+          "decos": [],
+          "lineno": 108
+        },
+        {
+          "name": "test_dest_mask_is_a_slice_of_the_full_mask",
+          "doc": "",
+          "decos": [],
+          "lineno": 116
+        },
+        {
+          "name": "test_density_is_bounded",
+          "doc": "",
+          "decos": [],
+          "lineno": 122
+        },
+        {
+          "name": "test_mask_is_sparse_compared_to_action_space",
+          "doc": "Sanity check on the premise behind factorising the policy.",
+          "decos": [],
+          "lineno": 128
+        },
+        {
+          "name": "test_occupied_and_empty_partition_the_board",
+          "doc": "",
+          "decos": [],
+          "lineno": 139
+        },
+        {
+          "name": "test_can_move_to_only_for_side_to_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 147
+        },
+        {
+          "name": "test_attack_balance_excludes_defended_squares",
+          "doc": "",
+          "decos": [],
+          "lineno": 156
+        },
+        {
+          "name": "test_stack_and_flatten_mask_tensor",
+          "doc": "",
+          "decos": [],
+          "lineno": 164
+        }
+      ],
+      "n_lines": 174,
+      "imports_chessrl": [
+        "chessrl.M"
+      ],
+      "imports_modules": [
+        "chessrl"
+      ]
+    },
+    "test_perceptron.py": {
+      "functions": [
+        {
+          "name": "test_heads_have_the_shapes_the_protocol_promises",
+          "doc": "",
+          "decos": [],
+          "lineno": 72
+        },
+        {
+          "name": "test_from_logits_is_not_a_square_against_square_matrix",
+          "doc": "The einsum bug produced a ``(64, 64)`` array that still ran. Guard against it directly: the origin head must return one number per square, not a pairwise table.",
+          "decos": [],
+          "lineno": 80
+        },
+        {
+          "name": "test_square_local_heads_require_a_bound_position",
+          "doc": "Calling a head before ``set_position`` must fail loudly. Silently scoring against a stale board would corrupt training in a way that is nearly impossible to see from the loss.",
+          "decos": [],
+          "lineno": 91
+        },
+        {
+          "name": "test_distribution_is_a_valid_probability_vector",
+          "doc": "",
+          "decos": [],
+          "lineno": 102
+        },
+        {
+          "name": "test_distribution_has_exactly_one_entry_per_legal_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 110
+        },
+        {
+          "name": "test_distribution_is_zero_when_the_game_is_over",
+          "doc": "",
+          "decos": [],
+          "lineno": 119
+        },
+        {
+          "name": "test_policy_selects_a_legal_move_for_both_colours",
+          "doc": "",
+          "decos": [],
+          "lineno": 125
+        },
+        {
+          "name": "test_parameter_count_is_in_the_low_thousands",
+          "doc": "The whole design hinges on this being small. A flattened perceptron over ``(22, 8, 8)`` needs 6.8M parameters for the destination head alone; this factorised version must stay orders of",
+          "decos": [],
+          "lineno": 137
+        },
+        {
+          "name": "test_parameter_count_matches_the_declared_layout",
+          "doc": "",
+          "decos": [],
+          "lineno": 148
+        },
+        {
+          "name": "test_disabling_context_removes_the_hidden_pathway",
+          "doc": "",
+          "decos": [],
+          "lineno": 159
+        },
+        {
+          "name": "test_value_channels_are_opt_in_and_change_the_input_width",
+          "doc": "",
+          "decos": [],
+          "lineno": 169
+        },
+        {
+          "name": "test_colour_symmetry_holds_exactly",
+          "doc": "One weight set must serve both colours, so mirrored positions must agree. Rank-reflect the position, swap the colours, reflect every move, and the probability of each move must be unchanged. Any residual above float noise",
+          "decos": [],
+          "lineno": 180
+        },
+        {
+          "name": "test_symmetry_survives_a_dense_middlegame",
+          "doc": "The case that actually caught the bug. A symmetric opening hides a rank-dependent head because every White move has a mirror-image Black move at the same weight. A dense middlegame with",
+          "decos": [],
+          "lineno": 205
+        },
+        {
+          "name": "test_mirrored_positions_select_mirrored_moves_when_greedy",
+          "doc": "Greedy selection is deterministic, so the chosen move must mirror. Checked on the *move identity*, not on a probability: with a correct canonical frame the mirror image of the chosen move is exactly the move",
+          "decos": [],
+          "lineno": 225
+        },
+        {
+          "name": "test_mirrored_positions_agree_move_for_move",
+          "doc": "Every move's probability must equal its mirror's, end to end.",
+          "decos": [],
+          "lineno": 244
+        },
+        {
+          "name": "test_canonical_square_map_is_its_own_inverse",
+          "doc": "For Black the map is a rank reflection, which is an involution.",
+          "decos": [],
+          "lineno": 261
+        },
+        {
+          "name": "test_canonical_square_map_is_identity_for_white",
+          "doc": "",
+          "decos": [],
+          "lineno": 271
+        },
+        {
+          "name": "test_geometry_features_have_a_declared_length",
+          "doc": "",
+          "decos": [],
+          "lineno": 280
+        },
+        {
+          "name": "test_move_features_have_a_declared_length",
+          "doc": "",
+          "decos": [],
+          "lineno": 285
+        },
+        {
+          "name": "test_geometry_is_expressed_in_the_canonical_frame",
+          "doc": "Geometry depends only on the canonical squares it is given. ``_geom_features`` is the *inner* half of the canonicalisation: the caller has already mapped real squares into the canonical frame, so the function",
+          "decos": [],
+          "lineno": 292
+        },
+        {
+          "name": "test_geometry_makes_forward_moves_forward_for_both_colours",
+          "doc": "``d_rank`` must be positive for a pawn push by either side. In the canonical frame the side to move always advances towards higher ranks, so this is the invariant that makes one weight set serve both.",
+          "decos": [],
+          "lineno": 320
+        },
+        {
+          "name": "test_same_seed_gives_identical_weights",
+          "doc": "",
+          "decos": [],
+          "lineno": 342
+        },
+        {
+          "name": "test_different_seeds_give_different_weights",
+          "doc": "",
+          "decos": [],
+          "lineno": 349
+        },
+        {
+          "name": "test_quantised_updates_land_on_the_fixed_point_grid",
+          "doc": "Every nudge must move a weight by a whole multiple of ``1/QUANT``. This is what keeps two seeded runs bit-identical rather than merely close after thousands of steps.",
+          "decos": [],
+          "lineno": 355
+        },
+        {
+          "name": "test_two_identical_training_runs_produce_identical_weights",
+          "doc": "The end-to-end version of the quantisation guarantee.",
+          "decos": [],
+          "lineno": 372
+        },
+        {
+          "name": "test_non_quantised_updates_are_allowed_to_leave_the_grid",
+          "doc": "",
+          "decos": [],
+          "lineno": 387
+        },
+        {
+          "name": "test_weight_cache_is_bounded",
+          "doc": "The channel cache must not grow without limit over a long run.",
+          "decos": [],
+          "lineno": 399
+        },
+        {
+          "name": "test_credit_moves_the_move_it_is_given_up_the_ranking",
+          "doc": "Positive credit on a move must raise that move's own probability.",
+          "decos": [],
+          "lineno": 424
+        },
+        {
+          "name": "test_negative_credit_pushes_a_move_down",
+          "doc": "",
+          "decos": [],
+          "lineno": 438
+        },
+        {
+          "name": "test_zero_credit_is_a_no_op",
+          "doc": "",
+          "decos": [],
+          "lineno": 451
+        },
+        {
+          "name": "test_credit_for_black_updates_a_row_that_inference_reads",
+          "doc": "Training and inference must agree on which weight row a square owns. If training nudged ``W_from[real_square]`` while inference read ``W_from[canonical_square]``, the model would train on White's games only",
+          "decos": [],
+          "lineno": 458
+        },
+        {
+          "name": "test_credit_touches_only_some_weights",
+          "doc": "A single credit event must not rewrite the whole model.",
+          "decos": [],
+          "lineno": 479
+        },
+        {
+          "name": "test_counter_records_both_the_offer_and_the_take",
+          "doc": "",
+          "decos": [],
+          "lineno": 491
+        },
+        {
+          "name": "test_train_on_game_applies_one_update_per_ply",
+          "doc": "",
+          "decos": [],
+          "lineno": 535
+        },
+        {
+          "name": "test_train_on_game_rejects_a_result_without_fens",
+          "doc": "",
+          "decos": [],
+          "lineno": 543
+        },
+        {
+          "name": "test_later_plies_get_less_credit_than_earlier_ones",
+          "doc": "Diminishing credit: the credit curve must actually fall off. ``credit_curve`` weights a ply by ``decay ** plies_from_the_end``, so the *last* ply (fewest steps back) gets the largest weight and the first ply",
+          "decos": [],
+          "lineno": 552
+        },
+        {
+          "name": "test_shaped_reward_is_small_and_bounded",
+          "doc": "An unfinished game is a weak hint, never a full-magnitude signal.",
+          "decos": [],
+          "lineno": 571
+        },
+        {
+          "name": "test_unfinished_games_score_zero_without_shaping",
+          "doc": "The trap: scoring a ply-capped game as a draw teaches shuffling.",
+          "decos": [],
+          "lineno": 580
+        },
+        {
+          "name": "test_a_decisive_game_gives_a_full_magnitude_reward",
+          "doc": "",
+          "decos": [],
+          "lineno": 589
+        },
+        {
+          "name": "test_training_improves_the_agreement_with_a_shaping_signal",
+          "doc": "Repeat credit on the same move must monotonically raise its probability.",
+          "decos": [],
+          "lineno": 602
+        },
+        {
+          "name": "test_search_feedback_returns_at_most_top_k_moves",
+          "doc": "",
+          "decos": [],
+          "lineno": 621
+        },
+        {
+          "name": "test_search_feedback_returns_legal_moves_only",
+          "doc": "",
+          "decos": [],
+          "lineno": 631
+        },
+        {
+          "name": "test_search_feedback_weights_are_normalised_against_the_best",
+          "doc": "",
+          "decos": [],
+          "lineno": 641
+        },
+        {
+          "name": "test_search_feedback_returns_empty_on_a_finished_game",
+          "doc": "",
+          "decos": [],
+          "lineno": 651
+        },
+        {
+          "name": "test_search_feedback_finds_a_mate_in_one",
+          "doc": "Sanity: the feedback signal must actually see a forced mate. Scholar's mate, 1.e4 e5 2.Bc4 Nc6 3.Qh5 Nf6??, and White has Qxf7#. If the depth-5 feedback cannot rank a mate-in-one first, nothing downstream can be",
+          "decos": [],
+          "lineno": 657
+        },
+        {
+          "name": "test_top_5_feedback_prefers_the_tactically_best_move",
+          "doc": "The search signal must rank a winning capture above a quiet move. Black's queen on d8 is undefended and cannot be recaptured: White's rook on d1 takes it for free. Any correct search must put ``Rxd8`` first, so this",
+          "decos": [],
+          "lineno": 675
+        },
+        {
+          "name": "test_train_on_search_feedback_raises_the_searched_best_move",
+          "doc": "The point of the mechanism: imitate a deeper search. Repeat the feedback on a position whose best move is unambiguously better than everything else (a free queen), and require the model's probability on",
+          "decos": [],
+          "lineno": 690
+        },
+        {
+          "name": "test_train_on_search_feedback_reports_what_it_did",
+          "doc": "",
+          "decos": [],
+          "lineno": 712
+        },
+        {
+          "name": "test_train_on_search_feedback_on_a_finished_game_is_a_no_op",
+          "doc": "",
+          "decos": [],
+          "lineno": 720
+        },
+        {
+          "name": "test_search_feedback_only_touches_the_moves_it_reports",
+          "doc": "Moves outside the top-k must not receive credit from the search signal.",
+          "decos": [],
+          "lineno": 728
+        },
+        {
+          "name": "test_train_on_midstates_without_a_store_is_a_no_op",
+          "doc": "",
+          "decos": [],
+          "lineno": 749
+        },
+        {
+          "name": "test_train_on_midstates_samples_and_trains",
+          "doc": "",
+          "decos": [],
+          "lineno": 755
+        },
+        {
+          "name": "test_midstate_sampling_does_not_repeat_positions",
+          "doc": "Duplicates would silently reweight the phase mix.",
+          "decos": [],
+          "lineno": 769
+        },
+        {
+          "name": "test_midstate_training_skips_finished_positions",
+          "doc": "",
+          "decos": [],
+          "lineno": 783
+        },
+        {
+          "name": "test_state_dict_round_trips",
+          "doc": "",
+          "decos": [],
+          "lineno": 799
+        },
+        {
+          "name": "test_loading_rebuilds_a_perceptron_not_a_blind_scorer",
+          "doc": "The base class's ``load`` hardcodes a BlindScorer, which would silently produce a position-blind L3. Assert the loaded policy really sees the board.",
+          "decos": [],
+          "lineno": 812
+        },
+        {
+          "name": "test_saved_weights_reproduce_the_same_choice",
+          "doc": "",
+          "decos": [],
+          "lineno": 826
+        },
+        {
+          "name": "test_trainer_save_writes_a_metadata_sidecar",
+          "doc": "",
+          "decos": [],
+          "lineno": 839
+        },
+        {
+          "name": "test_saving_does_not_serialise_the_position_cache",
+          "doc": "Counters and caches are runtime state, not weights.",
+          "decos": [],
+          "lineno": 852
+        },
+        {
+          "name": "test_an_untrained_l3_is_not_yet_stronger_than_blind_l1",
+          "doc": "A fresh L3 is not automatically better than a blind policy, and the suite should say so. Both shuffle: L3 has board *inputs* but random *weights*, so it has no more",
+          "decos": [],
+          "lineno": 870
+        },
+        {
+          "name": "test_trained_l3_wins_material_against_a_blind_opponent",
+          "doc": "The real level-ladder claim: *training* makes L3 see something. Train on positions whose best move is a capture, then check the model prefers captures it previously ignored. This is the contained version of",
+          "decos": [],
+          "lineno": 902
+        },
+        {
+          "name": "test_l3_has_trainable_parameters_and_exposes_a_distribution",
+          "doc": "The whole point of L3 over L2: it learns.",
+          "decos": [],
+          "lineno": 927
+        },
+        {
+          "name": "test_l3_does_not_import_torch",
+          "doc": "torch is an L4/L5 extra and must not be pulled in by L3. Asserted on the *source text* rather than on ``sys.modules``: torch may already be imported by another test in the same session, so a module-set",
+          "decos": [],
+          "lineno": 937
+        },
+        {
+          "name": "test_l3_imports_without_torch_on_the_path",
+          "doc": "L3 must import cleanly in a subprocess where torch is unavailable. A module-level ``import torch`` would be invisible in this session, where L4's tests have already loaded it. Blocking it in a fresh interpreter is",
+          "decos": [],
+          "lineno": 953
+        }
+      ],
+      "n_lines": 980,
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.cache.MidstateStore",
+        "chessrl.game.GameResult",
+        "chessrl.game.play_game",
+        "chessrl.perceptron.GEOMETRY_NAMES",
+        "chessrl.perceptron.L3Config",
+        "chessrl.perceptron.L3Policy",
+        "chessrl.perceptron.L3Trainer",
+        "chessrl.perceptron.MOVE_FEATURE_NAMES_L3",
+        "chessrl.perceptron.PerceptronConfig",
+        "chessrl.perceptron.PerceptronScorer",
+        "chessrl.perceptron.QUANT",
+        "chessrl.policy.BlindScorer",
+        "chessrl.policy.FactoredSoftmaxPolicy"
+      ],
+      "imports_modules": [
+        "chessrl",
+        "chessrl.cache",
+        "chessrl.game",
+        "chessrl.perceptron",
+        "chessrl.policy"
+      ]
+    },
+    "test_policy.py": {
+      "functions": [
+        {
+          "name": "test_masked_softmax_is_zero_on_masked_entries",
+          "doc": "",
+          "decos": [],
+          "lineno": 27
+        },
+        {
+          "name": "test_masked_softmax_returns_zeros_for_empty_mask",
+          "doc": "",
+          "decos": [],
+          "lineno": 36
+        },
+        {
+          "name": "test_masked_softmax_is_stable_with_large_negative_logits",
+          "doc": "",
+          "decos": [],
+          "lineno": 43
+        },
+        {
+          "name": "test_masked_softmax_uniform_fallback_when_all_logits_are_neg_inf",
+          "doc": "",
+          "decos": [],
+          "lineno": 52
+        },
+        {
+          "name": "test_masked_softmax_matches_naive_softmax_without_masking",
+          "doc": "",
+          "decos": [],
+          "lineno": 61
+        },
+        {
+          "name": "test_blind_scorer_starts_at_zero_logits",
+          "doc": "",
+          "decos": [],
+          "lineno": 74
+        },
+        {
+          "name": "test_blind_scorer_ignores_the_board",
+          "doc": "",
+          "decos": [],
+          "lineno": 81
+        },
+        {
+          "name": "test_blind_scorer_roundtrips_through_state_dict",
+          "doc": "",
+          "decos": [],
+          "lineno": 89
+        },
+        {
+          "name": "test_zero_logits_gives_uniform_over_legal_moves",
+          "doc": "The initial distribution must equal random play. This is the sanity check that lets L1 be diffed against RandomPolicy: a zero scorer is uniform over the legal mask, so the two agree exactly.",
+          "decos": [],
+          "lineno": 107
+        },
+        {
+          "name": "test_distribution_is_zero_on_illegal_moves",
+          "doc": "",
+          "decos": [],
+          "lineno": 124
+        },
+        {
+          "name": "test_distribution_over_interesting_positions_always_sums_to_one",
+          "doc": "",
+          "decos": [],
+          "lineno": 133
+        },
+        {
+          "name": "test_move_probability_agrees_with_move_distribution",
+          "doc": "The cheap per-move path and the dense table must not disagree. They are computed by different code paths, so a disagreement here is a silent bug: training would nudge one probability while evaluation reported",
+          "decos": [],
+          "lineno": 143
+        },
+        {
+          "name": "test_select_returns_a_legal_move_from_every_probe_position",
+          "doc": "",
+          "decos": [],
+          "lineno": 166
+        },
+        {
+          "name": "test_select_greedy_returns_a_legal_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 176
+        },
+        {
+          "name": "test_greedy_selects_the_argmax_move",
+          "doc": "With a hand-set table, greedy must pick the highest-logit legal move.",
+          "decos": [],
+          "lineno": 186
+        },
+        {
+          "name": "test_greedy_is_deterministic",
+          "doc": "",
+          "decos": [],
+          "lineno": 197
+        },
+        {
+          "name": "test_sampling_is_reproducible_for_a_fixed_seed",
+          "doc": "",
+          "decos": [],
+          "lineno": 205
+        },
+        {
+          "name": "test_sampling_actually_varies",
+          "doc": "",
+          "decos": [],
+          "lineno": 214
+        },
+        {
+          "name": "test_sample_factors_returns_a_legal_combination",
+          "doc": "",
+          "decos": [],
+          "lineno": 221
+        },
+        {
+          "name": "test_promotion_factor_is_masked_when_not_a_promotion",
+          "doc": "A non-promotion move must have zero probability on every promo slot > 0.",
+          "decos": [],
+          "lineno": 233
+        },
+        {
+          "name": "test_underpromotion_slots_are_reachable_in_a_promotion_position",
+          "doc": "",
+          "decos": [],
+          "lineno": 248
+        },
+        {
+          "name": "test_temperature_zero_approaches_greedy",
+          "doc": "",
+          "decos": [],
+          "lineno": 258
+        },
+        {
+          "name": "test_distribution_is_empty_on_a_finished_board",
+          "doc": "",
+          "decos": [],
+          "lineno": 268
+        },
+        {
+          "name": "test_save_and_load_roundtrip",
+          "doc": "",
+          "decos": [],
+          "lineno": 275
+        },
+        {
+          "name": "test_saved_state_excludes_counters",
+          "doc": "The spec is explicit: counters are deleted before saving.",
+          "decos": [],
+          "lineno": 293
+        },
+        {
+          "name": "test_counter_counts_offers_and_takes_separately",
+          "doc": "",
+          "decos": [],
+          "lineno": 312
+        },
+        {
+          "name": "test_counter_reports_never_offered_squares",
+          "doc": "",
+          "decos": [],
+          "lineno": 327
+        },
+        {
+          "name": "test_prune_candidates_ignores_squares_never_offered",
+          "doc": "Pruning on probability alone would delete untested squares.",
+          "decos": [],
+          "lineno": 340
+        },
+        {
+          "name": "test_prune_candidates_fires_after_enough_offers",
+          "doc": "",
+          "decos": [],
+          "lineno": 352
+        },
+        {
+          "name": "test_prune_candidates_respects_min_offers_boundary",
+          "doc": "",
+          "decos": [],
+          "lineno": 365
+        },
+        {
+          "name": "test_counter_stats_shape",
+          "doc": "",
+          "decos": [],
+          "lineno": 380
+        },
+        {
+          "name": "test_counter_save_load_roundtrip",
+          "doc": "",
+          "decos": [],
+          "lineno": 392
+        },
+        {
+          "name": "test_entropy_of_uniform_is_log_n",
+          "doc": "",
+          "decos": [],
+          "lineno": 408
+        },
+        {
+          "name": "test_entropy_of_a_point_mass_is_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 413
+        },
+        {
+          "name": "test_perplexity_matches_exp_entropy",
+          "doc": "",
+          "decos": [],
+          "lineno": 419
+        },
+        {
+          "name": "test_uniform_over_mask_is_uniform_and_normalised",
+          "doc": "",
+          "decos": [],
+          "lineno": 424
+        }
+      ],
+      "n_lines": 430,
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.policy.BlindScorer",
+        "chessrl.policy.FactoredSoftmaxPolicy",
+        "chessrl.policy.ProbCounter",
+        "chessrl.policy.entropy",
+        "chessrl.policy.masked_softmax",
+        "chessrl.policy.move_probability",
+        "chessrl.policy.perplexity",
+        "chessrl.policy.uniform_over_mask"
+      ],
+      "imports_modules": [
+        "chessrl",
+        "chessrl.policy"
+      ]
+    },
+    "test_rating.py": {
+      "functions": [
+        {
+          "name": "test_clean_sweep_matches_the_analytic_maximum",
+          "doc": "A sweep must fit at the closed-form optimum, not merely near it.",
+          "decos": [
+            "pytest.mark.parametrize"
+          ],
+          "lineno": 79
+        },
+        {
+          "name": "test_sweep_rating_grows_with_the_length_of_the_sweep",
+          "doc": "More evidence of a lopsided result means a larger rating, not the same. This is the property a mis-scaled prior destroys in the most confusing way: with the prior too strong every sweep fits at ~0 regardless of length, and",
+          "decos": [],
+          "lineno": 90
+        },
+        {
+          "name": "test_even_match_fits_at_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 111
+        },
+        {
+          "name": "test_all_draws_fits_at_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 117
+        },
+        {
+          "name": "test_draws_are_between_a_win_and_a_loss",
+          "doc": "Half a win to each side must land strictly between the two extremes.",
+          "decos": [],
+          "lineno": 122
+        },
+        {
+          "name": "test_no_nan_or_inf_for_any_reasonable_input",
+          "doc": "The whole point of the prior. An undefeated entrant has an infinite MLE and a naive fit returns ``inf`` or, worse, ``nan``.",
+          "decos": [],
+          "lineno": 130
+        },
+        {
+          "name": "test_the_prior_bounds_an_undefeated_entrant",
+          "doc": "",
+          "decos": [],
+          "lineno": 146
+        },
+        {
+          "name": "test_ladder_is_ordered_correctly",
+          "doc": "",
+          "decos": [],
+          "lineno": 156
+        },
+        {
+          "name": "test_a_cycle_is_not_given_an_order",
+          "doc": "Three-way rock-paper-scissors: every entrant wins 8 and loses 8 against one opponent from the other, so the data contains no ranking and the fit must say so (equal ratings) rather than inventing one from the order the",
+          "decos": [],
+          "lineno": 167
+        },
+        {
+          "name": "test_anchor_only_shifts_the_level_not_the_differences",
+          "doc": "",
+          "decos": [],
+          "lineno": 182
+        },
+        {
+          "name": "test_order_of_records_does_not_change_the_fit",
+          "doc": "",
+          "decos": [],
+          "lineno": 195
+        },
+        {
+          "name": "test_unfinished_games_are_not_evidence",
+          "doc": "A pile of unfinished games must not move the fitted rating at all.",
+          "decos": [],
+          "lineno": 210
+        },
+        {
+          "name": "test_entrant_with_no_decided_games_still_appears",
+          "doc": "",
+          "decos": [],
+          "lineno": 219
+        },
+        {
+          "name": "test_more_games_shrink_the_standard_error",
+          "doc": "",
+          "decos": [],
+          "lineno": 228
+        },
+        {
+          "name": "test_standard_error_has_the_elo_scale_not_the_logistic_scale",
+          "doc": "The information is the second derivative of the *logistic* likelihood, so the standard error must be converted back to Elo units. Forgetting the conversion understates every error bar by ~174x, which would make a six-game",
+          "decos": [],
+          "lineno": 236
+        },
+        {
+          "name": "test_report_counts_are_aggregated_from_both_sides",
+          "doc": "",
+          "decos": [],
+          "lineno": 258
+        },
+        {
+          "name": "test_empty_input_is_handled",
+          "doc": "",
+          "decos": [],
+          "lineno": 271
+        },
+        {
+          "name": "test_records_for_unknown_entrants_are_ignored",
+          "doc": "",
+          "decos": [],
+          "lineno": 277
+        },
+        {
+          "name": "test_ratings_are_sorted_descending",
+          "doc": "",
+          "decos": [],
+          "lineno": 283
+        },
+        {
+          "name": "test_residuals_are_sorted_by_how_badly_the_model_misses",
+          "doc": "",
+          "decos": [],
+          "lineno": 294
+        },
+        {
+          "name": "test_expected_score_is_the_elo_curve",
+          "doc": "",
+          "decos": [],
+          "lineno": 308
+        },
+        {
+          "name": "test_expected_score_is_monotone_and_bounded",
+          "doc": "",
+          "decos": [],
+          "lineno": 315
+        },
+        {
+          "name": "test_the_elo_scale_is_the_conventional_400",
+          "doc": "",
+          "decos": [],
+          "lineno": 323
+        }
+      ],
+      "n_lines": 325,
+      "imports_chessrl": [],
+      "imports_modules": []
+    },
+    "test_search.py": {
+      "functions": [
+        {
+          "name": "test_score_move_prefers_capturing_a_queen_over_a_pawn",
+          "doc": "",
+          "decos": [],
+          "lineno": 43
+        },
+        {
+          "name": "test_score_move_prefers_a_cheap_attacker_over_an_expensive_one",
+          "doc": "MVV-LVA: knight-takes-queen beats queen-takes-queen.",
+          "decos": [],
+          "lineno": 52
+        },
+        {
+          "name": "test_score_move_values_promotion",
+          "doc": "",
+          "decos": [],
+          "lineno": 60
+        },
+        {
+          "name": "test_score_move_handles_en_passant",
+          "doc": "En passant has no piece on the destination square. A naive ``piece_at(to_square)`` check returns None and scores it as a quiet move, which silently buries one of the sharpest tactical motifs at",
+          "decos": [],
+          "lineno": 68
+        },
+        {
+          "name": "test_order_moves_puts_the_transposition_move_first",
+          "doc": "",
+          "decos": [],
+          "lineno": 81
+        },
+        {
+          "name": "test_order_moves_is_a_permutation",
+          "doc": "Ordering must never add, drop or duplicate a move.",
+          "decos": [],
+          "lineno": 89
+        },
+        {
+          "name": "test_order_moves_is_deterministic",
+          "doc": "",
+          "decos": [],
+          "lineno": 99
+        },
+        {
+          "name": "test_order_moves_applies_a_prior_when_given_one",
+          "doc": "",
+          "decos": [],
+          "lineno": 105
+        },
+        {
+          "name": "test_order_moves_ignores_the_prior_when_weight_is_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 115
+        },
+        {
+          "name": "test_prior_does_not_displace_a_queen_capture",
+          "doc": "The prior must not outrank MVV-LVA on a clearly best tactical move.",
+          "decos": [],
+          "lineno": 126
+        },
+        {
+          "name": "test_finds_mate_in_one_back_rank",
+          "doc": "",
+          "decos": [],
+          "lineno": 142
+        },
+        {
+          "name": "test_finds_scholars_mate",
+          "doc": "",
+          "decos": [],
+          "lineno": 149
+        },
+        {
+          "name": "test_finds_the_other_scholars_mate",
+          "doc": "",
+          "decos": [],
+          "lineno": 157
+        },
+        {
+          "name": "test_prefers_a_faster_mate",
+          "doc": "Mate in 1 must be chosen over mate in 2 when both exist.",
+          "decos": [],
+          "lineno": 165
+        },
+        {
+          "name": "test_avoids_hanging_a_queen_for_free",
+          "doc": "A one-ply-safe tactic: taking the queen then being recaptured is bad. This is where quiescence earns its keep. At depth 1 the search sees \"capture the pawn, +100\" and stops; the recapture is one ply past the",
+          "decos": [],
+          "lineno": 174
+        },
+        {
+          "name": "test_never_returns_an_illegal_move_on_probe_positions",
+          "doc": "",
+          "decos": [],
+          "lineno": 188
+        },
+        {
+          "name": "test_select_raises_when_there_are_no_legal_moves",
+          "doc": "",
+          "decos": [],
+          "lineno": 195
+        },
+        {
+          "name": "test_select_with_a_single_legal_move_returns_it",
+          "doc": "",
+          "decos": [],
+          "lineno": 202
+        },
+        {
+          "name": "test_deeper_search_beats_shallower",
+          "doc": "The ladder gate. A deeper search must not lose to a shallower one.",
+          "decos": [],
+          "lineno": 213
+        },
+        {
+          "name": "test_depth_two_never_loses_to_depth_one_over_more_games",
+          "doc": "",
+          "decos": [],
+          "lineno": 222
+        },
+        {
+          "name": "test_search_is_deterministic",
+          "doc": "Two instances at the same depth must make identical moves.",
+          "decos": [],
+          "lineno": 230
+        },
+        {
+          "name": "test_node_count_grows_with_depth",
+          "doc": "",
+          "decos": [],
+          "lineno": 240
+        },
+        {
+          "name": "test_transposition_table_reduces_the_node_count",
+          "doc": "The TT must actually be helping, not just existing.",
+          "decos": [],
+          "lineno": 249
+        },
+        {
+          "name": "test_iterative_deepening_reduces_the_node_count",
+          "doc": "",
+          "decos": [],
+          "lineno": 259
+        },
+        {
+          "name": "test_search_finds_a_capture_when_free_material_is_available",
+          "doc": "",
+          "decos": [],
+          "lineno": 268
+        },
+        {
+          "name": "test_mate_score_dominates_material",
+          "doc": "A forced mate must outrank any amount of material.",
+          "decos": [],
+          "lineno": 275
+        },
+        {
+          "name": "test_quiescence_returns_stand_pat_when_no_captures_exist",
+          "doc": "",
+          "decos": [],
+          "lineno": 288
+        },
+        {
+          "name": "test_quiescence_respects_its_depth_cap",
+          "doc": "The cap must terminate; without it a capture cycle would recurse.",
+          "decos": [],
+          "lineno": 296
+        },
+        {
+          "name": "test_quiescence_depth_cap_is_actually_enforced",
+          "doc": "Regression: qdepth was once derived from board.ply(), which never advanced inside the extension and silently disabled the cap. Checks the real invariant: the extension never recurses deeper than",
+          "decos": [],
+          "lineno": 306
+        },
+        {
+          "name": "test_terminal_position_in_quiescence_is_scored_as_mate",
+          "doc": "",
+          "decos": [],
+          "lineno": 333
+        },
+        {
+          "name": "test_minimax_policy_exposes_a_node_counter",
+          "doc": "",
+          "decos": [],
+          "lineno": 345
+        },
+        {
+          "name": "test_minimax_policy_accepts_and_ignores_a_seed",
+          "doc": "Harnesses pass a seed uniformly; this policy is deterministic.",
+          "decos": [],
+          "lineno": 351
+        },
+        {
+          "name": "test_minimax_policy_names_itself_by_depth",
+          "doc": "",
+          "decos": [],
+          "lineno": 358
+        },
+        {
+          "name": "test_minimax_beats_random_decisively",
+          "doc": "",
+          "decos": [],
+          "lineno": 362
+        },
+        {
+          "name": "test_minimax_beats_greedy_material",
+          "doc": "Greedy is one ply and blind to replies; L2 sees the reply.",
+          "decos": [],
+          "lineno": 371
+        },
+        {
+          "name": "test_minimax_beats_the_blind_policy",
+          "doc": "",
+          "decos": [],
+          "lineno": 380
+        },
+        {
+          "name": "test_informed_policy_has_no_trainable_parameters",
+          "doc": "The spec requires L2's wrapper to be non-learning. Check it directly.",
+          "decos": [],
+          "lineno": 393
+        },
+        {
+          "name": "test_informed_policy_returns_a_legal_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 408
+        },
+        {
+          "name": "test_prior_cannot_change_the_search_value",
+          "doc": "The invariant that actually holds, checked against a brute-force minimax. Alpha-beta with a correct window returns the same minimax value whatever order it visits children in. So the right test is not \"same move\" -- order",
+          "decos": [],
+          "lineno": 415
+        },
+        {
+          "name": "test_prior_only_differs_on_genuinely_tied_moves",
+          "doc": "If the wrapper and the plain engine disagree, it must be a tie. This is the precise version of \"the prior only reorders\". It found the real behaviour: the wrapper returns a different move than the plain engine on",
+          "decos": [],
+          "lineno": 447
+        },
+        {
+          "name": "test_prior_never_prefers_a_blunder",
+          "doc": "A prior must not talk the search into a materially losing move.",
+          "decos": [],
+          "lineno": 479
+        },
+        {
+          "name": "test_wrapper_verdict_is_stable_when_the_prior_is_shuffled",
+          "doc": "Different priors, same engine, same answer.",
+          "decos": [],
+          "lineno": 498
+        },
+        {
+          "name": "test_wrapper_exercises_the_same_search_as_plain_l2",
+          "doc": "Same node count on a fixed position means the search is unchanged.",
+          "decos": [],
+          "lineno": 513
+        },
+        {
+          "name": "test_wrapper_plays_a_full_legal_game",
+          "doc": "",
+          "decos": [],
+          "lineno": 527
+        },
+        {
+          "name": "test_wrapper_beats_the_plain_blind_policy",
+          "doc": "",
+          "decos": [],
+          "lineno": 534
+        },
+        {
+          "name": "test_wrapper_does_not_change_with_additional_play",
+          "doc": "Non-learning means identical policy before and after any number of games. There is no ``train`` method to call, so the strongest available statement is that repeated selection on the same position is idempotent and that the",
+          "decos": [],
+          "lineno": 540
+        },
+        {
+          "name": "test_wrapper_prior_is_actually_used_for_ordering",
+          "doc": "Sanity: the prior must reach the engine, not be silently dropped.",
+          "decos": [],
+          "lineno": 555
+        },
+        {
+          "name": "test_wrapper_with_zero_prior_weight_matches_plain_l2",
+          "doc": "",
+          "decos": [],
+          "lineno": 564
+        },
+        {
+          "name": "test_l2_completes_a_game_without_illegal_moves",
+          "doc": "",
+          "decos": [],
+          "lineno": 577
+        },
+        {
+          "name": "test_l2_as_an_opponent_for_the_l1_trainer",
+          "doc": "L2 must be usable as the external opponent the trainer accepts.",
+          "decos": [],
+          "lineno": 587
+        }
+      ],
+      "n_lines": 594,
+      "imports_chessrl": [
+        "chessrl.V",
+        "chessrl.game.MaterialPolicy",
+        "chessrl.game.RandomPolicy",
+        "chessrl.game.play_match",
+        "chessrl.policy.FactoredSoftmaxPolicy",
+        "chessrl.search.INF",
+        "chessrl.search.InformedMinimaxPolicy",
+        "chessrl.search.MinimaxEngine",
+        "chessrl.search.MinimaxPolicy",
+        "chessrl.search.QUIESCE_DEPTH",
+        "chessrl.search.order_moves",
+        "chessrl.search.score_move",
+        "chessrl.train_naive.FactoredSoftmaxTrainer",
+        "chessrl.train_naive.TrainConfig"
+      ],
+      "imports_modules": [
+        "chessrl",
+        "chessrl.game",
+        "chessrl.policy",
+        "chessrl.search",
+        "chessrl.train_naive"
+      ]
+    },
+    "test_squarelocal.py": {
+      "functions": [
+        {
+          "name": "test_heads_have_the_shapes_the_protocol_promises",
+          "doc": "",
+          "decos": [],
+          "lineno": 80
+        },
+        {
+          "name": "test_from_logits_is_not_a_square_against_square_matrix",
+          "doc": "The einsum bug produced a ``(64, 64)`` array that still ran. Weight tying invites the *opposite* mistake -- contracting the channel axis away entirely and returning a scalar -- so the shape is checked explicitly",
+          "decos": [],
+          "lineno": 88
+        },
+        {
+          "name": "test_square_local_heads_require_a_bound_position",
+          "doc": "",
+          "decos": [],
+          "lineno": 100
+        },
+        {
+          "name": "test_distribution_is_a_valid_probability_vector",
+          "doc": "",
+          "decos": [],
+          "lineno": 106
+        },
+        {
+          "name": "test_distribution_has_exactly_one_entry_per_legal_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 114
+        },
+        {
+          "name": "test_distribution_is_zero_when_the_game_is_over",
+          "doc": "",
+          "decos": [],
+          "lineno": 123
+        },
+        {
+          "name": "test_policy_selects_a_legal_move_for_both_colours",
+          "doc": "",
+          "decos": [],
+          "lineno": 129
+        },
+        {
+          "name": "test_policy_plays_a_full_legal_game_to_a_real_result",
+          "doc": "The repo's standard gate: a level must finish a real game. Uses L3.5 against itself so the game is a property of this level and needs no other module, and requires a *real terminal* result rather than a ply",
+          "decos": [],
+          "lineno": 137
+        },
+        {
+          "name": "test_parameter_count_matches_the_declared_layout",
+          "doc": "",
+          "decos": [],
+          "lineno": 169
+        },
+        {
+          "name": "test_parameter_count_within_ten_percent_of_L3",
+          "doc": "The budget constraint, asserted -- with the deviation recorded. The spec (\u00a73) demands L3.5 land within +-10% of L3's 7225 parameters, and (\u00a73, \u00a77.2) demands that constraint be *asserted* rather than documented. The",
+          "decos": [],
+          "lineno": 177
+        },
+        {
+          "name": "test_context_width_is_the_only_budget_knob",
+          "doc": "``h_ctx`` must move the budget; everything else must hold it fixed. If some other tensor were secretly indexed by square, the budget knob would not be the whole story and the comparison would be uninterpretable.",
+          "decos": [],
+          "lineno": 218
+        },
+        {
+          "name": "test_no_weight_tensor_is_indexed_by_square",
+          "doc": "The whole level, in one assertion. Every square-local tensor must have no axis of length 64. This is the property that *is* weight tying, and it is much easier to break by",
+          "decos": [],
+          "lineno": 233
+        },
+        {
+          "name": "test_tied_model_cannot_break_a_symmetric_tie",
+          "doc": "A consequence of tying, asserted so it is a known property, not a bug. L3 owns an independent weight row per square, so the two knights on b1 and g1 score *differently* and greedy play can prefer one. L3.5 applies one row",
+          "decos": [],
+          "lineno": 269
+        },
+        {
+          "name": "test_tie_is_broken_by_array_order_not_by_a_chess_signal",
+          "doc": "Make the fallback explicit, so nothing downstream misreads it. With an exact tie greedy selection has to pick something, and it picks by array order. Documents the resulting behaviour so that a change in it is",
+          "decos": [],
+          "lineno": 302
+        },
+        {
+          "name": "test_mirrored_positions_agree_move_for_move",
+          "doc": "The property that must hold instead of move-identity: probabilities mirror. L3 asserts that greedy selection picks the mirrored *move*; that is true there only because its per-square rows break ties by initialisation. The",
+          "decos": [],
+          "lineno": 331
+        },
+        {
+          "name": "test_disabling_context_removes_the_hidden_pathway_and_shrinks_the_model",
+          "doc": "",
+          "decos": [],
+          "lineno": 356
+        },
+        {
+          "name": "test_value_channels_are_opt_in_and_change_the_input_width",
+          "doc": "",
+          "decos": [],
+          "lineno": 365
+        },
+        {
+          "name": "test_colour_symmetry_holds_exactly",
+          "doc": "One tied weight set must serve both colours. Weight tying is only *coherent* because the encoder canonicalises; if any head read geometry in absolute board coordinates, one tied row would be",
+          "decos": [],
+          "lineno": 376
+        },
+        {
+          "name": "test_colour_symmetry_survives_a_dense_middlegame",
+          "doc": "The case that caught the equivalent L3 bug.",
+          "decos": [],
+          "lineno": 401
+        },
+        {
+          "name": "test_canonical_square_map_is_its_own_inverse",
+          "doc": "",
+          "decos": [],
+          "lineno": 416
+        },
+        {
+          "name": "test_canonical_square_map_is_identity_for_white",
+          "doc": "",
+          "decos": [],
+          "lineno": 424
+        },
+        {
+          "name": "test_shared_row_is_touched_by_every_square",
+          "doc": "The tied row must be updated by credit, and inference must read it. The claim \"weight-tied\" is otherwise unfalsifiable from the outside: a model could hold a (64, n_ch) tensor whose rows merely happened to be",
+          "decos": [],
+          "lineno": 433
+        },
+        {
+          "name": "test_sub_grid_updates_are_buffered_not_discarded",
+          "doc": "The residual buffer is why the tied heads learn at all. A single event at the default rate is 0.4 grid units and rounds to zero. Without error feedback this test's final assertion fails by construction,",
+          "decos": [],
+          "lineno": 476
+        },
+        {
+          "name": "test_tied_origin_head_gives_one_score_per_square_from_one_row",
+          "doc": "The tied contraction must be per-square, not a single scalar. Tying invites the opposite of L3's einsum bug: contracting *both* axes and returning a scalar, which would make the origin factor uniform and the",
+          "decos": [],
+          "lineno": 507
+        },
+        {
+          "name": "test_shared_row_receives_channel_weights_of_the_moves_origin",
+          "doc": "The update must be addressed at the origin's *canonical* square. Checks the arithmetic directly rather than through a probability: after one credit on e2e4, the increment on ``w_shared`` must equal",
+          "decos": [],
+          "lineno": 523
+        },
+        {
+          "name": "test_origin_dependence_survives_tying",
+          "doc": "Two moves that share a destination must be able to score differently. ``to_logits(from_sq)`` must not be a function of the destination alone. In the opening, b1 and g1 are both knights and either can reach a4/c3/e2/d2",
+          "decos": [],
+          "lineno": 550
+        },
+        {
+          "name": "test_origin_dependence_is_carried_structurally_by_the_geometry_term",
+          "doc": "Locate the asymmetry: it must come from ``w_geom``, not from a per-origin row. Zeroing the geometry weights must collapse ``to_logits`` to something that depends on the destination (and, through the context term, the position)",
+          "decos": [],
+          "lineno": 569
+        },
+        {
+          "name": "test_geometry_features_are_pair_functions_of_the_canonical_frame",
+          "doc": "``_geom_features`` must be a pure function of the pair it is given.",
+          "decos": [],
+          "lineno": 596
+        },
+        {
+          "name": "test_move_features_have_a_declared_length",
+          "doc": "",
+          "decos": [],
+          "lineno": 608
+        },
+        {
+          "name": "test_tied_credit_does_not_diverge_at_the_default_rate",
+          "doc": "Bound the tied row after many credit events at the default rate.",
+          "decos": [],
+          "lineno": 619
+        },
+        {
+          "name": "test_default_lr_shared_is_lr_over_the_credit_fanout",
+          "doc": "The relationship is a definition, not a magic number.",
+          "decos": [],
+          "lineno": 640
+        },
+        {
+          "name": "test_undivided_learning_rate_actually_diverges",
+          "doc": "The trap is real, and this is what makes the guard above meaningful. Set ``lr_shared`` to the *undivided* rate -- which is what a naive implementation would do by reusing ``_nudge`` -- and 300 credit events push",
+          "decos": [],
+          "lineno": 649
+        },
+        {
+          "name": "test_context_pathways_are_not_normalised_by_the_fanout",
+          "doc": "``W_ctx`` is already shared at L3; dividing it by 64 would rig the level. If the context input weights were stepped at ``lr_shared`` too, L3.5's global-fact pathway would learn 64x slower than L3's for no reason -- and",
+          "decos": [],
+          "lineno": 675
+        },
+        {
+          "name": "test_same_seed_gives_identical_weights",
+          "doc": "",
+          "decos": [],
+          "lineno": 701
+        },
+        {
+          "name": "test_different_seeds_give_different_weights",
+          "doc": "",
+          "decos": [],
+          "lineno": 708
+        },
+        {
+          "name": "test_policy_seed_reaches_the_scorer",
+          "doc": "Both RNGs need the seed, or every run is the same run.",
+          "decos": [],
+          "lineno": 714
+        },
+        {
+          "name": "test_quantised_updates_land_on_the_fixed_point_grid",
+          "doc": "",
+          "decos": [],
+          "lineno": 726
+        },
+        {
+          "name": "test_two_identical_training_runs_produce_identical_weights",
+          "doc": "",
+          "decos": [],
+          "lineno": 738
+        },
+        {
+          "name": "test_non_quantised_updates_are_allowed_to_leave_the_grid",
+          "doc": "",
+          "decos": [],
+          "lineno": 751
+        },
+        {
+          "name": "test_credit_moves_the_move_it_is_given_up_the_ranking",
+          "doc": "",
+          "decos": [],
+          "lineno": 766
+        },
+        {
+          "name": "test_negative_credit_pushes_a_move_down",
+          "doc": "",
+          "decos": [],
+          "lineno": 779
+        },
+        {
+          "name": "test_zero_credit_is_a_no_op",
+          "doc": "",
+          "decos": [],
+          "lineno": 792
+        },
+        {
+          "name": "test_credit_for_black_updates_a_row_that_inference_reads",
+          "doc": "Training and inference must agree on the canonical frame. The failure mode is asymmetric and therefore easy to miss: getting the canonical/real indexing wrong here is invisible for White (identity map)",
+          "decos": [],
+          "lineno": 799
+        },
+        {
+          "name": "test_black_credit_addresses_the_reflected_square",
+          "doc": "The exact row touched for Black must be the reflected one.",
+          "decos": [],
+          "lineno": 820
+        },
+        {
+          "name": "test_counter_records_both_the_offer_and_the_take",
+          "doc": "",
+          "decos": [],
+          "lineno": 840
+        },
+        {
+          "name": "test_trainer_rejects_a_policy_of_the_wrong_level",
+          "doc": "An L3Policy would get L3's per-square credit applied to a tied model.",
+          "decos": [],
+          "lineno": 848
+        },
+        {
+          "name": "test_train_on_game_applies_one_update_per_ply",
+          "doc": "",
+          "decos": [],
+          "lineno": 882
+        },
+        {
+          "name": "test_train_on_game_rejects_a_result_without_fens",
+          "doc": "",
+          "decos": [],
+          "lineno": 890
+        },
+        {
+          "name": "test_unfinished_games_score_zero_without_shaping",
+          "doc": "",
+          "decos": [],
+          "lineno": 899
+        },
+        {
+          "name": "test_shaped_reward_is_small_and_bounded",
+          "doc": "",
+          "decos": [],
+          "lineno": 907
+        },
+        {
+          "name": "test_l35_inherits_L3s_credit_curve_and_search_knobs",
+          "doc": "L3.5 must differ from L3 in *architecture only*. If the trainer's other eight knobs drifted, a difference between the two levels would no longer be attributable to weight tying.",
+          "decos": [],
+          "lineno": 915
+        },
+        {
+          "name": "test_search_feedback_returns_at_most_top_k_moves",
+          "doc": "",
+          "decos": [],
+          "lineno": 929
+        },
+        {
+          "name": "test_search_feedback_finds_a_mate_in_one",
+          "doc": "",
+          "decos": [],
+          "lineno": 938
+        },
+        {
+          "name": "test_train_on_search_feedback_raises_the_searched_best_move",
+          "doc": "The mechanism must actually learn, at the tied rate.",
+          "decos": [],
+          "lineno": 948
+        },
+        {
+          "name": "test_train_on_search_feedback_on_a_finished_game_is_a_no_op",
+          "doc": "",
+          "decos": [],
+          "lineno": 964
+        },
+        {
+          "name": "test_train_on_midstates_without_a_store_is_a_no_op",
+          "doc": "",
+          "decos": [],
+          "lineno": 972
+        },
+        {
+          "name": "test_train_on_midstates_samples_and_trains",
+          "doc": "",
+          "decos": [],
+          "lineno": 977
+        },
+        {
+          "name": "test_state_dict_round_trips",
+          "doc": "",
+          "decos": [],
+          "lineno": 995
+        },
+        {
+          "name": "test_loading_rebuilds_a_square_local_scorer",
+          "doc": "",
+          "decos": [],
+          "lineno": 1008
+        },
+        {
+          "name": "test_saved_weights_reproduce_the_same_choice",
+          "doc": "",
+          "decos": [],
+          "lineno": 1017
+        },
+        {
+          "name": "test_trainer_save_writes_metadata_including_the_tied_rate",
+          "doc": "",
+          "decos": [],
+          "lineno": 1030
+        },
+        {
+          "name": "test_saving_does_not_serialise_the_position_cache",
+          "doc": "",
+          "decos": [],
+          "lineno": 1043
+        },
+        {
+          "name": "test_l35_does_not_import_torch",
+          "doc": "",
+          "decos": [],
+          "lineno": 1057
+        },
+        {
+          "name": "test_l35_imports_without_torch_on_the_path",
+          "doc": "",
+          "decos": [],
+          "lineno": 1067
+        },
+        {
+          "name": "test_l35_module_is_independently_deletable",
+          "doc": "Spec \u00a74: L3.5 must not be bolted into ``perceptron.py``. The point of a new rung is that it can be removed without touching the old one, which is only true if the old one never mentions it.",
+          "decos": [],
+          "lineno": 1091
+        },
+        {
+          "name": "test_flat_control_has_no_spatial_structure",
+          "doc": "The control's defining property, asserted rather than described. ``L3-flat`` throws away the per-square input entirely, so its origin head is a *constant* across the board. That is exactly what makes it a control:",
+          "decos": [],
+          "lineno": 1110
+        },
+        {
+          "name": "test_flat_control_plays_legal_moves_and_produces_a_distribution",
+          "doc": "",
+          "decos": [],
+          "lineno": 1129
+        },
+        {
+          "name": "test_flat_control_is_not_square_indexed",
+          "doc": "",
+          "decos": [],
+          "lineno": 1143
+        },
+        {
+          "name": "test_flat_control_respects_the_canonical_frame",
+          "doc": "The control must obey the same colour symmetry, or its losses mean nothing.",
+          "decos": [],
+          "lineno": 1151
+        },
+        {
+          "name": "test_flat_control_has_no_spatial_structure",
+          "doc": "The control's defining property, asserted rather than described. ``L3-flat`` throws away the per-square input entirely, so its origin head is a *constant* across the board. That is exactly what makes it a control:",
+          "decos": [],
+          "lineno": 1177
+        },
+        {
+          "name": "test_flat_control_plays_legal_moves_and_produces_a_distribution",
+          "doc": "",
+          "decos": [],
+          "lineno": 1196
+        },
+        {
+          "name": "test_flat_control_is_not_square_indexed",
+          "doc": "",
+          "decos": [],
+          "lineno": 1210
+        },
+        {
+          "name": "test_flat_control_respects_the_canonical_frame",
+          "doc": "The control must obey the same colour symmetry, or its losses mean nothing.",
+          "decos": [],
+          "lineno": 1218
+        }
+      ],
+      "n_lines": 1237,
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.cache.MidstateStore",
+        "chessrl.game.GameResult",
+        "chessrl.game.play_game",
+        "chessrl.perceptron.GEOMETRY_NAMES",
+        "chessrl.perceptron.L3Config",
+        "chessrl.perceptron.L3Policy",
+        "chessrl.perceptron.L3Trainer",
+        "chessrl.perceptron.MOVE_FEATURE_NAMES_L3",
+        "chessrl.perceptron.PerceptronConfig",
+        "chessrl.perceptron.PerceptronScorer",
+        "chessrl.perceptron.QUANT",
+        "chessrl.squarelocal.CREDIT_FANOUT",
+        "chessrl.squarelocal.FlatPolicy",
+        "chessrl.squarelocal.FlatScorer",
+        "chessrl.squarelocal.L35Config",
+        "chessrl.squarelocal.L35Policy",
+        "chessrl.squarelocal.L35Trainer",
+        "chessrl.squarelocal.LEAN_H_CTX",
+        "chessrl.squarelocal.SquareLocalConfig",
+        "chessrl.squarelocal.SquareLocalScorer",
+        "chessrl.squarelocal.implemented_fraction_of",
+        "chessrl.squarelocal.parameter_count"
+      ],
+      "imports_modules": [
+        "chessrl",
+        "chessrl.cache",
+        "chessrl.game",
+        "chessrl.perceptron",
+        "chessrl.squarelocal"
+      ]
+    },
+    "test_torch_model.py": {
+      "functions": [
+        {
+          "name": "test_parameter_counts_match_l3",
+          "doc": "The two models must have the same number of parameters, or parity is not even the right question.",
+          "decos": [],
+          "lineno": 73
+        },
+        {
+          "name": "test_parameter_shapes_match_l3",
+          "doc": "Every named weight must have L3's shape, not just L3's total count.",
+          "decos": [],
+          "lineno": 81
+        },
+        {
+          "name": "test_logits_match_l3_exactly",
+          "doc": "Load L3's weights and require every logit to agree. The tolerance is float32 noise, not a fudge factor: the two implementations perform the same sums in the same order, so agreement should be at the level",
+          "decos": [],
+          "lineno": 91
+        },
+        {
+          "name": "test_move_distributions_match_l3_exactly",
+          "doc": "The end-to-end version: same weights, same probabilities.",
+          "decos": [],
+          "lineno": 129
+        },
+        {
+          "name": "test_greedy_choices_match_l3",
+          "doc": "Same weights must mean the same chosen move, not merely close logits.",
+          "decos": [],
+          "lineno": 141
+        },
+        {
+          "name": "test_weights_survive_a_round_trip_through_torch",
+          "doc": "L3 -> L4 -> L3 must be lossless. If the transfer loses precision elsewhere, the parity test could pass while the reverse direction silently corrupts a model.",
+          "decos": [],
+          "lineno": 149
+        },
+        {
+          "name": "test_parity_holds_without_the_context_pathway",
+          "doc": "The ReLU branch is the most intricate part; check it can be disabled.",
+          "decos": [],
+          "lineno": 164
+        },
+        {
+          "name": "test_parity_holds_for_the_smallest_hidden_layer",
+          "doc": "A 1-unit hidden layer is the degenerate case most likely to hide an off-by-one in the gate.",
+          "decos": [],
+          "lineno": 182
+        },
+        {
+          "name": "test_heads_have_the_shapes_the_protocol_promises",
+          "doc": "",
+          "decos": [],
+          "lineno": 202
+        },
+        {
+          "name": "test_from_logits_is_not_a_square_against_square_matrix",
+          "doc": "Same trap as L3: the batched matmul produces a ``(64, 64)`` table.",
+          "decos": [],
+          "lineno": 210
+        },
+        {
+          "name": "test_heads_require_a_bound_position",
+          "doc": "",
+          "decos": [],
+          "lineno": 215
+        },
+        {
+          "name": "test_distribution_is_a_valid_probability_vector",
+          "doc": "",
+          "decos": [],
+          "lineno": 221
+        },
+        {
+          "name": "test_distribution_has_one_entry_per_legal_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 229
+        },
+        {
+          "name": "test_distribution_is_zero_when_the_game_is_over",
+          "doc": "",
+          "decos": [],
+          "lineno": 236
+        },
+        {
+          "name": "test_selects_a_legal_move_for_both_colours",
+          "doc": "",
+          "decos": [],
+          "lineno": 242
+        },
+        {
+          "name": "test_policy_is_usable_as_a_move_policy_in_a_game",
+          "doc": "L4 must be a first-class member of the ladder, not a curiosity. Only that it *plays*: an untrained model with random weights shuffles and the game runs to the ply cap, exactly as untrained L3 does. Asserting a",
+          "decos": [],
+          "lineno": 248
+        },
+        {
+          "name": "test_colour_symmetry_holds",
+          "doc": "The canonical frame must survive the torch round trip.",
+          "decos": [],
+          "lineno": 280
+        },
+        {
+          "name": "test_canonical_square_map_matches_l3s",
+          "doc": "L4 must not have its own copy of the frame map.",
+          "decos": [],
+          "lineno": 300
+        },
+        {
+          "name": "test_geometry_table_is_built_from_l3s_function",
+          "doc": "A reimplemented geometry table would make the parity test vacuous.",
+          "decos": [],
+          "lineno": 310
+        },
+        {
+          "name": "test_origin_head_scores_a_batch_in_one_call",
+          "doc": "The heads must accept a batch; that is the point of the rewrite.",
+          "decos": [],
+          "lineno": 328
+        },
+        {
+          "name": "test_batched_origin_logits_match_the_single_position_path",
+          "doc": "Batching must not change the numbers.",
+          "decos": [],
+          "lineno": 340
+        },
+        {
+          "name": "test_destination_head_scores_a_batch_of_origins",
+          "doc": "",
+          "decos": [],
+          "lineno": 356
+        },
+        {
+          "name": "test_gradients_flow_to_every_parameter",
+          "doc": "A parameter that never receives a gradient is a parameter that cannot learn, and it would look like a slow train rather than a bug.",
+          "decos": [],
+          "lineno": 369
+        },
+        {
+          "name": "test_context_pathway_receives_gradients",
+          "doc": "",
+          "decos": [],
+          "lineno": 405
+        },
+        {
+          "name": "test_training_moves_the_parameters",
+          "doc": "",
+          "decos": [],
+          "lineno": 423
+        },
+        {
+          "name": "test_optimiser_step_reduces_the_loss_it_is_given",
+          "doc": "Sanity on the whole training path: the loss must go down. If the sign is wrong anywhere -- in the target, the log, or the optimiser -- the loss will increase and this catches it immediately.",
+          "decos": [],
+          "lineno": 436
+        },
+        {
+          "name": "test_search_feedback_raises_the_searched_best_move",
+          "doc": "Autograd version of the L3 claim, on the same position.",
+          "decos": [],
+          "lineno": 451
+        },
+        {
+          "name": "test_train_on_search_feedback_reports_what_it_did",
+          "doc": "",
+          "decos": [],
+          "lineno": 480
+        },
+        {
+          "name": "test_train_on_search_feedback_on_a_finished_game_is_a_no_op",
+          "doc": "",
+          "decos": [],
+          "lineno": 488
+        },
+        {
+          "name": "test_a_trained_model_prefers_the_capture_it_learned",
+          "doc": "",
+          "decos": [],
+          "lineno": 496
+        },
+        {
+          "name": "test_same_seed_gives_identical_weights",
+          "doc": "",
+          "decos": [],
+          "lineno": 510
+        },
+        {
+          "name": "test_different_seeds_give_different_weights",
+          "doc": "",
+          "decos": [],
+          "lineno": 517
+        },
+        {
+          "name": "test_policy_seed_reaches_the_model",
+          "doc": "The L3 lesson, asserted here too: a seed that only reaches the sampling RNG leaves every initialised model identical.",
+          "decos": [],
+          "lineno": 523
+        },
+        {
+          "name": "test_state_dict_round_trips",
+          "doc": "",
+          "decos": [],
+          "lineno": 531
+        },
+        {
+          "name": "test_loaded_policy_is_a_torch_model_not_a_blind_scorer",
+          "doc": "",
+          "decos": [],
+          "lineno": 544
+        },
+        {
+          "name": "test_saved_weights_reproduce_the_same_choice",
+          "doc": "",
+          "decos": [],
+          "lineno": 553
+        },
+        {
+          "name": "test_trainer_save_writes_a_metadata_sidecar",
+          "doc": "",
+          "decos": [],
+          "lineno": 566
+        },
+        {
+          "name": "test_torch_is_importable_in_this_environment",
+          "doc": "If this fails, every other test in the module was skipped.",
+          "decos": [],
+          "lineno": 581
+        }
+      ],
+      "n_lines": 583,
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.encode.board_context_features",
+        "chessrl.encode.encode",
+        "chessrl.game.play_game",
+        "chessrl.perceptron.L3Policy",
+        "chessrl.perceptron.PerceptronConfig",
+        "chessrl.perceptron.PerceptronScorer",
+        "chessrl.policy.BlindScorer",
+        "chessrl.policy.FactoredSoftmaxPolicy",
+        "chessrl.search.MinimaxEngine",
+        "chessrl.torch_model.TorchConfig",
+        "chessrl.torch_model.TorchPolicy",
+        "chessrl.torch_model.TorchScorer",
+        "chessrl.torch_model.TorchTrainConfig",
+        "chessrl.torch_model.TorchTrainer",
+        "chessrl.torch_model.canonical_squares",
+        "chessrl.torch_model.geometry_table"
+      ],
+      "imports_modules": [
+        "chessrl",
+        "chessrl.encode",
+        "chessrl.game",
+        "chessrl.perceptron",
+        "chessrl.policy",
+        "chessrl.search",
+        "chessrl.torch_model"
+      ]
+    },
+    "test_train_naive.py": {
+      "functions": [
+        {
+          "name": "test_credit_curve_gives_the_last_move_full_credit",
+          "doc": "",
+          "decos": [],
+          "lineno": 44
+        },
+        {
+          "name": "test_credit_curve_diminishes_towards_the_past",
+          "doc": "",
+          "decos": [],
+          "lineno": 49
+        },
+        {
+          "name": "test_credit_curve_shape_matches_the_game_length",
+          "doc": "",
+          "decos": [],
+          "lineno": 55
+        },
+        {
+          "name": "test_credit_curve_is_zero_for_a_draw",
+          "doc": "A draw is uninformative about which move was better.",
+          "decos": [],
+          "lineno": 59
+        },
+        {
+          "name": "test_credit_curve_of_equal_decay_one_is_flat",
+          "doc": "",
+          "decos": [],
+          "lineno": 65
+        },
+        {
+          "name": "test_credit_curve_on_a_zero_length_game",
+          "doc": "",
+          "decos": [],
+          "lineno": 70
+        },
+        {
+          "name": "test_credit_curve_values_match_the_formula",
+          "doc": "",
+          "decos": [],
+          "lineno": 74
+        },
+        {
+          "name": "test_a_won_game_raises_the_probability_of_moves_played",
+          "doc": "The fundamental direction check: reward must increase probability.",
+          "decos": [],
+          "lineno": 84
+        },
+        {
+          "name": "test_a_lost_game_lowers_the_probability_of_moves_played",
+          "doc": "",
+          "decos": [],
+          "lineno": 98
+        },
+        {
+          "name": "test_zero_credit_is_a_no_op",
+          "doc": "",
+          "decos": [],
+          "lineno": 111
+        },
+        {
+          "name": "test_the_distribution_stays_normalised_after_many_updates",
+          "doc": "Logit-space updates must not break the distribution invariant.",
+          "decos": [],
+          "lineno": 122
+        },
+        {
+          "name": "test_probabilities_never_go_negative_or_exceed_one",
+          "doc": "",
+          "decos": [],
+          "lineno": 137
+        },
+        {
+          "name": "test_illegal_moves_are_never_given_probability_by_training",
+          "doc": "",
+          "decos": [],
+          "lineno": 150
+        },
+        {
+          "name": "test_masking_means_unlegal_actions_receive_no_update",
+          "doc": "A move illegal in this position must keep its logits untouched.",
+          "decos": [],
+          "lineno": 161
+        },
+        {
+          "name": "test_update_concentrates_on_the_origin_that_was_played",
+          "doc": "",
+          "decos": [],
+          "lineno": 173
+        },
+        {
+          "name": "test_credit_magnitude_scales_the_update",
+          "doc": "",
+          "decos": [],
+          "lineno": 184
+        },
+        {
+          "name": "test_train_on_game_increments_the_game_counter",
+          "doc": "",
+          "decos": [],
+          "lineno": 202
+        },
+        {
+          "name": "test_train_on_game_requires_recorded_fens",
+          "doc": "",
+          "decos": [],
+          "lineno": 208
+        },
+        {
+          "name": "test_white_win_raises_white_moves_and_lowers_black_moves",
+          "doc": "The sign convention. Getting this wrong yields a policy that loses.",
+          "decos": [],
+          "lineno": 215
+        },
+        {
+          "name": "test_black_win_is_the_mirror_of_a_white_win",
+          "doc": "",
+          "decos": [],
+          "lineno": 227
+        },
+        {
+          "name": "test_a_draw_teaches_nothing",
+          "doc": "A draw is uninformative; outcome reward must be exactly zero.",
+          "decos": [],
+          "lineno": 243
+        },
+        {
+          "name": "test_an_unfinished_game_teaches_nothing_without_shaping",
+          "doc": "",
+          "decos": [],
+          "lineno": 252
+        },
+        {
+          "name": "test_an_unfinished_game_does_teach_with_shaping",
+          "doc": "Shaping is what makes L1 trainable: without it a blind policy never sees a non-zero reward, because it never delivers mate.",
+          "decos": [],
+          "lineno": 260
+        },
+        {
+          "name": "test_white_reward_is_plus_one_for_a_white_win",
+          "doc": "",
+          "decos": [],
+          "lineno": 270
+        },
+        {
+          "name": "test_white_reward_is_minus_one_for_a_black_win",
+          "doc": "",
+          "decos": [],
+          "lineno": 277
+        },
+        {
+          "name": "test_white_reward_is_zero_for_a_draw",
+          "doc": "",
+          "decos": [],
+          "lineno": 283
+        },
+        {
+          "name": "test_shaped_reward_is_bounded",
+          "doc": "Shaping must stay in [-1, 1] so it composes with a real result.",
+          "decos": [],
+          "lineno": 289
+        },
+        {
+          "name": "test_train_on_game_updates_the_counters",
+          "doc": "",
+          "decos": [],
+          "lineno": 303
+        },
+        {
+          "name": "test_diminishing_credit_reaches_earlier_moves_less",
+          "doc": "A move near the end of a long game gets a bigger nudge.",
+          "decos": [],
+          "lineno": 311
+        },
+        {
+          "name": "test_training_on_a_real_game_runs_end_to_end",
+          "doc": "",
+          "decos": [],
+          "lineno": 327
+        },
+        {
+          "name": "test_train_runs_and_reports_its_shape",
+          "doc": "",
+          "decos": [],
+          "lineno": 340
+        },
+        {
+          "name": "test_train_is_reproducible_under_a_fixed_seed",
+          "doc": "",
+          "decos": [],
+          "lineno": 349
+        },
+        {
+          "name": "test_train_respects_the_game_count_argument",
+          "doc": "",
+          "decos": [],
+          "lineno": 358
+        },
+        {
+          "name": "test_frozen_opponent_is_a_different_object",
+          "doc": "Self-play against the same live object is degenerate: the two sides make identical decisions and the game mirrors itself forever.",
+          "decos": [],
+          "lineno": 364
+        },
+        {
+          "name": "test_frozen_opponent_snapshots_current_weights",
+          "doc": "",
+          "decos": [],
+          "lineno": 373
+        },
+        {
+          "name": "test_frozen_opponent_does_not_track_later_changes",
+          "doc": "",
+          "decos": [],
+          "lineno": 380
+        },
+        {
+          "name": "test_shaping_produces_updates_where_pure_outcome_reward_produces_none",
+          "doc": "The central L1 finding, asserted so a regression is caught. A blind policy under a ply cap essentially never delivers mate, so with pure outcome reward the trainer receives no signal at all. Shaping is not",
+          "decos": [],
+          "lineno": 387
+        },
+        {
+          "name": "test_train_accepts_an_external_opponent",
+          "doc": "The L2 wrapper depends on this: swap in a non-learning opponent.",
+          "decos": [],
+          "lineno": 407
+        },
+        {
+          "name": "test_train_plays_both_colours",
+          "doc": "Alternating colours stops the policy learning a first-move bias.",
+          "decos": [],
+          "lineno": 417
+        },
+        {
+          "name": "test_mean_entropy_starts_near_log_of_legal_moves",
+          "doc": "An untrained blind policy is uniform, so entropy is high.",
+          "decos": [],
+          "lineno": 427
+        },
+        {
+          "name": "test_mean_entropy_falls_as_the_policy_sharpens",
+          "doc": "",
+          "decos": [],
+          "lineno": 436
+        },
+        {
+          "name": "test_probability_table_has_the_right_shapes",
+          "doc": "",
+          "decos": [],
+          "lineno": 445
+        },
+        {
+          "name": "test_top_moves_returns_probable_legal_moves",
+          "doc": "",
+          "decos": [],
+          "lineno": 458
+        },
+        {
+          "name": "test_top_moves_respects_the_k_argument",
+          "doc": "",
+          "decos": [],
+          "lineno": 470
+        },
+        {
+          "name": "test_prune_leaves_untested_squares_alone",
+          "doc": "",
+          "decos": [],
+          "lineno": 479
+        },
+        {
+          "name": "test_prune_zeroes_logits_of_confident_low_probability_origins",
+          "doc": "",
+          "decos": [],
+          "lineno": 487
+        },
+        {
+          "name": "test_pruning_never_makes_a_legal_move_impossible",
+          "doc": "Pruning removes preference, not legality.",
+          "decos": [],
+          "lineno": 503
+        },
+        {
+          "name": "test_train_with_prune_enabled_reports_the_prune_result",
+          "doc": "",
+          "decos": [],
+          "lineno": 518
+        },
+        {
+          "name": "test_save_writes_model_meta_and_counter",
+          "doc": "",
+          "decos": [],
+          "lineno": 531
+        },
+        {
+          "name": "test_saved_model_reloads_to_the_same_distribution",
+          "doc": "",
+          "decos": [],
+          "lineno": 544
+        },
+        {
+          "name": "test_meta_sidecar_records_training_provenance",
+          "doc": "",
+          "decos": [],
+          "lineno": 557
+        },
+        {
+          "name": "test_counter_is_not_embedded_in_the_model_file",
+          "doc": "The spec asks for counters to be deleted before saving the model.",
+          "decos": [],
+          "lineno": 568
+        },
+        {
+          "name": "test_saved_counter_roundtrips_and_resumes",
+          "doc": "",
+          "decos": [],
+          "lineno": 580
+        },
+        {
+          "name": "test_save_creates_missing_directories",
+          "doc": "",
+          "decos": [],
+          "lineno": 593
+        }
+      ],
+      "n_lines": 597,
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.V",
+        "chessrl.game.GameResult",
+        "chessrl.game.MaterialPolicy",
+        "chessrl.game.RandomPolicy",
+        "chessrl.game.play_game",
+        "chessrl.policy.FactoredSoftmaxPolicy",
+        "chessrl.policy.ProbCounter",
+        "chessrl.train_naive.FactoredSoftmaxTrainer",
+        "chessrl.train_naive.TrainConfig",
+        "chessrl.train_naive.credit_curve"
+      ],
+      "imports_modules": [
+        "chessrl",
+        "chessrl.game",
+        "chessrl.policy",
+        "chessrl.train_naive"
+      ]
+    },
+    "test_value.py": {
+      "functions": [
+        {
+          "name": "test_start_material_is_level",
+          "doc": "",
+          "decos": [],
+          "lineno": 17
+        },
+        {
+          "name": "test_material_value_ignores_kings",
+          "doc": "",
+          "decos": [],
+          "lineno": 21
+        },
+        {
+          "name": "test_material_balance_counts_a_queen",
+          "doc": "",
+          "decos": [],
+          "lineno": 27
+        },
+        {
+          "name": "test_material_ratio_at_start_is_one",
+          "doc": "",
+          "decos": [],
+          "lineno": 32
+        },
+        {
+          "name": "test_material_ratio_bare_kings_is_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 36
+        },
+        {
+          "name": "test_material_ratio_is_bounded_on_promotion_heavy_position",
+          "doc": "",
+          "decos": [],
+          "lineno": 41
+        },
+        {
+          "name": "test_material_ratio_decreases_across_a_game",
+          "doc": "",
+          "decos": [],
+          "lineno": 46
+        },
+        {
+          "name": "test_phase_name_boundaries",
+          "doc": "",
+          "decos": [],
+          "lineno": 56
+        },
+        {
+          "name": "test_phase_weights_sum_to_one",
+          "doc": "",
+          "decos": [],
+          "lineno": 61
+        },
+        {
+          "name": "test_phase_weights_favour_early_at_start",
+          "doc": "",
+          "decos": [],
+          "lineno": 68
+        },
+        {
+          "name": "test_phase_weights_favour_late_in_endgame",
+          "doc": "",
+          "decos": [],
+          "lineno": 73
+        },
+        {
+          "name": "test_phase_weights_bare_kings_is_pure_endgame",
+          "doc": "A bare-kings position is purely endgame; weights collapse onto \"late\". Not a degenerate fallback case -- it is the tent functions doing exactly what they should. Two kings with no other material has material_ratio 0,",
+          "decos": [],
+          "lineno": 78
+        },
+        {
+          "name": "test_game_phase_matches_material_ratio",
+          "doc": "",
+          "decos": [],
+          "lineno": 91
+        },
+        {
+          "name": "test_pst_is_symmetric_between_colours",
+          "doc": "A colour mirror must produce the same piece-square total. This is the check that caught the king table being looked up without a rank mirror for Black, which made the start position evaluate to +50.",
+          "decos": [],
+          "lineno": 100
+        },
+        {
+          "name": "test_central_pawn_beats_rim_pawn",
+          "doc": "",
+          "decos": [],
+          "lineno": 112
+        },
+        {
+          "name": "test_king_table_is_phase_dependent",
+          "doc": "The king should prefer shelter in the middlegame and the centre late.",
+          "decos": [],
+          "lineno": 121
+        },
+        {
+          "name": "test_evaluate_start_position_is_level",
+          "doc": "",
+          "decos": [],
+          "lineno": 131
+        },
+        {
+          "name": "test_evaluate_sign_convention_is_side_to_move",
+          "doc": "A white queen up position is good for whoever is to move.",
+          "decos": [],
+          "lineno": 135
+        },
+        {
+          "name": "test_evaluate_checkmate_is_mate_score",
+          "doc": "",
+          "decos": [],
+          "lineno": 143
+        },
+        {
+          "name": "test_evaluate_stalemate_is_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 149
+        },
+        {
+          "name": "test_evaluate_insufficient_material_is_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 155
+        },
+        {
+          "name": "test_evaluate_deeper_mate_is_preferred",
+          "doc": "Mate found sooner must score higher than the same mate found later.",
+          "decos": [],
+          "lineno": 161
+        },
+        {
+          "name": "test_evaluate_for_is_colour_consistent",
+          "doc": "",
+          "decos": [],
+          "lineno": 173
+        },
+        {
+          "name": "test_evaluate_returns_int",
+          "doc": "",
+          "decos": [],
+          "lineno": 180
+        },
+        {
+          "name": "test_outcome_score_mapping",
+          "doc": "",
+          "decos": [],
+          "lineno": 188
+        },
+        {
+          "name": "test_capture_value_on_quiet_move_is_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 199
+        },
+        {
+          "name": "test_capture_value_counts_the_victim",
+          "doc": "",
+          "decos": [],
+          "lineno": 204
+        },
+        {
+          "name": "test_capture_value_handles_en_passant",
+          "doc": "En passant captures a pawn that is not on the destination square. Missing this would silently make the encoder blind to the motif, which is why it is asserted explicitly rather than left to the generic path.",
+          "decos": [],
+          "lineno": 211
+        },
+        {
+          "name": "test_recapture_risk_detects_a_hanging_piece",
+          "doc": "",
+          "decos": [],
+          "lineno": 224
+        },
+        {
+          "name": "test_recapture_risk_is_zero_for_a_safe_move",
+          "doc": "",
+          "decos": [],
+          "lineno": 231
+        },
+        {
+          "name": "test_hanging_value_ignores_defended_pieces",
+          "doc": "A defended piece under attack is not hanging.",
+          "decos": [],
+          "lineno": 238
+        },
+        {
+          "name": "test_hanging_value_counts_an_undefended_piece",
+          "doc": "",
+          "decos": [],
+          "lineno": 244
+        },
+        {
+          "name": "test_hanging_value_on_start_position_is_zero",
+          "doc": "",
+          "decos": [],
+          "lineno": 250
+        }
+      ],
+      "n_lines": 251,
+      "imports_chessrl": [
+        "chessrl.V"
+      ],
+      "imports_modules": [
+        "chessrl"
+      ]
+    }
+  }
+}

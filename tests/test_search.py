@@ -592,3 +592,35 @@ def test_l2_as_an_opponent_for_the_l1_trainer():
     summary = trainer.train(games=3, opponent=MinimaxPolicy(depth=1))
     assert summary["games"] == 3
     assert trainer.games_played == 3
+
+
+# --------------------------------------------------------------------------
+# G6 audit: the transposition table's node saving was measured but not locked
+# --------------------------------------------------------------------------
+
+def test_transposition_table_reduces_the_node_count():
+    """The TT is a real optimisation, and this pins that it stays one.
+
+    From the opening at depth 4, the engine with the transposition table
+    searches 2049 nodes against 3254 without it (a 37% saving), with 96 table
+    hits. The assertion is deliberately the inequality plus a meaningful margin,
+    not the exact counts -- a small refactor may shift node totals, but a TT
+    that no longer consults its table, or saves nothing, is a real regression
+    and must fail here.
+    """
+    board = chess.Board()
+
+    with_tt = MinimaxEngine(depth=4, use_tt=True)
+    with_tt.select(board)
+
+    without_tt = MinimaxEngine(depth=4, use_tt=False)
+    without_tt.select(board)
+
+    # The table is actually being consulted, not just present.
+    assert with_tt.tt_hits > 0
+    # And it saves a meaningful share of the search, not a rounding error.
+    assert with_tt.nodes < without_tt.nodes
+    assert with_tt.nodes <= 0.80 * without_tt.nodes, (
+        f"TT should save a real fraction of nodes: with={with_tt.nodes} "
+        f"without={without_tt.nodes}"
+    )

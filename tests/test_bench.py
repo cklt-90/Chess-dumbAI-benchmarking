@@ -686,3 +686,97 @@ def test_json_round_trip_preserves_the_counts_and_the_ratings(tmp_path):
     line_before = text_before.split("games         :")[1].split("\n")[0]
     line_after = text_after.split("games         :")[1].split("\n")[0]
     assert line_before == line_after
+
+
+# --------------------------------------------------------------------------
+# G4 audit: the L6 result pinned at the *play* level, not only the weight level
+# --------------------------------------------------------------------------
+
+def _ensemble_vs_l2(weights, config, ensemble_is_white, seed):
+    """Play one fitted-ensemble-vs-L2-d2 game and return the GameResult."""
+    import random
+
+    from chessrl.game import play_game
+    from bench.ensemble_run import build_weighted_ensemble
+    from bench.levels import build, default_roster
+
+    specs = {s.name: s for s in default_roster()}
+    l2, _ = build(specs["L2-d2"])
+    ensemble = build_weighted_ensemble(weights, config=config, seed=0)
+    white, black = (ensemble, l2) if ensemble_is_white else (l2, ensemble)
+    return play_game(white, black, max_plies=120, rng=random.Random(seed))
+
+
+def _ensemble_lost(result, ensemble_is_white):
+    return result.result == ("0-1" if ensemble_is_white else "1-0")
+
+
+def test_absolute_weights_make_the_ensemble_lose_to_its_best_member():
+    """The *play*-level statement of the negative result.
+
+    The weight-level tests (above) assert the blind pair outweighs the search
+    member; this pins the consequence: fitted with the absolute rule, the
+    ensemble loses to ``L2-d2`` alone on every game, both colours. Measured
+    6/6 checkmate losses, so the assertion is exact, not probabilistic. If this
+    ever passes, the default weighting rule has changed and the README's
+    negative-result narrative needs revisiting.
+    """
+    from chessrl.ensemble import EnsembleConfig, OutcomeLedger, accuracy_weights
+    from bench.ensemble_run import MEMBER_NAMES
+
+    ledger = OutcomeLedger()
+    ledger.note_many("L1", [True] * 10 + [False] * 14)
+    ledger.note_many("L3", [True] * 9 + [False] * 15)
+    ledger.note_many("L2-d2", [True] * 18 + [False] * 6)
+    weights = accuracy_weights(ledger, list(MEMBER_NAMES))
+
+    cases = [(True, 0), (False, 0), (True, 1), (False, 1)]
+    results = [_ensemble_vs_l2(weights, EnsembleConfig(), w, s) for w, s in cases]
+    losses = sum(_ensemble_lost(r, w) for r, (w, _) in zip(results, cases))
+    mean_plies = sum(r.plies for r in results) / len(results)
+    assert losses == len(cases), (
+        "the absolute-weighted ensemble should lose to L2-d2 on every game "
+        f"(both colours); it only lost {losses}/{len(cases)}"
+    )
+    # And it is not a narrow loss: the blind-majority dilution makes it blunder
+    # material, so it is mated fast. Measured ~32 plies; this is the *mechanism*
+    # of the negative result, and the thing the relative fix removes.
+    assert mean_plies < 60, (
+        "the absolute ensemble should be mated quickly (it blunders material); "
+        f"mean game length was {mean_plies:.0f} plies"
+    )
+
+
+def test_relative_weights_make_the_ensemble_survive_like_its_best_member():
+    """The *play*-level statement of the structural fix.
+
+    Both ensembles lose to ``L2-d2`` -- the relative one is ~97% L2-d2 plus a
+    little noise, so it is at best the equal of its best member, never better.
+    The fix is in *how* it loses. The absolute ensemble, diluted by the blind
+    majority, blunders material and is mated fast (measured ~32 plies). The
+    relative ensemble plays like L2-d2 and survives much longer (measured ~72
+    plies, 2.25x). The assertion is that contrast -- robust to rng tie-breaks --
+    rather than a win/loss outcome, which would be flaky.
+    """
+    from chessrl.ensemble import EnsembleConfig, OutcomeLedger, accuracy_weights
+    from bench.ensemble_run import MEMBER_NAMES
+
+    ledger = OutcomeLedger()
+    ledger.note_many("L1", [True] * 10 + [False] * 14)
+    ledger.note_many("L3", [True] * 9 + [False] * 15)
+    ledger.note_many("L2-d2", [True] * 18 + [False] * 6)
+    abs_weights = accuracy_weights(ledger, list(MEMBER_NAMES))
+    rel_weights = accuracy_weights(ledger, list(MEMBER_NAMES), relative=True)
+
+    cases = [(True, 0), (False, 0), (True, 1), (False, 1)]
+    abs_mean = sum(
+        _ensemble_vs_l2(abs_weights, EnsembleConfig(), w, s).plies
+        for w, s in cases) / len(cases)
+    rel_mean = sum(
+        _ensemble_vs_l2(rel_weights, EnsembleConfig(relative=True), w, s).plies
+        for w, s in cases) / len(cases)
+    assert rel_mean > abs_mean, (
+        "the relative ensemble should survive longer than the absolute one -- it "
+        "plays like its best member instead of blundering material early: "
+        f"rel={rel_mean:.0f} vs abs={abs_mean:.0f} plies"
+    )

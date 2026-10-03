@@ -978,3 +978,47 @@ def test_l3_imports_without_torch_on_the_path():
     )
     assert result.returncode == 0, result.stderr
     assert "ok" in result.stdout
+
+
+# --------------------------------------------------------------------------
+# the standard gate, for L3 (G2 audit: no dedicated self-play full-game test)
+# --------------------------------------------------------------------------
+
+def test_policy_plays_a_full_legal_game_to_a_real_result():
+    """The repo's gate, applied to L3 as self-play.
+
+    L3 already plays games inside other tests (drawing L1, learning from
+    search), but always *against* something else. The gate must hold for the
+    level on its own: an untrained perceptron playing itself shuffles to a cap,
+    and that must be reported as unfinished -- never silently as a draw -- and
+    every recorded move must be legal. Uses two independent seeds so the game
+    is not a degenerate same-weights mirror.
+    """
+    import random
+
+    from chessrl.game import play_game
+
+    white = L3Policy(seed=1)
+    black = L3Policy(seed=2)
+    result = play_game(white, black, max_plies=60, rng=random.Random(1))
+
+    assert result.reason in {
+        "checkmate", "stalemate", "insufficient_material",
+        "seventyfive_moves", "fivefold_repetition", "fifty_moves",
+        "max_plies", "no_progress",
+    }, f"unexpected termination reason: {result.reason}"
+    assert result.plies == len(result.moves)
+
+    if result.result == "unfinished":
+        assert not result.is_finished
+        assert result.score_for(chess.WHITE) == 0
+    else:
+        assert result.is_finished
+
+    replay = chess.Board()
+    for san in result.moves:
+        move = replay.parse_san(san)
+        assert move in replay.legal_moves, f"{san} not legal in {replay.fen()}"
+        replay.push(move)
+    assert len(result.fens) == len(result.moves) + 1
+    assert replay.fen() == result.fens[-1]

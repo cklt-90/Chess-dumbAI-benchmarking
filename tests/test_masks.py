@@ -172,3 +172,60 @@ def test_stack_and_flatten_mask_tensor():
     flat = M.flatten_mask_tensor(tensor)
     assert flat.shape == (128,)
     assert flat[0] == 1.0
+
+
+# --------------------------------------------------------------------------
+# attacked_by_mask (G1 audit: previously untested public API)
+# --------------------------------------------------------------------------
+
+def test_attacked_by_mask_marks_a_knights_attacks():
+    """A knight on d5 attacks its eight squares and nothing else.
+
+    ``attacked_by_mask`` is a pure attack map (it does not exclude own-occupied
+    squares and ignores pins), so on an otherwise-empty board the attacked set
+    is exactly the knight's reach.
+    """
+    from chessrl import bitboard as B
+
+    board = chess.Board("8/8/8/3N4/8/8/8/8 w - - 0 1")
+    mask = M.attacked_by_mask(board, chess.WHITE)
+    attacked = {chess.square_name(s) for s in B.mask_to_squares(mask)}
+    assert attacked == {"c3", "e3", "b4", "f4", "b6", "f6", "c7", "e7"}
+
+
+# --------------------------------------------------------------------------
+# G3 audit: special moves are legal AND admitted by the mask (no legality gap)
+# --------------------------------------------------------------------------
+
+def _is_admitted(board, uci):
+    move = chess.Move.from_uci(uci)
+    assert move in board.legal_moves, f"{uci} should be legal in {board.fen()}"
+    mask = M.legal_move_mask(board)
+    return bool(mask.flat[M.move_to_index(move)])
+
+
+def test_castling_is_admitted_for_both_sides_and_colours():
+    """The mask must admit castling -- the memory note that masks "admit
+    everything" is a load-bearing claim, and this is the test that locks it.
+
+    Uses an empty board with only the two rooks and kings and full castling
+    rights, so all four castle moves are legal and must be in the mask.
+    """
+    kings = "r3k2r/8/8/8/8/8/8/R3K2R {} KQkq - 0 1"
+    assert _is_admitted(chess.Board(kings.format("w")), "e1g1")  # White kingside
+    assert _is_admitted(chess.Board(kings.format("w")), "e1c1")  # White queenside
+    assert _is_admitted(chess.Board(kings.format("b")), "e8g8")  # Black kingside
+    assert _is_admitted(chess.Board(kings.format("b")), "e8c8")  # Black queenside
+
+
+def test_en_passant_is_admitted_when_it_is_legal():
+    # White pawn e5, Black just played d7d5: exd6 e.p. is legal and must be
+    # admitted (the ep target is in the FEN's sixth field).
+    board = chess.Board("8/8/8/3pP3/8/8/8/8 w - d6 0 1")
+    assert _is_admitted(board, "e5d6")
+
+
+def test_all_four_promotions_are_admitted():
+    board = chess.Board("8/P7/8/8/8/8/8/8 w - - 0 1")
+    for promo in ("a7a8q", "a7a8r", "a7a8b", "a7a8n"):
+        assert _is_admitted(board, promo), promo

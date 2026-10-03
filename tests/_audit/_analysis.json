@@ -1,0 +1,858 @@
+{
+  "per_file": {
+    "test_bench.py": {
+      "n_tests": 41,
+      "imports_modules": [
+        "chessrl",
+        "chessrl.ensemble",
+        "chessrl.game"
+      ],
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.ensemble.EnsemblePolicy",
+        "chessrl.ensemble.OutcomeLedger",
+        "chessrl.ensemble.accuracy_weights",
+        "chessrl.game.DistributionPolicy"
+      ],
+      "intents": {
+        "canonical": 4,
+        "unit_behaviour": 24,
+        "legal_game": 3,
+        "edge_case": 8,
+        "roundtrip": 2,
+        "reproducible": 3,
+        "regression": 1
+      }
+    },
+    "test_bitboard.py": {
+      "n_tests": 18,
+      "imports_modules": [
+        "chessrl"
+      ],
+      "imports_chessrl": [
+        "chessrl.B",
+        "chessrl.E",
+        "chessrl.PLANE_ORDER"
+      ],
+      "intents": {
+        "unit_behaviour": 6,
+        "roundtrip": 3,
+        "canonical": 8,
+        "edge_case": 1
+      }
+    },
+    "test_cache.py": {
+      "n_tests": 25,
+      "imports_modules": [
+        "chessrl.cache"
+      ],
+      "imports_chessrl": [
+        "chessrl.cache.MidstateStore",
+        "chessrl.cache.PositionCache"
+      ],
+      "intents": {
+        "reproducible": 1,
+        "unit_behaviour": 20,
+        "edge_case": 1,
+        "roundtrip": 3
+      }
+    },
+    "test_diagnostics.py": {
+      "n_tests": 27,
+      "imports_modules": [
+        "chessrl",
+        "chessrl.diagnostics",
+        "chessrl.game",
+        "chessrl.policy"
+      ],
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.diagnostics.PROBE_FENS",
+        "chessrl.diagnostics.PlayDiagnostics",
+        "chessrl.diagnostics.action_coverage",
+        "chessrl.diagnostics.compare_policies",
+        "chessrl.diagnostics.diagnose_games",
+        "chessrl.diagnostics.format_comparison",
+        "chessrl.diagnostics.policy_sharpness",
+        "chessrl.game.MaterialPolicy",
+        "chessrl.game.RandomPolicy",
+        "chessrl.policy.FactoredSoftmaxPolicy"
+      ],
+      "intents": {
+        "edge_case": 4,
+        "unit_behaviour": 20,
+        "legal_game": 1,
+        "reproducible": 1,
+        "regression": 2
+      }
+    },
+    "test_encode.py": {
+      "n_tests": 26,
+      "imports_modules": [
+        "chessrl"
+      ],
+      "imports_chessrl": [
+        "chessrl.E",
+        "chessrl.V"
+      ],
+      "intents": {
+        "regression": 2,
+        "edge_case": 3,
+        "roundtrip": 1,
+        "canonical": 5,
+        "unit_behaviour": 16,
+        "special_moves": 2
+      }
+    },
+    "test_ensemble.py": {
+      "n_tests": 107,
+      "imports_modules": [
+        "chessrl",
+        "chessrl.ensemble",
+        "chessrl.game",
+        "chessrl.value"
+      ],
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.ensemble.EnsembleConfig",
+        "chessrl.ensemble.EnsemblePolicy",
+        "chessrl.ensemble.MemberAccuracy",
+        "chessrl.ensemble.MemberKind",
+        "chessrl.ensemble.MemberSpec",
+        "chessrl.ensemble.OutcomeLedger",
+        "chessrl.ensemble._move_is_safe",
+        "chessrl.ensemble.accuracy_weights",
+        "chessrl.ensemble.score_member_opinions",
+        "chessrl.game.DistributionPolicy",
+        "chessrl.game._play",
+        "chessrl.game.play_game",
+        "chessrl.value.evaluate"
+      ],
+      "intents": {
+        "unit_behaviour": 63,
+        "edge_case": 31,
+        "roundtrip": 5,
+        "regression": 11,
+        "reproducible": 4,
+        "legal_game": 5,
+        "performance": 2
+      }
+    },
+    "test_game.py": {
+      "n_tests": 32,
+      "imports_modules": [
+        "chessrl.cache",
+        "chessrl.game"
+      ],
+      "imports_chessrl": [
+        "chessrl.cache.MidstateStore",
+        "chessrl.game.GameResult",
+        "chessrl.game.MaterialPolicy",
+        "chessrl.game.RandomPolicy",
+        "chessrl.game._no_progress_plies",
+        "chessrl.game.generate_games",
+        "chessrl.game.play_game",
+        "chessrl.game.play_match",
+        "chessrl.game.summarise_games"
+      ],
+      "intents": {
+        "legal_game": 4,
+        "regression": 2,
+        "reproducible": 1,
+        "unit_behaviour": 20,
+        "edge_case": 4,
+        "canonical": 2,
+        "roundtrip": 1,
+        "ladder": 1
+      }
+    },
+    "test_guided.py": {
+      "n_tests": 27,
+      "imports_modules": [
+        "chessrl.game",
+        "chessrl.guided",
+        "chessrl.search"
+      ],
+      "imports_chessrl": [
+        "chessrl.game.GameResult",
+        "chessrl.game.play_game",
+        "chessrl.guided.GuidedConfig",
+        "chessrl.guided.GuidedEngine",
+        "chessrl.guided.GuidedModel",
+        "chessrl.guided.GuidedPolicy",
+        "chessrl.guided.GuidedTrainConfig",
+        "chessrl.guided.GuidedTrainer",
+        "chessrl.guided._trunk_inputs",
+        "chessrl.search.INF",
+        "chessrl.search.MinimaxEngine"
+      ],
+      "intents": {
+        "reproducible": 4,
+        "unit_behaviour": 9,
+        "regression": 6,
+        "edge_case": 3,
+        "performance": 2,
+        "legal_game": 2,
+        "canonical": 1,
+        "roundtrip": 2
+      }
+    },
+    "test_masks.py": {
+      "n_tests": 18,
+      "imports_modules": [
+        "chessrl"
+      ],
+      "imports_chessrl": [
+        "chessrl.M"
+      ],
+      "intents": {
+        "roundtrip": 2,
+        "unit_behaviour": 12,
+        "regression": 1,
+        "special_moves": 3,
+        "edge_case": 3
+      }
+    },
+    "test_perceptron.py": {
+      "n_tests": 64,
+      "imports_modules": [
+        "chessrl",
+        "chessrl.cache",
+        "chessrl.game",
+        "chessrl.perceptron",
+        "chessrl.policy"
+      ],
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.cache.MidstateStore",
+        "chessrl.game.GameResult",
+        "chessrl.game.play_game",
+        "chessrl.perceptron.GEOMETRY_NAMES",
+        "chessrl.perceptron.L3Config",
+        "chessrl.perceptron.L3Policy",
+        "chessrl.perceptron.L3Trainer",
+        "chessrl.perceptron.MOVE_FEATURE_NAMES_L3",
+        "chessrl.perceptron.PerceptronConfig",
+        "chessrl.perceptron.PerceptronScorer",
+        "chessrl.perceptron.QUANT",
+        "chessrl.policy.BlindScorer",
+        "chessrl.policy.FactoredSoftmaxPolicy"
+      ],
+      "intents": {
+        "unit_behaviour": 35,
+        "regression": 5,
+        "edge_case": 5,
+        "canonical": 10,
+        "reproducible": 6,
+        "legal_game": 5,
+        "roundtrip": 5,
+        "ladder": 1
+      }
+    },
+    "test_policy.py": {
+      "n_tests": 36,
+      "imports_modules": [
+        "chessrl",
+        "chessrl.policy"
+      ],
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.policy.BlindScorer",
+        "chessrl.policy.FactoredSoftmaxPolicy",
+        "chessrl.policy.ProbCounter",
+        "chessrl.policy.entropy",
+        "chessrl.policy.masked_softmax",
+        "chessrl.policy.move_probability",
+        "chessrl.policy.perplexity",
+        "chessrl.policy.uniform_over_mask"
+      ],
+      "intents": {
+        "edge_case": 10,
+        "reproducible": 3,
+        "unit_behaviour": 17,
+        "roundtrip": 4,
+        "regression": 2,
+        "special_moves": 2,
+        "legal_game": 1
+      }
+    },
+    "test_rating.py": {
+      "n_tests": 23,
+      "imports_modules": [],
+      "imports_chessrl": [],
+      "intents": {
+        "unit_behaviour": 19,
+        "edge_case": 3,
+        "legal_game": 1
+      }
+    },
+    "test_search.py": {
+      "n_tests": 50,
+      "imports_modules": [
+        "chessrl",
+        "chessrl.game",
+        "chessrl.policy",
+        "chessrl.search",
+        "chessrl.train_naive"
+      ],
+      "imports_chessrl": [
+        "chessrl.V",
+        "chessrl.game.MaterialPolicy",
+        "chessrl.game.RandomPolicy",
+        "chessrl.game.play_match",
+        "chessrl.policy.FactoredSoftmaxPolicy",
+        "chessrl.search.INF",
+        "chessrl.search.InformedMinimaxPolicy",
+        "chessrl.search.MinimaxEngine",
+        "chessrl.search.MinimaxPolicy",
+        "chessrl.search.QUIESCE_DEPTH",
+        "chessrl.search.order_moves",
+        "chessrl.search.score_move",
+        "chessrl.train_naive.FactoredSoftmaxTrainer",
+        "chessrl.train_naive.TrainConfig"
+      ],
+      "intents": {
+        "unit_behaviour": 28,
+        "ladder": 6,
+        "special_moves": 2,
+        "edge_case": 6,
+        "reproducible": 5,
+        "performance": 1,
+        "regression": 3
+      }
+    },
+    "test_squarelocal.py": {
+      "n_tests": 73,
+      "imports_modules": [
+        "chessrl",
+        "chessrl.cache",
+        "chessrl.game",
+        "chessrl.perceptron",
+        "chessrl.squarelocal"
+      ],
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.cache.MidstateStore",
+        "chessrl.game.GameResult",
+        "chessrl.game.play_game",
+        "chessrl.perceptron.GEOMETRY_NAMES",
+        "chessrl.perceptron.L3Config",
+        "chessrl.perceptron.L3Policy",
+        "chessrl.perceptron.L3Trainer",
+        "chessrl.perceptron.MOVE_FEATURE_NAMES_L3",
+        "chessrl.perceptron.PerceptronConfig",
+        "chessrl.perceptron.PerceptronScorer",
+        "chessrl.perceptron.QUANT",
+        "chessrl.squarelocal.CREDIT_FANOUT",
+        "chessrl.squarelocal.FlatPolicy",
+        "chessrl.squarelocal.FlatScorer",
+        "chessrl.squarelocal.L35Config",
+        "chessrl.squarelocal.L35Policy",
+        "chessrl.squarelocal.L35Trainer",
+        "chessrl.squarelocal.LEAN_H_CTX",
+        "chessrl.squarelocal.SquareLocalConfig",
+        "chessrl.squarelocal.SquareLocalScorer",
+        "chessrl.squarelocal.implemented_fraction_of",
+        "chessrl.squarelocal.parameter_count"
+      ],
+      "intents": {
+        "unit_behaviour": 43,
+        "regression": 7,
+        "edge_case": 5,
+        "canonical": 13,
+        "performance": 1,
+        "reproducible": 4,
+        "legal_game": 2,
+        "roundtrip": 4
+      }
+    },
+    "test_torch_model.py": {
+      "n_tests": 38,
+      "imports_modules": [
+        "chessrl",
+        "chessrl.encode",
+        "chessrl.game",
+        "chessrl.perceptron",
+        "chessrl.policy",
+        "chessrl.search",
+        "chessrl.torch_model"
+      ],
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.encode.board_context_features",
+        "chessrl.encode.encode",
+        "chessrl.game.play_game",
+        "chessrl.perceptron.L3Policy",
+        "chessrl.perceptron.PerceptronConfig",
+        "chessrl.perceptron.PerceptronScorer",
+        "chessrl.policy.BlindScorer",
+        "chessrl.policy.FactoredSoftmaxPolicy",
+        "chessrl.search.MinimaxEngine",
+        "chessrl.torch_model.TorchConfig",
+        "chessrl.torch_model.TorchPolicy",
+        "chessrl.torch_model.TorchScorer",
+        "chessrl.torch_model.TorchTrainConfig",
+        "chessrl.torch_model.TorchTrainer",
+        "chessrl.torch_model.canonical_squares",
+        "chessrl.torch_model.geometry_table"
+      ],
+      "intents": {
+        "unit_behaviour": 25,
+        "roundtrip": 5,
+        "edge_case": 1,
+        "canonical": 3,
+        "regression": 1,
+        "performance": 1,
+        "legal_game": 1,
+        "reproducible": 4
+      }
+    },
+    "test_train_naive.py": {
+      "n_tests": 54,
+      "imports_modules": [
+        "chessrl",
+        "chessrl.game",
+        "chessrl.policy",
+        "chessrl.train_naive"
+      ],
+      "imports_chessrl": [
+        "chessrl.M",
+        "chessrl.V",
+        "chessrl.game.GameResult",
+        "chessrl.game.MaterialPolicy",
+        "chessrl.game.RandomPolicy",
+        "chessrl.game.play_game",
+        "chessrl.policy.FactoredSoftmaxPolicy",
+        "chessrl.policy.ProbCounter",
+        "chessrl.train_naive.FactoredSoftmaxTrainer",
+        "chessrl.train_naive.TrainConfig",
+        "chessrl.train_naive.credit_curve"
+      ],
+      "intents": {
+        "unit_behaviour": 34,
+        "edge_case": 11,
+        "canonical": 3,
+        "regression": 5,
+        "legal_game": 3,
+        "reproducible": 1,
+        "roundtrip": 4
+      }
+    },
+    "test_value.py": {
+      "n_tests": 33,
+      "imports_modules": [
+        "chessrl"
+      ],
+      "imports_chessrl": [
+        "chessrl.V"
+      ],
+      "intents": {
+        "unit_behaviour": 21,
+        "edge_case": 7,
+        "special_moves": 2,
+        "regression": 2,
+        "canonical": 2,
+        "ladder": 1
+      }
+    }
+  },
+  "coverage": {
+    "bitboard.py": {
+      "public": [
+        "apply_canonical",
+        "attack_map",
+        "board_to_planes",
+        "canonical",
+        "defended_map",
+        "empty_mask",
+        "empty_planes",
+        "flip_colour",
+        "flip_ranks",
+        "int_to_planes",
+        "mask_to_squares",
+        "occupancy",
+        "pack_planes",
+        "planes_to_board",
+        "planes_to_int",
+        "rc_to_square",
+        "rotate_180",
+        "square_names",
+        "square_to_rc",
+        "squares_to_mask",
+        "unpack_planes"
+      ],
+      "referenced": [
+        "apply_canonical",
+        "attack_map",
+        "board_to_planes",
+        "canonical",
+        "defended_map",
+        "empty_planes",
+        "flip_ranks",
+        "int_to_planes",
+        "occupancy",
+        "pack_planes",
+        "planes_to_board",
+        "planes_to_int",
+        "square_names",
+        "unpack_planes"
+      ],
+      "unreferenced": [
+        "empty_mask",
+        "flip_colour",
+        "mask_to_squares",
+        "rc_to_square",
+        "rotate_180",
+        "square_to_rc",
+        "squares_to_mask"
+      ]
+    },
+    "cache.py": {
+      "public": [
+        "Midstate",
+        "MidstateStore",
+        "PositionCache"
+      ],
+      "referenced": [
+        "MidstateStore",
+        "PositionCache"
+      ],
+      "unreferenced": [
+        "Midstate"
+      ]
+    },
+    "diagnostics.py": {
+      "public": [
+        "PlayDiagnostics",
+        "action_coverage",
+        "compare_policies",
+        "diagnose_games",
+        "format_comparison",
+        "policy_sharpness"
+      ],
+      "referenced": [
+        "PlayDiagnostics",
+        "action_coverage",
+        "compare_policies",
+        "diagnose_games",
+        "format_comparison",
+        "policy_sharpness"
+      ],
+      "unreferenced": []
+    },
+    "encode.py": {
+      "public": [
+        "attack_balance_plane",
+        "board_context_features",
+        "capture_target_mask",
+        "capture_value_plane",
+        "contested_mask",
+        "danger_value_plane",
+        "en_passant_mask",
+        "encode",
+        "encode_canonical_for_move_space",
+        "encode_move_feature",
+        "opponent_attack_mask",
+        "own_danger_plane",
+        "promotion_rank_mask",
+        "summarise",
+        "to_move_attack_mask"
+      ],
+      "referenced": [
+        "board_context_features",
+        "danger_value_plane",
+        "encode",
+        "encode_move_feature",
+        "own_danger_plane",
+        "summarise"
+      ],
+      "unreferenced": [
+        "attack_balance_plane",
+        "capture_target_mask",
+        "capture_value_plane",
+        "contested_mask",
+        "en_passant_mask",
+        "encode_canonical_for_move_space",
+        "opponent_attack_mask",
+        "promotion_rank_mask",
+        "to_move_attack_mask"
+      ]
+    },
+    "ensemble.py": {
+      "public": [
+        "EnsembleConfig",
+        "EnsemblePolicy",
+        "MemberAccuracy",
+        "MemberKind",
+        "MemberSpec",
+        "OutcomeLedger",
+        "accuracy_weights",
+        "score_member_opinions"
+      ],
+      "referenced": [
+        "EnsembleConfig",
+        "EnsemblePolicy",
+        "MemberAccuracy",
+        "MemberKind",
+        "MemberSpec",
+        "OutcomeLedger",
+        "accuracy_weights",
+        "score_member_opinions"
+      ],
+      "unreferenced": []
+    },
+    "game.py": {
+      "public": [
+        "DistributionPolicy",
+        "GameResult",
+        "MaterialPolicy",
+        "MovePolicy",
+        "RandomPolicy",
+        "generate_games",
+        "play_game",
+        "play_match",
+        "summarise_games"
+      ],
+      "referenced": [
+        "DistributionPolicy",
+        "GameResult",
+        "MaterialPolicy",
+        "MovePolicy",
+        "RandomPolicy",
+        "generate_games",
+        "play_game",
+        "play_match",
+        "summarise_games"
+      ],
+      "unreferenced": []
+    },
+    "guided.py": {
+      "public": [
+        "GuidedConfig",
+        "GuidedEngine",
+        "GuidedModel",
+        "GuidedPolicy",
+        "GuidedTrainConfig",
+        "GuidedTrainer"
+      ],
+      "referenced": [
+        "GuidedConfig",
+        "GuidedEngine",
+        "GuidedModel",
+        "GuidedPolicy",
+        "GuidedTrainConfig",
+        "GuidedTrainer"
+      ],
+      "unreferenced": []
+    },
+    "masks.py": {
+      "public": [
+        "attack_balance_mask",
+        "attacked_by_mask",
+        "can_move_to_mask",
+        "empty_squares_mask",
+        "flatten_mask_tensor",
+        "index_to_move",
+        "legal_dest_mask",
+        "legal_from_mask",
+        "legal_move_mask",
+        "legal_to_mask",
+        "mask_density",
+        "move_to_index",
+        "moves_to_indices",
+        "occupied_mask",
+        "stack_masks"
+      ],
+      "referenced": [
+        "attack_balance_mask",
+        "can_move_to_mask",
+        "empty_squares_mask",
+        "flatten_mask_tensor",
+        "index_to_move",
+        "legal_dest_mask",
+        "legal_from_mask",
+        "legal_move_mask",
+        "legal_to_mask",
+        "mask_density",
+        "move_to_index",
+        "moves_to_indices",
+        "occupied_mask",
+        "stack_masks"
+      ],
+      "unreferenced": [
+        "attacked_by_mask"
+      ]
+    },
+    "perceptron.py": {
+      "public": [
+        "L3Config",
+        "L3Policy",
+        "L3Trainer",
+        "PerceptronConfig",
+        "PerceptronScorer",
+        "move_feature_vector"
+      ],
+      "referenced": [
+        "L3Config",
+        "L3Policy",
+        "L3Trainer",
+        "PerceptronConfig",
+        "PerceptronScorer"
+      ],
+      "unreferenced": [
+        "move_feature_vector"
+      ]
+    },
+    "policy.py": {
+      "public": [
+        "BlindScorer",
+        "FactoredSoftmaxPolicy",
+        "ProbCounter",
+        "Scorer",
+        "entropy",
+        "masked_softmax",
+        "move_probability",
+        "perplexity",
+        "uniform_over_mask"
+      ],
+      "referenced": [
+        "BlindScorer",
+        "FactoredSoftmaxPolicy",
+        "ProbCounter",
+        "entropy",
+        "masked_softmax",
+        "move_probability",
+        "perplexity",
+        "uniform_over_mask"
+      ],
+      "unreferenced": [
+        "Scorer"
+      ]
+    },
+    "search.py": {
+      "public": [
+        "InformedMinimaxPolicy",
+        "MinimaxEngine",
+        "MinimaxPolicy",
+        "order_moves",
+        "score_move"
+      ],
+      "referenced": [
+        "InformedMinimaxPolicy",
+        "MinimaxEngine",
+        "MinimaxPolicy",
+        "order_moves",
+        "score_move"
+      ],
+      "unreferenced": []
+    },
+    "squarelocal.py": {
+      "public": [
+        "L35Config",
+        "L35Policy",
+        "L35Trainer",
+        "LEAN_H_CTX",
+        "SquareLocalConfig",
+        "SquareLocalScorer",
+        "implemented_fraction_of",
+        "parameter_count"
+      ],
+      "referenced": [
+        "L35Config",
+        "L35Policy",
+        "L35Trainer",
+        "LEAN_H_CTX",
+        "SquareLocalConfig",
+        "SquareLocalScorer",
+        "implemented_fraction_of",
+        "parameter_count"
+      ],
+      "unreferenced": []
+    },
+    "torch_model.py": {
+      "public": [
+        "TorchConfig",
+        "TorchPolicy",
+        "TorchScorer",
+        "TorchScorerAdapter",
+        "TorchTrainConfig",
+        "TorchTrainer",
+        "canonical_squares",
+        "geometry_table",
+        "torch_masked_softmax"
+      ],
+      "referenced": [
+        "TorchConfig",
+        "TorchPolicy",
+        "TorchScorer",
+        "TorchTrainConfig",
+        "TorchTrainer",
+        "canonical_squares",
+        "geometry_table"
+      ],
+      "unreferenced": [
+        "TorchScorerAdapter",
+        "torch_masked_softmax"
+      ]
+    },
+    "train_naive.py": {
+      "public": [
+        "FactoredSoftmaxTrainer",
+        "TrainConfig",
+        "credit_curve"
+      ],
+      "referenced": [
+        "FactoredSoftmaxTrainer",
+        "TrainConfig",
+        "credit_curve"
+      ],
+      "unreferenced": []
+    },
+    "value.py": {
+      "public": [
+        "capture_value",
+        "evaluate",
+        "evaluate_for",
+        "game_phase",
+        "hanging_value",
+        "material_balance",
+        "material_ratio",
+        "material_value",
+        "outcome_score",
+        "phase_name",
+        "phase_weights",
+        "piece_square_score",
+        "recapture_risk"
+      ],
+      "referenced": [
+        "capture_value",
+        "evaluate",
+        "evaluate_for",
+        "game_phase",
+        "hanging_value",
+        "material_balance",
+        "material_ratio",
+        "material_value",
+        "outcome_score",
+        "phase_name",
+        "phase_weights",
+        "piece_square_score",
+        "recapture_risk"
+      ],
+      "unreferenced": []
+    }
+  },
+  "intent_distribution": {
+    "canonical": 51,
+    "unit_behaviour": 412,
+    "legal_game": 28,
+    "edge_case": 106,
+    "roundtrip": 41,
+    "reproducible": 37,
+    "regression": 50,
+    "special_moves": 11,
+    "performance": 7,
+    "ladder": 9
+  },
+  "n_total_tests": 692
+}

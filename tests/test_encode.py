@@ -240,3 +240,88 @@ def test_context_features_detect_check():
 def test_summarise_reports_every_channel():
     summary = E.summarise(E.encode(chess.Board(), with_values=True))
     assert len(summary) == E.TOTAL_CHANNELS
+
+
+# --------------------------------------------------------------------------
+# encode_canonical_for_move_space (G1 audit: previously untested public API)
+# --------------------------------------------------------------------------
+
+def test_encode_canonical_for_move_space_is_the_uncanonicalised_encode():
+    """The helper is a named alias for ``encode(board, canonicalise=False)``,
+    so the "this is move-space input" choice is explicit at the call site."""
+    for fen in INTERESTING_FENS:
+        board = chess.Board(fen)
+        assert np.array_equal(
+            E.encode_canonical_for_move_space(board),
+            E.encode(board, canonicalise=False),
+        ), fen
+
+
+def test_encode_canonical_for_move_space_differs_for_black_to_move():
+    """For a Black-to-move position the canonical form reflects + colour-swaps,
+    so the move-space (uncanonicalised) encode must differ. For a White-to-move
+    position canonical is the identity, so they coincide -- the difference must
+    therefore be pinned on a black-to-move FEN, not a white-to-move one."""
+    board = chess.Board("rnbqkbnr/ppp1pppp/8/3p4/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1")
+    move_space = E.encode_canonical_for_move_space(board)
+    canonical = E.encode(board)
+    assert not np.array_equal(move_space, canonical)
+
+
+# --------------------------------------------------------------------------
+# direct per-plane assertions (G7 audit: previously exercised only indirectly)
+# --------------------------------------------------------------------------
+
+def _squares(mask):
+    from chessrl import bitboard as B
+    return {chess.square_name(s) for s in B.mask_to_squares(mask.astype(bool))}
+
+
+def test_promotion_rank_mask_is_the_back_rank_for_each_colour():
+    white = E.promotion_rank_mask(chess.WHITE)
+    black = E.promotion_rank_mask(chess.BLACK)
+    # White promotes on rank 8 -> row 7; Black on rank 1 -> row 0. All files, no others.
+    assert white[7].all() and not white[:7].any()
+    assert black[0].all() and not black[1:].any()
+
+
+def test_en_passant_mask_marks_only_the_ep_square():
+    board = chess.Board()
+    board.push_san("e4")  # Black to move, en-passant target e3
+    assert _squares(E.en_passant_mask(board)) == {"e3"}
+    # A board with no en-passant target yields an empty plane.
+    assert not E.en_passant_mask(chess.Board()).any()
+
+
+def test_capture_target_mask_marks_the_capturable_enemy():
+    # White pawn e4 can capture the black pawn on d5.
+    board = chess.Board("8/8/8/3p4/4P3/8/8/8 w - - 0 1")
+    assert _squares(E.capture_target_mask(board)) == {"d5"}
+
+
+def test_attack_masks_split_side_to_move_from_opponent():
+    # A lone white knight on d5: White attacks its eight squares, Black none.
+    board = chess.Board("8/8/8/3N4/8/8/8/8 w - - 0 1")
+    knight = {"c3", "e3", "b4", "f4", "b6", "f6", "c7", "e7"}
+    assert _squares(E.to_move_attack_mask(board)) == knight
+    assert _squares(E.opponent_attack_mask(board)) == set()
+
+
+def test_contested_mask_marks_squares_both_sides_attack():
+    # White knight d5 and black knight a2: both can reach b4 and c3, and the
+    # contested plane is exactly the intersection of the two attack maps.
+    board = chess.Board("8/8/8/3N4/8/8/n7/8 w - - 0 1")
+    white_attacks = _squares(E.to_move_attack_mask(board))
+    black_attacks = _squares(E.opponent_attack_mask(board))
+    contested = _squares(E.contested_mask(board))
+    assert contested == (white_attacks & black_attacks)
+    assert contested == {"b4", "c3"}
+
+
+def test_capture_value_plane_reports_the_best_capture():
+    # White pawn e4 can take a black rook on d5: the plane must report the
+    # rook's centipawn value at d5 and that it is the maximum on the board.
+    board = chess.Board("8/8/8/3r4/4P3/8/8/8 w - - 0 1")
+    plane = E.capture_value_plane(board)
+    assert plane[chess.D5 >> 3, chess.D5 & 7] == pytest.approx(500.0)
+    assert plane.max() == pytest.approx(500.0)
