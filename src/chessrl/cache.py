@@ -142,6 +142,23 @@ class PositionCache:
 # midstate store
 # --------------------------------------------------------------------------
 
+def _move_between(before_fen: str, after_fen: str) -> chess.Move | None:
+    """Recover the single move linking two consecutive game FENs, or None.
+
+    Used to tag a position as near a transition (capture or pawn move) without
+    storing the move list separately -- exactly the signal H17 needs.
+    """
+    before = chess.Board(before_fen)
+    after = chess.Board(after_fen)
+    for move in before.legal_moves:
+        before.push(move)
+        match = before.fen() == after.fen()
+        before.pop()
+        if match:
+            return move
+    return None
+
+
 @dataclass(slots=True)
 class Midstate:
     """One recorded position plus the metadata training wants."""
@@ -152,6 +169,10 @@ class Midstate:
     movecount: int
     material_ratio: float
     zobrist: int
+    # Whether the move played *from* this position was a capture or a pawn move
+    # -- the "near a transition" tag H17 needs. Set by ``record_game`` from the
+    # FEN list; defaults False for single-board records and reloaded corpora.
+    near_transition: bool = False
 
     def board(self) -> chess.Board:
         """Rebuild a playable board. Fresh object each call -- safe to mutate."""
@@ -207,6 +228,13 @@ class MidstateStore:
         for ply, fen in enumerate(fens):
             board = chess.Board(fen)
             from .value import material_ratio
+            near = False
+            if ply + 1 < len(fens):
+                move = _move_between(fen, fens[ply + 1])
+                if move is not None:
+                    near = board.is_capture(move) or board.piece_type_at(
+                        move.from_square
+                    ) == chess.PAWN
             self._append(Midstate(
                 fen=fen,
                 ply=ply,
@@ -214,6 +242,7 @@ class MidstateStore:
                 movecount=board.fullmove_number,
                 material_ratio=material_ratio(board),
                 zobrist=chess.polyglot.zobrist_hash(board),
+                near_transition=near,
             ))
 
     def _append(self, entry: Midstate) -> None:
@@ -307,6 +336,71 @@ class MidstateStore:
     def sample_boards(self, n: int, **kwargs) -> list[chess.Board]:
         """Convenience: ``sample`` but returning fresh playable boards."""
         return [e.board() for e in self.sample(n, **kwargs)]
+
+    def sample_near_transition(
+        self,
+        n: int,
+        rng: random.Random | None = None,
+        mix: tuple[float, float, float] = (0.3, 0.5, 0.2),
+    ) -> list[Midstate]:
+        """Draw up to ``n`` *distinct* positions, prioritising near-transition ones.
+
+        A position is "near a transition" when the move played in it was a capture
+        or a pawn move -- the irreversible, eventful steps H17 hypothesises carry
+        the most learning signal. Flagged positions are taken first (phase-mixed
+        within the flagged pool, so the sample is not all one phase), and only
+        backfilled from quiet positions when the flagged pool is too small to fill
+        ``n``. Without replacement, like :meth:`sample`.
+
+        With no flagged positions at all it degrades cleanly to :meth:`sample`.
+        """
+        rng = rng or random.Random()
+        if not self._entries or n <= 0:
+            return []
+        target = min(n, len(self._entries))
+        flagged = [e for e in self._entries if e.near_transition]
+        if not flagged:
+            return self.sample(n, rng=rng, mix=mix)
+
+        # Take the phase-mixed quota from the flagged pool first.
+        chosen: list[Midstate] = []
+        used: set[int] = set()
+        weights = {"early": mix[0], "mid": mix[1], "late": mix[2]}
+        buckets = {
+            p: [e for e in self.by_phase(p) if e.near_transition] for p in weights
+        }
+        for phase, weight in weights.items():
+            quota = int(round(target * weight))
+            if quota <= 0:
+                continue
+            pool = [e for e in buckets[phase] if id(e) not in used]
+            if not pool:
+                continue
+            take = min(quota, len(pool))
+            picked = rng.sample(pool, take)
+            chosen.extend(picked)
+            used.update(id(e) for e in picked)
+
+        # Not enough flagged in the requested phase mix: pull more flagged before
+        # any quiet backfill, so transitions stay the priority.
+        if len(chosen) < target:
+            extra = [e for e in flagged if id(e) not in used]
+            need = target - len(chosen)
+            if extra:
+                picked = rng.sample(extra, min(need, len(extra)))
+                chosen.extend(picked)
+                used.update(id(e) for e in picked)
+
+        # Only if the flagged pool genuinely cannot fill n do we touch quiet ones.
+        if len(chosen) < target:
+            remaining = [e for e in self._entries if id(e) not in used]
+            shortfall = target - len(chosen)
+            if remaining:
+                picked = rng.sample(remaining, min(shortfall, len(remaining)))
+                chosen.extend(picked)
+
+        rng.shuffle(chosen)
+        return chosen
 
     # ---- persistence -----------------------------------------------------
 

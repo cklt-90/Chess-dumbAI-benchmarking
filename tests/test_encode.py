@@ -28,14 +28,28 @@ from conftest import INTERESTING_FENS, colour_mirror, random_game_fens
 # --------------------------------------------------------------------------
 
 def test_channel_layout_is_pinned():
-    """Freeze the channel order. Changing this invalidates saved weights."""
+    """Freeze the channel order. Changing this invalidates saved weights.
+
+    H23 appended two castling-rights planes (``castle_w``, ``castle_b``) as the
+    representation repair for under-played castling. They are *appended*, never
+    *inserted*, so every prior channel index is preserved -- but the count moves,
+    and this guard is the place that is supposed to notice. A reorder is still a
+    failure; an append is expected and updates these numbers.
+    """
     assert E.CHANNELS[:12] == (
         "pawn_w", "knight_w", "bishop_w", "rook_w", "queen_w", "king_w",
         "pawn_b", "knight_b", "bishop_b", "rook_b", "queen_b", "king_b",
     )
-    assert E.BINARY_CHANNELS == 22
+    assert E.CHANNELS[19:24] == (
+        "promotion_rank_w", "promotion_rank_b", "en_passant",
+        "castle_w", "castle_b",
+    )
+    assert E.BINARY_CHANNELS == 24
     assert E.VALUE_CHANNELS_N == 4
-    assert E.TOTAL_CHANNELS == 26
+    assert E.TOTAL_CHANNELS == 28
+    # The appended castling planes must be registered as colour-paired, so they
+    # canonicalise correctly (plane 22 == side-to-move's rights after swap).
+    assert (22, 23) in E.COLOUR_PAIRED_CHANNELS
     assert E.VALUE_CHANNELS == (
         "capture_value", "danger_value", "attack_balance", "own_danger",
     )
@@ -47,6 +61,31 @@ def test_colour_paired_channels_point_at_real_colour_channels():
         assert E.CHANNELS[black_ch].endswith("_b")
         assert white_ch < E.BINARY_CHANNELS
         assert black_ch < E.BINARY_CHANNELS
+
+
+def test_castling_rights_channel_tracks_rights_and_canonicalises():
+    """H23: the appended ``castle_w`` / ``castle_b`` planes must (a) flag the
+    board only while that side holds a castling right, and (b) canonicalise so
+    that plane 22 always means the *side-to-move's* rights (see
+    ``COLOUR_PAIRED_CHANNELS``). A learner can then express "I may still castle"
+    as a board pattern instead of only via the ``can_castle`` scalar.
+    """
+    board = chess.Board(
+        "rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4"
+    )
+    t = E.encode(board)
+    assert bool(t[22].all()) and bool(t[23].all())  # both sides still hold rights
+    board.push(board.parse_san("O-O"))
+    board.push(chess.Move.from_uci("d7d5"))  # White to move again
+    t2 = E.encode(board)
+    assert not bool(t2[22].any())  # White lost castling rights
+    assert bool(t2[23].all())  # Black still holds them
+    # Canonical invariant: plane 22 == side-to-move's rights regardless of colour.
+    black_to_move = chess.Board(
+        "rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 4 4"
+    )
+    tb = E.encode(black_to_move)
+    assert bool(tb[22].all())  # side-to-move is Black, who still holds rights
 
 
 # --------------------------------------------------------------------------

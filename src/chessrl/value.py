@@ -224,6 +224,61 @@ KING_PST_MID = _load_pst(_PST_SRC[chess.KING])
 KING_PST_END = _load_pst(_KING_ENDGAME_SRC)
 
 
+def king_shelter_score(board: chess.Board, colour: int) -> int:
+    """Pawn-shield and wing-safety bonus for ``colour``'s king.
+
+    Gives every level that consults ``evaluate`` -- L2's search and the
+    greedy-material policy -- a *reason* to castle, which is the missing
+    incentive H23 diagnosed: castling is legal and in the mask, but with a
+    material+PST-only eval nothing rewards it, so only the searching levels
+    (which see king safety through search) ever do.
+
+    The signal has three parts, all White-perspective and rank-mirrored for
+    Black exactly like the piece-square tables:
+
+    * pawns directly in front of and beside the king reward a intact shield;
+    * an open king file (<=1 friendly pawn on it) is penalised as exposure;
+    * the king off the exposed central files (d/e) is rewarded, so a castled
+      king on the wing scores higher than an uncastled king stuck on e1 -- this
+      is what turns "castle" from a neutral move into a slightly favourable one.
+
+    The whole term is scaled by game phase (full in the opening, half in the
+    bare endgame) so a castled shield does not wrongly dominate late play. It is
+    deliberately small -- at most about a third of a pawn -- so it nudges
+    without overriding material. Because it is a pure function of the board
+    state (potential-based), it rewards castling through consequences, not via a
+    per-move bonus, which is the shaping regime the literature endorses.
+    """
+    king_sq = board.king(colour)
+    if king_sq is None:
+        return 0
+    kf = chess.square_file(king_sq)
+    kr = chess.square_rank(king_sq)
+    # Rank "ahead" of the king, toward the enemy: up for White, down for Black.
+    ahead = (kr + 1) if colour == chess.WHITE else (kr - 1)
+    r = material_ratio(board)
+    phase_scale = 0.5 + 0.5 * r  # 1.0 opening, 0.5 bare endgame
+    score = 0
+    if 0 <= ahead <= 7:
+        for df in (-1, 0, 1):
+            f = kf + df
+            if 0 <= f <= 7:
+                sq = chess.square(f, ahead)
+                if board.piece_at(sq) == chess.Piece(chess.PAWN, colour):
+                    score += 6
+                else:
+                    score -= 4
+    # Open-file exposure: fewer than two friendly pawns on the king's file.
+    file_pawns = chess.popcount(
+        board.pieces_mask(chess.PAWN, colour) & chess.BB_FILES[kf]
+    )
+    if file_pawns <= 1:
+        score -= 6
+    # Castled kings sit on the wing files, away from the exposed centre.
+    score += -3 if kf in (3, 4) else 3
+    return int(score * phase_scale)
+
+
 def piece_square_score(board: chess.Board, colour: int) -> int:
     """Total piece-square bonus for ``colour``, with a phase-blended king table.
 
@@ -285,8 +340,16 @@ def evaluate(board: chess.Board) -> int:
     ):
         return 0
 
-    white = material_value(board, chess.WHITE) + piece_square_score(board, chess.WHITE)
-    black = material_value(board, chess.BLACK) + piece_square_score(board, chess.BLACK)
+    white = (
+        material_value(board, chess.WHITE)
+        + piece_square_score(board, chess.WHITE)
+        + king_shelter_score(board, chess.WHITE)
+    )
+    black = (
+        material_value(board, chess.BLACK)
+        + piece_square_score(board, chess.BLACK)
+        + king_shelter_score(board, chess.BLACK)
+    )
     score = white - black  # White's point of view
     return score if board.turn == chess.WHITE else -score
 

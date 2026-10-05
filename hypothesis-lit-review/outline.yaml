@@ -1,0 +1,177 @@
+# Research outline — hypothesis-based literature review for chess-rl-bench
+# Generated 2026-10-04. Human-confirmed: 15 items (13 register + 2 supplement),
+# proposed fields, unlimited time range, 5 agents x 3 items.
+topic: "Hypothesis-based literature review for chess-rl-bench"
+time_range: unlimited
+register: "HYPOTHESES.md (claims and local evidence status are quoted from there)"
+
+execution:
+  batch_size: 5          # parallel agents
+  items_per_agent: 3
+  output_dir: ./results
+
+# Batches are thematic. Each agent covers one cluster so its searches compound.
+batches:
+  - batch: 1
+    theme: "learning dynamics (domain claims)"
+    items: [h17-transitions, h21-arch-priors, h23-special-moves]
+  - batch: 2
+    theme: "search and populations (domain claims)"
+    items: [h18-horizon, h19-nontransitivity, h20-tactics-first]
+  - batch: 3
+    theme: "architecture and factorisation"
+    items: [h16-factored-action, h08-weight-tying, h09-budget-vs-topology]
+  - batch: 4
+    theme: "evaluation functions"
+    items: [h10-relational-limits, h11-learned-leaf-eval, nnue]
+  - batch: 5
+    theme: "prior-in-search, rating methodology, scale"
+    items: [h12-move-ordering, h13-rating-methodology, searchless-gm]
+
+items:
+  - id: h17-transitions
+    batch: 1
+    register_ref: H17
+    claim: "Value changes at pawn moves/captures; transition-focused sampling learns faster per game than uniform."
+    local_status: "OPEN, untested, runnable today. Circumstantial support: L6 ledger shows decisive games spread member accuracy 0-1 vs 0.80-0.85 in unfinished."
+    seed_sources:
+      - "Schaul et al. 2016, Prioritized Experience Replay (arXiv:1511.05952)"
+      - "Horgan et al. 2018, Ape-X / distributed prioritized replay"
+      - "Andrychowicz et al. 2017, Hindsight Experience Replay (arXiv:1707.01495)"
+
+  - id: h21-arch-priors
+    batch: 1
+    register_ref: H21
+    claim: "An untrained factorised policy still prefers central/forward moves above chance; structure carries a prior before any update."
+    local_status: "CONTESTED. Settled half: untrained-vs-untrained is ~random. Open half: random weights != random preferences."
+    seed_sources:
+      - "Ulyanov et al. 2018, Deep Image Prior (arXiv:1711.10925)"
+      - "Rahaman et al. 2019 / Frequency Principle 2022, spectral bias of neural networks (arXiv:2201.07395)"
+
+  - id: h23-special-moves
+    batch: 1
+    register_ref: H23
+    claim: "Castling/en passant are legal but underplayed because nothing rewards them; encoder lacks a castling-rights channel."
+    local_status: "CONTESTED. Mechanical half SUPPORTED (mask admits 100%). Behavioural half PARTLY SUPPORTED (L2-d2 castles 3/3 games; blind/untrained <=1/6). Gap located: no castling term in evaluate(), no castling channel in encode()."
+    seed_sources:
+      - "Silver et al. 2017, AlphaZero (arXiv:1712.01815) — castling rights as constant input planes"
+      - "Andrychowicz et al. 2017, HER — the standard sparse-event remedy"
+
+  - id: h18-horizon
+    batch: 2
+    register_ref: H18
+    claim: "At depth 2-3, L2's mistakes vs depth-5 are dominated by unresolved capture sequences, not positional misjudgement."
+    local_status: "CONTESTED, treated as OPEN locally. Principle settled (quiescence exists to blunt it); magnitude at these depths unmeasured. Local quiescence measured roughly node-neutral."
+    seed_sources:
+      - "Berliner 1973/1974, the horizon effect"
+      - "Quiescence Search, Chess Programming Wiki"
+      - "Shannon 1950, Programming a Computer for Playing Chess"
+
+  - id: h19-nontransitivity
+    batch: 2
+    register_ref: "H19 + H7"
+    claim: "Cycles run through the greedy-material level specifically; no rating ordering is fully faithful."
+    local_status: "H7 SUPPORTED as recorded (largest residual material vs L3: observed 0.500, expected 0.259) but fragile — rests on L3's provisional rating and unexplained 3-3 splits vs all L2 depths. H19 OPEN."
+    seed_sources:
+      - "Czarnecki et al. 2020, Real World Games Look Like Spinning Tops (arXiv:2004.09468)"
+      - "Santhosh Kumar et al. 2022, Measuring the Non-Transitivity in Chess (arXiv:2110.11737)"
+      - "Balduzzi et al. 2018, Re-evaluating Evaluation / Nash averaging (arXiv:1806.02643)"
+
+  - id: h20-tactics-first
+    batch: 2
+    register_ref: H20
+    claim: "Positional knowledge only pays once tactics are handled; 1-ply greedy material sits mid-table at naive scale."
+    local_status: "SETTLED locally (material 255 > L1 165, loses to all L2 depths) and historically. Do not investigate; verify the literature framing only."
+    seed_sources:
+      - "Shannon 1950, type-A vs type-B strategies"
+      - "Chess engine history: search-vs-evaluation tradeoff studies"
+      - "Ruoss et al. 2024 as the scale-boundary stress test"
+
+  - id: h16-factored-action
+    batch: 3
+    register_ref: H16
+    claim: "P(from)*P(to|from)*P(promo) beats a flat 20480-way softmax at equal parameters and equal updates per legal move — statistical sharing, not capacity."
+    local_status: "OPEN. Blocker stale (L3-flat now exists); live blockers: budget contradiction (783/1445/7225) and untrained weights."
+    seed_sources:
+      - "Silver et al. 2017, AlphaZero — 8x8x73 policy planes (arXiv:1712.01815)"
+      - "Lc0 transformer nets — attention source-destination policy heads"
+      - "McIlroy-Young et al. 2020, Maia (arXiv:2008.10086) — policy-prior quality measured as top-1 accuracy"
+
+  - id: h08-weight-tying
+    batch: 3
+    register_ref: H8
+    claim: "A weight-tied per-square function matches the per-square-weights model at comparable budget."
+    local_status: "IN PROGRESS. Untrained null recorded (11/12 unfinished — says nothing). Budget confound: L3.5 has 10.8% of L3's parameters; a loss cannot be read as 'tying is worse'."
+    seed_sources:
+      - "LeCun et al. 1989/1998 — CNN weight sharing, the canonical argument"
+      - "Silver et al. 2017, AlphaZero — shared conv trunk"
+      - "Graph-representation chess RL 2024 (arXiv:2410.23753) — GNN beats CNN at small sizes"
+
+  - id: h09-budget-vs-topology
+    batch: 3
+    register_ref: H9
+    claim: "A flat MLP at matched parameter count does not beat the factorised models; budget, not topology, dominates at this scale."
+    local_status: "IN PROGRESS. Control arm verified mechanically (L3-flat origin head exactly constant, std=0.0). Strength question not established."
+    seed_sources:
+      - "Kaplan et al. 2020 / Hoffmann et al. 2022, scaling laws (regime caveat: far above local scale)"
+      - "Graph-representation chess RL 2024 (arXiv:2410.23753)"
+      - "NNUE — small budgets winning via the right inductive bias"
+
+  - id: h10-relational-limits
+    batch: 4
+    register_ref: H10
+    claim: "A per-square function cannot express facts irreducibly about several squares (open file, knight-on-rim); tying must lose some strength there."
+    local_status: "MECHANISM LOCATED by construction (no destination-file feature; abs(tf-ff) makes b1->c3 and g1->h3 byte-identical). Strength cost unmeasured. Caveat: missing-feature problem, not proven a tying problem."
+    seed_sources:
+      - "Santoro et al. 2017, relational networks"
+      - "Graph-representation chess RL 2024 (arXiv:2410.23753) — direct small-scale test"
+      - "Lai 2015, Giraffe (arXiv:1509.01549) — global features in learned eval"
+
+  - id: h11-learned-leaf-eval
+    batch: 4
+    register_ref: H11
+    claim: "A trained value head beats the material+PST heuristic as a leaf eval."
+    local_status: "BLOCKED on training (Task #9). Untrained baseline NEGATIVE: +eval worst (-102 delta), every SE exceeds every delta; eval-without-prior also ~4x slower."
+    seed_sources:
+      - "Thrun 1995, NeuroChess"
+      - "Baxter, Tridgell, Weaver 2000, TD-Leaf / KnightCap (arXiv:cs/9901001)"
+      - "Lai 2015, Giraffe (arXiv:1509.01549)"
+      - "Silver et al. 2017, AlphaZero; Schrittwieser et al. 2020, MuZero (arXiv:1911.08265)"
+
+  - id: nnue
+    batch: 4
+    register_ref: "informs H11, H8, H9 (no register row)"
+    claim: "Efficiently updatable king-relative shared features with differential accumulator updates displaced handcrafted eval in top engines — learned eval without MCTS-scale training."
+    local_status: "Not in the register. Supplement agent flagged it as the biggest gap in the H11 lineage."
+    seed_sources:
+      - "Nasu 2018, NNUE original repo (github.com/ynasu87/nnue)"
+      - "Stockfish NNUE documentation (Pikafish wiki)"
+
+  - id: h12-move-ordering
+    batch: 5
+    register_ref: H12
+    claim: "The policy prior reduces node counts at fixed depth; it cannot change the root value except among equals."
+    local_status: "OPEN at scale. Mechanism unit-tested (tie example: Nf6 = Nc6 = 90 exactly); node-saving magnitude never measured."
+    seed_sources:
+      - "Knuth & Moore 1975, Analysis of Alpha-Beta Pruning — perfect ordering ~2b^(d/2), provably cannot change the value"
+      - "Move ordering heuristics (history, killer, MVV-LVA), Chess Programming Wiki"
+      - "Silver et al. 2017 — policy prior inside MCTS; Maia 2020 — what a good prior achieves (top-1 accuracy)"
+
+  - id: h13-rating-methodology
+    batch: 5
+    register_ref: "H13 + H3"
+    claim: "6 games per pair is too few to establish pairwise gaps; excluding unfinished games from ratings is the right convention."
+    local_status: "H13 SUPPORTED for the ablation roster (SEs 79-93 > deltas 36-102). H3 untested (needs flagged re-fit counting unfinished as draws)."
+    seed_sources:
+      - "Glickman 2020, Bradley-Terry generalised for draws in chess"
+      - "Coulom 2008, Whole-History Rating (remi-coulom.fr/WHR/WHR.pdf)"
+      - "Glicko-2; SPRT as used in Fishtest — exact games-to-significance at tolerance [Elo0, Elo1]"
+
+  - id: searchless-gm
+    batch: 5
+    register_ref: "stress-tests H20, bounds H12, informs H16 (no register row)"
+    claim: "Grandmaster-level chess without search (behavioral cloning at 270M params, 10M games, ~2895 blitz): at sufficient scale a pure policy handles tactics — the search-vs-eval division blurs."
+    local_status: "Not in the register. Its main local role is the scale-regime boundary: the result needs 270M params and 10M games, unreachable at naive numpy scale."
+    seed_sources:
+      - "Ruoss et al. 2024, Grandmaster-Level Chess Without Search (arXiv:2402.04494)"
+      - "ChessBench dataset, github.com/google-deepmind/searchless_chess"

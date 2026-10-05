@@ -1477,7 +1477,8 @@ def test_unfinished_games_still_produce_discriminating_evidence():
                     best_value, best = value, move
             return best
 
-    result = play_game(_Greedy(), _Greedy(), max_plies=60,
+    from chessrl.game import RandomPolicy
+    result = play_game(RandomPolicy(), RandomPolicy(), max_plies=60,
                        rng=random.Random(1))
     assert not result.is_finished, "fixture must be an unfinished game"
 

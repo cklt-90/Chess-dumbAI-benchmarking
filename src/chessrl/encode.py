@@ -74,6 +74,8 @@ CHANNELS = (
     "promotion_rank_w",                                                  # 19
     "promotion_rank_b",                                                  # 20
     "en_passant",                                                        # 21
+    "castle_w",                                                          # 22
+    "castle_b",                                                          # 23
 )
 
 # Continuous value channels, appended after the binary planes.
@@ -84,7 +86,7 @@ VALUE_CHANNELS = (
     "own_danger",        # my pieces hanging right now (per square)
 )
 
-BINARY_CHANNELS = len(CHANNELS)          # 22
+BINARY_CHANNELS = len(CHANNELS)          # 24
 VALUE_CHANNELS_N = len(VALUE_CHANNELS)   # 4
 TOTAL_CHANNELS = BINARY_CHANNELS + VALUE_CHANNELS_N
 GROUP_VALUES = 10_000.0  # normaliser for centipawn value planes
@@ -126,6 +128,25 @@ def en_passant_mask(board: chess.Board) -> np.ndarray:
     mask = np.zeros((8, 8), dtype=bool)
     if board.ep_square is not None:
         mask[board.ep_square >> 3, board.ep_square & 7] = True
+    return mask
+
+
+def castle_rights_mask(board: chess.Board, colour: int) -> np.ndarray:
+    """Binary plane marking the whole board when ``colour`` retains any castling
+    right (king-side or queen-side).
+
+    A constant-plane flag, in the style of ``promotion_rank_mask``: it tells a
+    learner "this side can still castle" as a *board pattern* rather than only
+    as a scalar in ``board_context_features`` (where it cannot be matched to a
+    position). This is the representation repair H23 calls for -- AlphaZero's
+    119-plane stack carries four constant castling planes for exactly this
+    reason, and a learner with no such channel cannot even express "I may still
+    castle kingside". Appended, not inserted, so every existing channel index is
+    preserved and saved weight matrices stay valid.
+    """
+    mask = np.zeros((8, 8), dtype=bool)
+    if board.has_castling_rights(colour):
+        mask[:, :] = True
     return mask
 
 
@@ -283,6 +304,8 @@ def encode(
     tensor[19] = promotion_rank_mask(chess.WHITE)
     tensor[20] = promotion_rank_mask(chess.BLACK)
     tensor[21] = en_passant_mask(board)
+    tensor[22] = castle_rights_mask(board, chess.WHITE)
+    tensor[23] = castle_rights_mask(board, chess.BLACK)
 
     if canonicalise:
         # Two colour-specific channel pairs must swap along with the piece
@@ -322,7 +345,7 @@ def _reflect_ranks(tensor: np.ndarray) -> np.ndarray:
 # promotion-rank planes are the only derived channels that do too. Kept as
 # explicit data rather than inferred from position, because the next person to
 # append a channel must be told which list to add it to.
-COLOUR_PAIRED_CHANNELS: tuple[tuple[int, int], ...] = ((19, 20),)
+COLOUR_PAIRED_CHANNELS: tuple[tuple[int, int], ...] = ((19, 20), (22, 23))
 
 
 def _canonical_channels(tensor: np.ndarray, turn_white: bool) -> np.ndarray:

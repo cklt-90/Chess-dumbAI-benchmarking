@@ -1,0 +1,76 @@
+# Field definitions — hypothesis-based literature review
+# 7 original fields (confirmed) + 7 supplementary fields from the search agent.
+# Schema matches validate_json.py: field_categories -> fields -> name/required.
+# detail_level: brief -> moderate -> detailed. Keep brief fields to <=2 lines.
+# 'uncertain' is reserved: the deep phase appends an "uncertain" array to each
+# JSON listing field names it could not verify; never guess — leave the claim
+# out instead.
+
+field_categories:
+  - category: register
+    fields:
+      - name: register_link
+        required: true
+        detail_level: brief
+        description: "Hypothesis id, one-line claim, local evidence status (quoted from HYPOTHESES.md / the 2026-10-03 review)"
+      - name: register_implication
+        required: false
+        detail_level: moderate
+        description: "Should the hypothesis's evidence status change (OPEN/CONTESTED/SETTLED)? Suggested one-line edit to HYPOTHESES.md"
+
+  - category: verdict
+    fields:
+      - name: literature_verdict
+        required: true
+        detail_level: brief
+        description: "supports / partially supports / contests / mixed / silent — one word plus one line of justification"
+      - name: scale_regime
+        required: true
+        detail_level: brief
+        description: "Which regime the verdict holds in: toy/numpy-scale | small-net (<=10M params) | AZ/Lc0-scale | engine-scale (NNUE + deep search). Verdicts can flip across regimes."
+      - name: quantified_effect
+        required: false
+        detail_level: moderate
+        description: "The effect with units: Elo gain, node-reduction %, games-to-significance at 95% CI, top-1 policy accuracy. Record canonical numbers where the literature has them."
+
+  - category: evidence
+    fields:
+      - name: key_sources
+        required: true
+        detail_level: moderate
+        description: "3-6 canonical papers/sources with year and one-line relevance each"
+      - name: literature_findings
+        required: true
+        detail_level: detailed
+        description: "What the literature establishes on this claim: main results, consensus, active disagreements"
+      - name: matched_controls
+        required: false
+        detail_level: brief
+        description: "Did the cited comparisons hold parameter count, compute, and training data constant? Decisive for H16/H9, where most published comparisons are NOT matched-parameter."
+      - name: known_failure_modes
+        required: false
+        detail_level: moderate
+        description: "Technique caveats that must travel with any import (e.g. PER's bias without importance-sampling annealing, quiescence explosion, Bradley-Terry non-identifiability on disconnected comparison graphs)"
+
+  - category: mapping
+    fields:
+      - name: mapping_to_local
+        required: true
+        detail_level: moderate
+        description: "Where the local hypothesis agrees with, diverges from, or narrows the literature claim"
+      - name: scale_limits
+        required: false
+        detail_level: moderate
+        description: "What the literature cannot say at this scale: regime differences between cited work and naive numpy-scale experiments"
+      - name: small_scale_replication
+        required: false
+        detail_level: brief
+        description: "Distinguish 'literature cannot say at this scale' (regime gap) from 'not yet checked' (a cheap local experiment exists)"
+      - name: confounds_flagged
+        required: false
+        detail_level: moderate
+        description: "Draw handling, opening book/starting positions, time control, search budget, hardware asymmetry — confounds that silently drive the cited conclusions"
+      - name: suggested_local_test
+        required: false
+        detail_level: moderate
+        description: "The minimal decisive experiment the literature implies for this harness (e.g. for H17: PER-style vs irreversible-move-focused sampling at matched update counts)"

@@ -430,8 +430,8 @@ def test_the_three_experiment_arms_all_build():
     # L3.5 is the lean arm and L3-flat the control; both must be a fraction of
     # L3 rather than a padded match. Asserted here as well as in
     # test_squarelocal so a roster edit cannot silently break the comparison.
-    assert counts["L3"] == 7225
-    assert counts["L3.5"] == 783
+    assert counts["L3"] == 7609
+    assert counts["L3.5"] == 787
     assert counts["L3-flat"] < counts["L3"]
     assert counts["L3.5"] < counts["L3"]
 

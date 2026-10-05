@@ -1,44 +1,52 @@
 # HYPOTHESES.md
 
-A register of testable claims about `chess-rl-bench`. Each entry states the
-hypothesis, **the measurement that would falsify it**, the command to run, and
+A register of testable claims about `chess-rl-bench`. Each entry states the  
+hypothesis, **the measurement that would falsify it**, the command to run, and  
 where to record the result.
 
-The purpose is to stop "which level is best" from being the only question asked.
-A ladder produces a leaderboard; a set of falsifiable claims produces knowledge.
-Every hypothesis here is written so that **a negative is a result**, not a
+The purpose is to stop "which level is best" from being the only question asked.  
+A ladder produces a leaderboard; a set of falsifiable claims produces knowledge.  
+Every hypothesis here is written so that **a negative is a result**, not a  
 failure — several are expected to fail, and those are the informative ones.
 
 ## How to use this
 
-1. Pick a hypothesis. **Read the falsification condition before running
-   anything** — if you cannot state what result would kill it, it is not a
+> **Verification note.** This register records *guesses* (what could happen) and,
+> where available, *literature context* (consolidated in the *Literature review
+> linkage (2026-10-04)* appendix at the end of this file, sourced from
+> `hypothesis-lit-review/report.md`). The actual **prove / not-prove** of each
+> hypothesis against experiments is tracked in a *separate document* (to be
+> created) — do not record conclusive verdicts here until that document exists.
+
+1. Pick a hypothesis. **Read the falsification condition before running  
+   anything** — if you cannot state what result would kill it, it is not a  
    hypothesis, it is a wish.
-2. Run the command. Save raw output to `bench/` as JSON where possible
+2. Run the command. Save raw output to `bench/` as JSON where possible  
    (`--out`), never just a terminal screenshot.
-3. Fill in the result block in place. Do not delete a falsified hypothesis —
-   strike it through and record what actually happened. **A dead hypothesis with
+3. Fill in the result block in place. Do not delete a falsified hypothesis —  
+   strike it through and record what actually happened. **A dead hypothesis with  
    evidence is worth more than a live one without.**
-4. If a result is inside one standard error, write "not established", not the
+4. If a result is inside one standard error, write "not established", not the  
    direction you preferred.
 
-Baselines already on disk: `bench/results-2026-10-02.json` (7 entrants),
-`bench/ablation-2026-10-02.json` (L5 seams). Re-render either with
+Baselines already on disk: `bench/results-2026-10-02.json` (7 entrants),  
+`bench/ablation-2026-10-02.json` (L5 seams). Re-render either with  
 `python -m bench --from <file>` — no games replayed.
 
-**Status key**: `[ ]` untested · `[~]` in progress · `[x]` tested (see result) ·
+**Status key**: `[ ]` untested · `[~]` in progress · `[x]` tested (see result) ·  
 `[!]` falsified · `[-]` blocked / not answerable yet
 
-**Groups**: A foundations (is the code sound?) · B the ladder (is each rung
-above the one below?) · C the representation axis (L3.5) · D value head and
-search seams · E methodology (is the benchmark sound?) · F **claims about chess
-and learning itself** (is a common belief true?)
+**Groups**: A foundations (is the code sound?) · B the ladder (is each rung  
+above the one below?) · C the representation axis (L3.5) · D value head and  
+search seams · E methodology (is the benchmark sound?) · F **claims about chess  
+and learning itself** (is a common belief true?) · G the training-signal axis  
+(self-play vs round-robin vs master-graded, with a random-walk control)
 
-**Runnable today**: H17, H18, H19, H21 need no new levels — see Group F. If you
+**Runnable today**: H17, H18, H19, H21 need no new levels — see Group F. If you  
 want a result on the board this week, start there rather than with L3.5.
 
-**Recently tested**: H23 (special moves) — mechanical half supported, behavioural
-half has a concrete gap (no castling-rights channel in the encoder; no
+**Recently tested**: H23 (special moves) — mechanical half supported, behavioural  
+half has a concrete gap (no castling-rights channel in the encoder; no  
 castling/en-passant term in `evaluate()`). See Group F.
 
 ---
@@ -46,39 +54,42 @@ castling/en-passant term in `evaluate()`). See Group F.
 ## Group A — the foundations (are the levels even sound?)
 
 ### H1 — Ordering cannot change a search value
-- **Claim**: For `MinimaxEngine`, changing move ordering changes *which* move is
+
+- **Claim**: For `MinimaxEngine`, changing move ordering changes *which* move is  
   returned among equals but never the value at a fixed depth and full window.
-- **Falsified by**: any pair of orderings returning different root values at the
-  same depth on the same position. This is a correctness invariant, not a
+- **Falsified by**: any pair of orderings returning different root values at the  
+  same depth on the same position. This is a correctness invariant, not a  
   performance claim; a failure is a bug in the engine, not a finding.
 - **Command**: `pytest tests/test_search.py -k ordering_or_value -v`
-- **Watch out**: the test must use `_root_with_value`, not `select` — two
+- **Watch out**: the test must use `_root_with_value`, not `select` — two  
   searches can agree on the move and disagree on the value, or vice versa.
 - **Status**: `[ ]`
 
 ### H2 — Canonicalisation makes one parameter set serve both colours
-- **Claim**: `encode(pos)` and `encode(colour_mirror(pos))` agree to ~1e-08 for
+
+- **Claim**: `encode(pos)` and `encode(colour_mirror(pos))` agree to ~1e-08 for  
   every level, and a greedy policy selects mirrored moves.
-- **Falsified by**: any position where the two encodings diverge beyond float
-  noise. Non-symmetric positions are the interesting ones — the opening array is
+- **Falsified by**: any position where the two encodings diverge beyond float  
+  noise. Non-symmetric positions are the interesting ones — the opening array is  
   symmetric and hides rank/file transposition bugs.
-- **Command**: `pytest tests/test_encode.py -k mirror -v` and
+- **Command**: `pytest tests/test_encode.py -k mirror -v` and  
   `pytest tests/test_perceptron.py -k symmetry -v`
-- **Why it matters**: a failure here silently halves the training data (the
-  model learns from one colour only). This is the single most expensive class of
+- **Why it matters**: a failure here silently halves the training data (the  
+  model learns from one colour only). This is the single most expensive class of  
   bug in the repo and has already bitten four times.
 - **Status**: `[ ]`
 
 ### H3 — Unfinished games carry no signal
-- **Claim**: excluding unfinished games from ratings is right; including them as
+
+- **Claim**: excluding unfinished games from ratings is right; including them as  
   draws would change the ordering.
-- **Falsified by**: a re-fit including `unf` as half-points producing the same
+- **Falsified by**: a re-fit including `unf` as half-points producing the same  
   ordering within one standard error — i.e. the exclusion does not matter.
-- **Command**: `python -m bench --from bench/results-2026-10-02.json` and
-  compare against a re-fit with unfinished counted as draws. (Requires a small
+- **Command**: `python -m bench --from bench/results-2026-10-02.json` and  
+  compare against a re-fit with unfinished counted as draws. (Requires a small  
   patch to `rating.py` to switch the convention; do it behind a flag.)
-- **Watch out**: this is a *methodological* hypothesis. If excluding them makes
-  no difference, the convention is still defensible (it is the conservative
+- **Watch out**: this is a *methodological* hypothesis. If excluding them makes  
+  no difference, the convention is still defensible (it is the conservative  
   choice) but the claim "it matters" is not supported.
 - **Status**: `[ ]`
 
@@ -87,47 +98,51 @@ castling/en-passant term in `evaluate()`). See Group F.
 ## Group B — the ladder (is each rung above the one below?)
 
 ### H4 — Depth is monotone (L2 deeper beats L2 shallower)
+
 - **Claim**: `L2-d3 > L2-d2 > L2-d1` in fitted Elo, and each head-to-head is won.
 - **Falsified by**: any inversion, or a gap inside two standard errors.
-- **Baseline evidence**: already **partially supported** — `578 / 533 / 485`
-  with monotone ordering, but `d3 vs d2` was `+1-0=4` (draws, not wins). So the
+- **Baseline evidence**: already **partially supported** — `578 / 533 / 485`  
+  with monotone ordering, but `d3 vs d2` was `+1-0=4` (draws, not wins). So the  
   claim "deeper is stronger" holds; "deeper wins more decisively" does not.
 - **Command**: `python -m bench --only L2-d1 L2-d2 L2-d3 --games 20`
-- **Honest reading**: an ordering that is monotone but whose gaps are draws is
-  weak evidence. 20 games/pair is the minimum to move the standard error below
+- **Honest reading**: an ordering that is monotone but whose gaps are draws is  
+  weak evidence. 20 games/pair is the minimum to move the standard error below  
   the gap.
 - **Status**: `[~]` (ordering observed, significance not established)
 
 ### H5 — Untrained learners do not beat the level below
+
 - **Claim**: with random weights, L3 does not beat L1, and L5 does not beat L2.
 - **Falsified by**: an untrained L3 winning a match against blind L1.
-- **Baseline evidence**: **supported** — L3 vs L1 was 0-6, all draws by
-  fivefold repetition. L3's rating (440) is fitted from 12 decided games out of
+- **Baseline evidence**: **supported** — L3 vs L1 was 0-6, all draws by  
+  fivefold repetition. L3's rating (440) is fitted from 12 decided games out of  
   25, so it is provisional.
 - **Command**: `python -m bench --only L1 L3 --games 10`
-- **Why it is in the register**: this is the claim that stops a reader crediting
+- **Why it is in the register**: this is the claim that stops a reader crediting  
   architecture where training hasn't happened. It is the repo's honesty gate.
 - **Status**: `[x]` — supported for L3; L5 arm untested at scale
 
 ### H6 — L2 beats every non-searching level
+
 - **Claim**: L2 at depth ≥1 beats L1, material, and random.
-- **Falsified by**: a loss to `material` or `random`. **A loss to `random` is a
+- **Falsified by**: a loss to `material` or `random`. **A loss to `random` is a  
   bug report, not a result.**
-- **Baseline evidence**: **supported** — L2-d1 17-1-0 vs material
+- **Baseline evidence**: **supported** — L2-d1 17-1-0 vs material  
   (97.2%), and random lost 24/24 decided.
 - **Command**: `python -m bench --only random material L2-d1 --games 20`
 - **Status**: `[x]`
 
 ### H7 — The ladder is not transitive (cycles exist)
-- **Claim**: there is at least one A>B, B>C, C>A cycle, so no rating ordering
+
+- **Claim**: there is at least one A>B, B>C, C>A cycle, so no rating ordering  
   is fully faithful.
-- **Falsified by**: all pairwise residuals small (< 0.1 in win-probability
+- **Falsified by**: all pairwise residuals small (< 0.1 in win-probability  
   terms) across a full round-robin.
-- **Baseline evidence**: **supported** — largest residual was
-  `material vs L3` (observed 0.500, expected 0.259): material beats L3 head to
+- **Baseline evidence**: **supported** — largest residual was  
+  `material vs L3` (observed 0.500, expected 0.259): material beats L3 head to  
   head while rating below it.
 - **Command**: `python -m bench --games 20` and read the `residuals` section.
-- **Why it matters**: if cycles are real, "the ladder" is a metaphor and the
+- **Why it matters**: if cycles are real, "the ladder" is a metaphor and the  
   HYPOTHESES register is the honest artefact.
 - **Status**: `[x]`
 
@@ -135,76 +150,80 @@ castling/en-passant term in `evaluate()`). See Group F.
 
 ## Group C — the representation axis (the reason L3.5 exists)
 
-> **L3.5 is now implemented.** `src/chessrl/squarelocal.py` holds the tied arms
-> (`SquareLocalScorer`, `L35Policy`, `L35Trainer`) and the `L3-flat` control;
-> `bench/levels.py` registers all three. The design doc that specified it has
-> been retired — its findings now live in `bench/README.md` ("The L3.5
-> experiment") and in the module docstrings, and the claims that turned out
+> **L3.5 is now implemented.** `src/chessrl/squarelocal.py` holds the tied arms  
+> (`SquareLocalScorer`, `L35Policy`, `L35Trainer`) and the `L3-flat` control;  
+> `bench/levels.py` registers all three. The design doc that specified it has  
+> been retired — its findings now live in `bench/README.md` ("The L3.5  
+> experiment") and in the module docstrings, and the claims that turned out  
 > **wrong** are recorded on H8 and H10 below.
 >
-> Two spec claims were falsified during implementation and are noted per
-> hypothesis: the `lr_shared = lr/64` rule silently zeroed the tied heads at the
-> fixed-point grid (fixed by error feedback), and the geometry feature set cannot
+> Two spec claims were falsified during implementation and are noted per  
+> hypothesis: the `lr_shared = lr/64` rule silently zeroed the tied heads at the  
+> fixed-point grid (fixed by error feedback), and the geometry feature set cannot  
 > express origin/destination file asymmetry.
 >
-> **These are still the hypotheses to run.** They were written before the level
-> existed, which is why they are worth keeping: the falsification conditions were
+> **These are still the hypotheses to run.** They were written before the level  
+> existed, which is why they are worth keeping: the falsification conditions were  
 > fixed in advance and the implementation did not get to move them.
 
 ### H8 — A weight-tied per-square function matches the per-square-weights model
-- **Claim**: at a comparable parameter budget, L3.5 is not worse than L3 by more
+
+- **Claim**: at a comparable parameter budget, L3.5 is not worse than L3 by more  
   than one standard error.
 - **Falsified by**: L3.5 losing to L3 by more than ~1 SE over ≥20 games/pair.
 - **Command**: `python -m bench --only L3 L3.5 --games 20`
-- **Budget caveat, measured**: the arms are **not** budget-matched — they sit at
-  7225 / 783 / 1445 (100% / 10.8% / 20.0%). The original ±10% demand was
-  self-contradictory (see `bench/README.md`). So a *win* by L3.5 is strong
-  evidence for tying, but a *loss* is confounded by the 9x parameter deficit and
+- **Budget caveat, measured**: the arms are **not** budget-matched — they sit at  
+  7225 / 783 / 1445 (100% / 10.8% / 20.0%). The original ±10% demand was  
+  self-contradictory (see `bench/README.md`). So a *win* by L3.5 is strong  
+  evidence for tying, but a *loss* is confounded by the 9x parameter deficit and  
   **cannot** be read as "tying is worse". Read H8 alongside H9 for that reason.
-- **This is a *decision* hypothesis.** A match (even a slight loss inside noise)
-  vindicates the tied bias and licenses spending the freed parameters elsewhere.
-  A clear loss says the per-square weight rows were earning their keep — which
+- **This is a *decision* hypothesis.** A match (even a slight loss inside noise)  
+  vindicates the tied bias and licenses spending the freed parameters elsewhere.  
+  A clear loss says the per-square weight rows were earning their keep — which  
   is itself an interesting statement about chess geometry.
 - **Status**: `[~]` runnable, untrained null result recorded (see below)
 
 ### H9 — Parameter budget, not topology, dominates at this scale
-- **Claim**: a flat MLP over `encode()` at matched parameter count does not beat
+
+- **Claim**: a flat MLP over `encode()` at matched parameter count does not beat  
   the factorised models.
 - **Falsified by**: `L3-flat` beating both L3 and L3.5 at equal budget.
 - **Command**: `python -m bench --only L3 L3.5 L3-flat --games 20`
-- **Measured, and it is the strongest evidence for the control's value**:
-  `L3-flat`'s origin head is **exactly constant across squares (std = 0.0)** —
-  it gives up spatial structure entirely. That is what makes it a control rather
+- **Measured, and it is the strongest evidence for the control's value**:  
+  `L3-flat`'s origin head is **exactly constant across squares (std = 0.0)** —  
+  it gives up spatial structure entirely. That is what makes it a control rather  
   than a weaker copy of L3.
-- **Why it is the control**: without it, an L3.5 win is indistinguishable from
+- **Why it is the control**: without it, an L3.5 win is indistinguishable from  
   "any change at all helps". This is the load-bearing arm of the experiment.
 - **Status**: `[~]` runnable, untrained null result recorded (see below)
 
 ### H10 — Global structure is not recoverable per-square
-- **Claim (the *interesting* one)**: a per-square function cannot express facts
-  that are irreducibly about several squares ("open file" is a fact about seven
-  other squares), so tying must lose *some* strength on positions distinguished
+
+- **Claim (the *interesting* one)**: a per-square function cannot express facts  
+  that are irreducibly about several squares ("open file" is a fact about seven  
+  other squares), so tying must lose *some* strength on positions distinguished  
   only by global structure.
-- **ALREADY PARTLY SUPPORTED, from implementation alone** — a rare case of a
-  hypothesis confirmed before any match. `_geom_features` carries `dest_rank` but
-  **no destination-file term**, and takes `abs(tf - ff)`, so `b1→c3` and `g1→h3`
-  produce **byte-identical** geometry vectors. Two knights also have identical
-  channel vectors, and the tied destination row is origin-blind. The model
-  therefore **cannot express "a knight belongs near the centre, not on the rim"**
-  — which L3 can, via its per-destination `W_to_dst` row.
+- **ALREADY PARTLY SUPPORTED, from implementation alone** — a rare case of a  
+  hypothesis confirmed before any match. `_geom_features` carries `dest_rank` but  
+  **no destination-file term**, and takes `abs(tf - ff)`, so `b1→c3` and `g1→h3`  
+  produce **byte-identical** geometry vectors. Two knights also have identical  
+  channel vectors, and the tied destination row is origin-blind. The model  
+  therefore **cannot express "a knight belongs near the centre, not on the rim"**  
+  — which L3 can, via its per-destination `W_to_dst` row.  
   So the stated weak point is **concrete and located**, not hypothetical.
-- **Falsified by**: L3.5 **matching** L3 specifically on a filtered set of
-  positions whose best move is determined by a global fact (open file, passed
-  pawn, weak square complex, king safety). Given the above, this now looks
+- **Falsified by**: L3.5 **matching** L3 specifically on a filtered set of  
+  positions whose best move is determined by a global fact (open file, passed  
+  pawn, weak square complex, king safety). Given the above, this now looks  
   unlikely — which makes it the more worth running.
-- **Command**: needs a curated position set, not the opening book. Build ~50
-  positions where the best move is chosen by a single named global feature, then
+- **Command**: needs a curated position set, not the opening book. Build ~50  
+  positions where the best move is chosen by a single named global feature, then  
   compare top-1 agreement of L3 vs L3.5 against depth-4 search as the oracle.
-- **Caveat**: the located limitation is a *missing-feature* problem, not strictly
-  a *tying* problem. Adding a destination-file feature would change the fixed
-  feature set the comparison rests on, which is why it was reported and not
+- **Caveat**: the located limitation is a *missing-feature* problem, not strictly  
+  a *tying* problem. Adding a destination-file feature would change the fixed  
+  feature set the comparison rests on, which is why it was reported and not  
   patched. Distinguishing the two is itself worth a result.
 - **Status**: `[~]` mechanism located; strength cost unmeasured
+
 
 ### H8/H9 first run — null, and correctly so
 - **Result (2026-10-02)**: **not established**, as expected. 4 games/pair,
@@ -396,6 +415,7 @@ dataset**, or **needs the level** (a new arm such as `L3-flat` or L3.5).
 - **Runnable today**: n/a
 - **Status**: `[x]` (settled, evidenced locally)
 
+
 ### H21 — The encoder leaks useful geometry before any learning
 - **Evidence status**: `CONTESTED` — the interesting half is open
 - **Claim**: an **untrained** model still prefers central pawn pushes to a-file
@@ -491,6 +511,165 @@ dataset**, or **needs the level** (a new arm such as `L3-flat` or L3.5).
 
 ---
 
+## Group G — the training-signal axis (which signal makes a learner?)
+
+> Group C varied the *function* (representation) at a fixed signal. This group
+> varies the *signal* (what the learner is trained on) at a fixed function. The
+> learner is held constant — same architecture, same parameter budget, **and the
+> same data budget (games / positions seen)** — so a difference is attributable
+> to the signal, not the learner and not the volume. That is the H9 rule applied
+> to data rather than parameters, and it is why the random-walk arm (H26) is the
+> control: without it, "trained" is indistinguishable from "touched more games".
+>
+> **Do-ability, assessed against the code (2026-10-03).** Every paradigm maps to
+> an existing hook; only one has a real blocker:
+>
+> | paradigm | signal type | hook that already exists | blocker |
+> |---|---|---|---|
+> | self-play (incumbent) | outcome RL vs frozen self-copy | `train_naive.train()` frozen-copy opponent | none — runnable today |
+> | round-robin | outcome RL vs a rotating opponent pool | `train_naive.train(opponent=...)` override | none — needs a thin opponent-cycle scheduler |
+> | graded by master | supervised imitation of a stronger player | `L3Trainer.train_on_search_feedback` (currently fed depth-5 search) | **a true master is not vendored** — depth-5 is a built-in *weak* master, runnable today; a real engine / master games is the blocker |
+> | random walks (control) | outcome RL on noise games | `RandomPolicy` generates the corpus | none — runnable today |
+>
+> What is genuinely missing is a **per-paradigm driver** (train N games with
+> signal S, then bench against fixed reference opponents, report rating ± SE) —
+> the analogue of `bench/ensemble_run.py`. The hooks exist; the driver does not.
+> That is a small build, not a research blocker.
+>
+> **None of these is settled.** The wider field expects opponent diversity and
+> supervision to help *eventually*; whether they help *at this budget and this
+> architecture* is precisely the open question, and it is why the control matters
+> more than the prediction. Related: H9 (the control is load-bearing), H20
+> (positional knowledge pays only after tactics), H23 (the master arm is the one
+> that would teach castling — L3 already wires `can_castle` into its origin
+> scoring, so it has the *features* to absorb supervision; the open question is
+> whether the *signal* is what it lacks).
+
+### H24 — Opponent diversity: round-robin beats self-play at equal data budget
+- **Claim**: at equal games seen and identical architecture, a learner trained
+  against a rotating pool of opponents (random / material / L2 from the roster)
+  beats the same learner trained by pure self-play, by more than ~1 SE on a
+  common reference set.
+- **Falsified by**: self-play matching or beating round-robin within 1 SE —
+  opponent diversity buys nothing at this scale.
+- **Why it might hold**: the frozen self-copy converges to the learner's own
+  style, so self-play rarely produces positions the learner would not itself
+  reach. A diverse pool forces responses to unfamiliar play and covers more of
+  the position space.
+- **Why it might not (the honest null)**: if the binding constraint is the
+  *eval/reward* signal (H23's gap — the learner cannot tell a good move from a
+  bad one), then better opponents do not help, because the learner cannot read
+  the lesson in the games either way.
+- **Command**: needs the per-paradigm driver. `train_naive.train(opponent=...)`
+  already accepts the override; a round-robin arm cycles a pool through it.
+- **Read against**: H26 — if random-walk training also helps, the diversity
+  effect is confounded.
+- **Status**: `[~]` hooks runnable today; driver thin
+
+### H25 — Master-graded beats self-taught at equal positions seen
+- **Claim**: at equal positions seen, a learner trained by imitating a master's
+  moves beats the same learner trained by self-play outcome-RL, by more than ~1 SE.
+- **Falsified by**: self-play matching master-graded within 1 SE — naive RL
+  suffices and supervision buys nothing. A draw here is a *strong* "naive is
+  enough" result, not a non-result.
+- **This is a *decision* hypothesis.** It prices the naive premise the whole
+  ladder is built on. A clear master win says the self-taught framing understates
+  the architecture's ceiling; a draw vindicates naive RL at this scale.
+- **Weak master runnable today**: `train_on_search_feedback` already imitates
+  depth-5 search, which is a built-in weak master — a first run needs no new
+  data. The **strong version is blocked** on a vendored master (engine or master
+  games) plus a shim turning master moves into the `(move, weight)` feedback
+  format the hook expects.
+- **Castling cross-ref (H23)**: this is the paradigm that would teach castling —
+  a master that castles supplies the reward self-play lacks. A master-trained L3
+  that *still* does not castle indicts the features (no castling plane); one that
+  *does* indicts the self-play reward. The arm doubles as the feature-vs-signal
+  diagnostic left open in H23.
+- **Status**: `[-]` weak-master (depth-5) runnable today; true master blocked on data
+
+
+### H26 — The random-walk control: noise carries no exploitable signal
+- **Claim**: a learner trained on games between two `RandomPolicy` players does
+  **not** beat an untrained learner, by more than ~1 SE.
+- **Falsified by**: random-walk-trained beating untrained by more than 1 SE —
+  which would mean the learner extracts structure even from noise, and *every*
+  comparison above is confounded by "more games = better" rather than "better
+  signal".
+- **Why it is the control** (the L3-flat of this axis, cf. H9): without it, a
+  self-play or master win is indistinguishable from "any training at all helps".
+  This is the load-bearing arm — run it *first*.
+- **A subtlety worth stating**: random-vs-random outcomes are not pure noise.
+  Random play slightly favours captures and checks, so the learner may pick up a
+  faint material-greed signal. A *small* random-walk gain is therefore expected
+  and is itself informative; the claim is only that it cannot reach the trained
+  levels. If it *does*, the benchmark's training loop is the finding, not any
+  paradigm.
+- **Command**: `RandomPolicy` exists; generate random-vs-random games, train on
+  them, bench against an untrained clone. Runnable today (thin driver).
+- **Status**: `[~]` runnable today
+
+---
+
+### H27 — Crow Search Algorithm (CSA) randomness as a training-signal dial
+- **Claim:** a training-game generator whose move sampling is parameterised by a
+  Crow Search Algorithm-style exploration knob (awareness probability
+  `AP ∈ [0,1]`, flight length `fl`) lets a learner explore *new* moves off its
+  self-play attractor. Intermediate `AP` reaches fixed strength per game *faster*
+  than either endpoint at equal data budget: `AP=0` ≈ pure self-play (incumbent),
+  `AP=1` ≈ pure random-walk (the H26 control).
+- **Falsified by:** pure self-play (`AP=0`) or pure random-walk (`AP=1`) matching
+  the interpolated arm within ~1 SE on a common reference set; or a monotonic
+  improvement as `AP` goes 0→1 (no intermediate optimum).
+- **Why it matters:** generalises H26 from a single baseline into a *continuous*
+  randomness spectrum, and directly tests the intuition that "differing amounts
+  of randomness allow exploring new moves." Other randomness-injection mechanisms
+  (temperature sampling, random-move injection, random-legal-position restarts
+  seeded from saved game positions) are alternative dials for the same axis.
+- **Command:** needs a `noise`/`AP` parameter on `RandomPolicy`/opponent move
+  sampling + the per-paradigm driver (same blocker as H24/H25/H26). Sweep
+  `AP ∈ {0, 0.25, 0.5, 0.75, 1.0}`, train N games each at matched budget, bench
+  vs fixed references.
+- **Runnable today:** partially — `RandomPolicy` exists; needs the `AP` parameter
+  + the driver.
+- **Status:** `[ ]`
+
+## Group H — the feedback-style axis (what target does the learner train on?)
+
+> Six candidate feedback styles, all at the fixed function / fixed data budget of
+> Group G, so any difference is attributable to the *signal form*, not the learner
+> or the volume. The random-start seeding (variant) is an orthogonal corpus-init
+> mechanism layerable on any style. Runs need the per-paradigm driver (Group G
+> blocker); see H24/H25/H26.
+
+### H28 — Feedback style changes learning rate at equal data budget
+- **Claim:** at matched games/positions seen and identical architecture, the *form*
+  of the training signal changes how fast and how far a learner improves, and the
+  ranking among the six styles is non-trivial (no style dominates).
+- **Falsified by:** every style landing within ~1 SE of every other on a common
+  reference set — i.e. signal form is irrelevant at this scale (a strong
+  "naive-RL-is-enough" result).
+- **Styles (arms):**
+  1. **Outcome** — win/lose terminal signal only (the incumbent self-play target).
+  2. **Discounted outcome** — win/lose with a *decaying* credit further back in
+     the game (temporal credit assignment / eligibility traces).
+  3. **Master-graded value** — position strength after 0..n *best-play* moves,
+     labelled by a master (depth-5 search is the built-in weak master today).
+  4. **Self-graded value** — position strength after 0..n *generated* moves, graded
+     by the learner's own (bootstrapped) value head.
+  5. **Blended / DAgger-style** — train on the learner's own generated positions
+     but *graded by the master* (dataset aggregation, Ross et al. 2011),
+     iteratively; generalises 3 & 4 and fixes covariate shift.
+  6. **Exploration-bonus / intrinsic-motivation** — reward visiting state–action
+     pairs the current policy rates as novel (count- or ensemble-disagreement-
+     based); ties directly back to H27/CSA's exploration dial.
+- **Corpus-init variant:** recurring training from *random legal positions* saved
+  from previous games (diverse restarts), layerable on any arm above.
+- **Command:** needs the per-paradigm driver extended so each style is a selectable
+  `feedback=` mode; sweep styles at matched budget, bench vs fixed references.
+- **Runnable today:** partially — 1–2 need only a credit rule; 3–6 need the
+  value-head + driver; the variant needs a position-store.
+- **Status:** `[ ]`
+
 ## Result template
 
 Copy this under a hypothesis when you test it:
@@ -532,3 +711,72 @@ Before adding a row, answer these three, in the entry:
    A hypothesis blocked on a level that does not exist is still worth recording —
    writing the kill condition *before* building the thing is what stops the
    thing being built to succeed (this is why H8–H10 exist while L3.5 does not).
+
+---
+
+## Literature review linkage (2026-10-04)
+
+Consolidated from `hypothesis-lit-review/report.md` (15 validated items). Each
+entry below maps a register hypothesis to the literature. The harness sits at
+**toy/numpy scale** (~10³ params, hundreds of self-play games); the recurring
+finding is that most literature verdicts are *silent or inverted* at this scale,
+so a local test is often **novel by construction**, not a replication. The
+register above stays the record of *guesses*; the prove/not-prove lives in a
+future document.
+
+- **H17 transitions** — *partially supports.* Mechanism (non-uniform sampling
+  accelerates value learning: PER, Ape-X, prioritized sweeping) established
+  toy→Atari; the *irreversibility* criterion is unpublished at every scale
+  (AZ/Lc0 use uniform replay). Local regime = white space.
+  Details + suggested test: `hypothesis-lit-review/report.md#h17-transitions`
+- **H21 arch-priors** — *supports premise, silent on payoff.* Structure carries a
+  prior before training (DIP, spectral bias, WANN) established at small-net;
+  *unpublished* at numpy scale; swamped by training at AZ/Lc0.
+  `…/report.md#h21-arch-priors`
+- **H23 special-moves** — *supports.* "Legal but invisible" is a known failure
+  pattern; every serious representation encodes castling explicitly (AZ: 4
+  constant planes). Holds across all regimes; toy/numpy has neither plane nor
+  term — exactly the local gap. `…/report.md#h23-special-moves`
+- **H18 horizon** — *partially supports.* Berliner's horizon effect + quiescence
+  are settled at engine scale; magnitude at depth 2–3 with a material+PST eval is
+  *untested* (AZ/Lc0 dissolve the question). `…/report.md#h18-horizon`
+- **H19 non-transitivity** — *partially supports.* Cycles confirmed at >1B-game
+  human scale and AI-population scale; the *greedy-material-hub* structural claim
+  is novel/untested anywhere. `…/report.md#h19-nontransitivity`
+- **H20 tactics-first** — *supports*, but **regime-bound**: Ruoss 2024 inverts it
+  at 270M params (~5 orders of magnitude above local scale). Local ladder premise
+  is safe. `…/report.md#h20-tactics-first`
+- **H16 factored-action** — *partially supports.* Factorisation is universal in
+  strong nets, but no published work isolates statistical sharing from capacity at
+  *matched* params/updates (H16's condition). No evidence at toy/numpy scale.
+  `…/report.md#h16-factored-action`
+- **H08 weight-tying** — *supports* (structural, not controlled-untied baselines);
+  established small-net & AZ/Lc0; **untested at toy/numpy (~10³ params)**. NNUE's
+  per-king-slice untying is the boundary. `…/report.md#h08-weight-tying`
+- **H09 budget-vs-topology** — *mixed; verdict flips across regimes.* Budget-
+  dominates holds ~10⁶–10¹⁰+ params; topology-matters holds in matched-parameter
+  game-net comparisons. **No measurement at ~10³ params.**
+  `…/report.md#h09-budget-vs-topology`
+- **H10 relational-limits** — *partially supports.* Per-square functions cannot
+  express irreducibly relational facts (supports small-net & engine scale); silent
+  at toy/numpy. Local caveat: missing-feature, not proven tying, problem.
+  `…/report.md#h10-relational-limits`
+- **H11 learned-leaf-eval** — *supports direction*; every published success used
+  search-derived/supervised labels (KnightCap, NNUE). **Silent at numpy scale**;
+  cheapest success used thousands of FICS games / ~175M positions. Cheapest local
+  arm: supervised value head via `train_on_search_feedback`.
+  `…/report.md#h11-learned-leaf-eval`
+- **NNUE** — *supports* (engine-scale; displaced handcrafted eval since ~2020, via
+  *supervised* training). Transferable to local = king-relative features +
+  supervised-from-search signal; accumulator/quantization are a regime gap.
+  `…/report.md#nnue`
+- **H12 move-ordering** — *supports.* Value-invariance is a **theorem** (Knuth &
+  Moore 1975), all regimes; node-saving magnitude is canonical at engine/AZ scale
+  but *unmeasured locally*. `…/report.md#h12-move-ordering`
+- **H13 / H3 rating-methodology** — *supports; regime-free.* SE formula
+  `347/√(n(1−d))` predicts ~82 Elo vs observed 79–93, so 6 games/pair cannot
+  establish sub-100-Elo gaps. H3 (unfinished-as-draws) untested locally.
+  `…/report.md#h13-rating-methodology`
+- **searchless-gm (Ruoss 2024)** — *supports at 10⁸-param/10⁷-game regime;
+  explicitly inverted at ≤10M params.* At the local toy/numpy regime the claim
+  *fails* — that is precisely its local role. `…/report.md#searchless-gm`

@@ -201,6 +201,7 @@ def fit_bradley_terry(
     prior: float = 1.0,
     iterations: int = 200,
     tol: float = 1e-9,
+    include_unfinished_as_draws: bool = False,
 ) -> FitResult:
     """Maximum-likelihood Elo ratings from a set of match records.
 
@@ -246,7 +247,15 @@ def fit_bradley_terry(
     # two half-weight observations rather than a special-cased outcome.
     obs: list[tuple[int, int, float, float]] = []
     for rec in records:
-        if rec.played <= 0:
+        # Unfinished games carry no information about who was better; by default
+        # they are excluded from the fit. When ``include_unfinished_as_draws`` is
+        # set (the H3 experiment), each unfinished game is folded in as a half-win
+        # to each side -- the exact "score a ply-capped game as a draw" trap H3
+        # warns against -- so the fit can quantify how much that choice moves the
+        # line. The default path is unchanged: ``eff_draws == rec.draws`` and an
+        # all-unfinished record is still skipped.
+        eff_draws = rec.draws + (rec.unfinished if include_unfinished_as_draws else 0)
+        if rec.played <= 0 and eff_draws <= 0:
             continue
         i, j = index.get(rec.a), index.get(rec.b)
         if i is None or j is None or i == j:
@@ -255,9 +264,9 @@ def fit_bradley_terry(
             obs.append((i, j, float(rec.wins), 1.0))
         if rec.losses:
             obs.append((j, i, float(rec.losses), 1.0))
-        if rec.draws:
-            obs.append((i, j, float(rec.draws), 0.5))
-            obs.append((j, i, float(rec.draws), 0.5))
+        if eff_draws:
+            obs.append((i, j, float(eff_draws), 0.5))
+            obs.append((j, i, float(eff_draws), 0.5))
     if not obs:
         return FitResult([], 0.0, 0, True, anchor)
 
