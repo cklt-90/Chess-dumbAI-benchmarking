@@ -1,5 +1,5 @@
 {
-  "blessed_at": "2026-10-05T10:02:25+00:00",
+  "blessed_at": "2026-10-05T10:17:39+00:00",
   "blessed_by": "workbuddy",
   "claims": [
     {
@@ -57,9 +57,9 @@
         }
       },
       "result": {
-        "detail": "missing (searched roots)",
-        "observed": null,
-        "ok": false
+        "detail": "present",
+        "observed": "C:\\Users\\Trinity\\Programmes\\Chess-player\\bench\\scripts\\h23_census.py",
+        "ok": true
       }
     },
     {
@@ -87,9 +87,9 @@
         }
       },
       "result": {
-        "detail": "missing (searched roots)",
-        "observed": null,
-        "ok": false
+        "detail": "present",
+        "observed": "C:\\Users\\Trinity\\Programmes\\Chess-player\\bench\\kaggle\\out_smoke\\results.json",
+        "ok": true
       }
     },
     {
