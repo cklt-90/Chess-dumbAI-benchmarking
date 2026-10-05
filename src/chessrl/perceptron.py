@@ -9,9 +9,9 @@ distribution from what it sees.
 
 The size problem, and how it is solved
 --------------------------------------
-The obvious design -- flatten the ``(26, 8, 8)`` tensor and multiply by a weight
-matrix -- needs 64 x 1664 = 106k parameters for the origin head alone, and
-64 x 64 x 1664 = 6.8M for the destination head. That is not a perceptron, it is
+The obvious design -- flatten the ``(28, 8, 8)`` tensor and multiply by a weight
+matrix -- needs 64 x 1792 = 115k parameters for the origin head alone, and
+64 x 64 x 1792 = 7.3M for the destination head. That is not a perceptron, it is
 a lookup table with extra steps, and with the number of games available in this
 benchmark it would never converge.
 
@@ -19,7 +19,7 @@ So the model stays **factorised**, exactly as L1's does, but each factor becomes
 a small perceptron over *local* features rather than a constant:
 
 * **origin head** -- score every square by a weight vector over that square's
-  own channel values. ``W_from`` is ``(64, TOTAL_CHANNELS)``: 1664 parameters.
+  own channel values. ``W_from`` is ``(64, BINARY_CHANNELS)``: 1536 parameters.
 * **destination head** -- score every square, given the origin, using
   (a) the destination square's own channel values, (b) the origin's, and
   (c) a small set of geometric relations between them.

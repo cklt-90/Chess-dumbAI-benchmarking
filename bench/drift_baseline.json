@@ -1,0 +1,118 @@
+{
+  "blessed_at": "2026-10-05T10:02:25+00:00",
+  "blessed_by": "workbuddy",
+  "claims": [
+    {
+      "claim": {
+        "key": "tanh",
+        "kind": "symbol",
+        "source": "line 98",
+        "spec": {
+          "present": true
+        }
+      },
+      "result": {
+        "detail": "not defined in target",
+        "observed": false,
+        "ok": false
+      }
+    },
+    {
+      "claim": {
+        "key": "CHEAP-HARVEST.md",
+        "kind": "path",
+        "source": "line 6",
+        "spec": {
+          "present": true
+        }
+      },
+      "result": {
+        "detail": "present",
+        "observed": "C:\\Users\\Trinity\\Programmes\\Chess-player\\bench\\CHEAP-HARVEST.md",
+        "ok": true
+      }
+    },
+    {
+      "claim": {
+        "key": "hypothesis-lit-review/report.md",
+        "kind": "path",
+        "source": "line 10",
+        "spec": {
+          "present": true
+        }
+      },
+      "result": {
+        "detail": "present",
+        "observed": "C:\\Users\\Trinity\\Programmes\\Chess-player\\hypothesis-lit-review\\report.md",
+        "ok": true
+      }
+    },
+    {
+      "claim": {
+        "key": "h23_census.py",
+        "kind": "path",
+        "source": "line 28",
+        "spec": {
+          "present": true
+        }
+      },
+      "result": {
+        "detail": "missing (searched roots)",
+        "observed": null,
+        "ok": false
+      }
+    },
+    {
+      "claim": {
+        "key": "bench/kaggle/kaggle_l3_train.py",
+        "kind": "path",
+        "source": "line 38",
+        "spec": {
+          "present": true
+        }
+      },
+      "result": {
+        "detail": "present",
+        "observed": "C:\\Users\\Trinity\\Programmes\\Chess-player\\bench\\kaggle\\kaggle_l3_train.py",
+        "ok": true
+      }
+    },
+    {
+      "claim": {
+        "key": "results.json",
+        "kind": "path",
+        "source": "line 79",
+        "spec": {
+          "present": true
+        }
+      },
+      "result": {
+        "detail": "missing (searched roots)",
+        "observed": null,
+        "ok": false
+      }
+    },
+    {
+      "claim": {
+        "key": "bench/scripts/h23_census.py",
+        "kind": "path",
+        "source": "line 129",
+        "spec": {
+          "present": true
+        }
+      },
+      "result": {
+        "detail": "present",
+        "observed": "C:\\Users\\Trinity\\Programmes\\Chess-player\\bench\\scripts\\h23_census.py",
+        "ok": true
+      }
+    }
+  ],
+  "doc": "bench\\KAGGLE-PLAN.md",
+  "doc_sha256": "08777add6b4b19e88b67942f748b189aca4b030cf24014b51961483b3aeb1482",
+  "does_not_prove": "correctness, intent, or that the doc is right",
+  "kind": "golden",
+  "proves": "no-change-since-baseline",
+  "schema": 1,
+  "target": "."
+}

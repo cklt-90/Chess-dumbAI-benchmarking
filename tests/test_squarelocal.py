@@ -179,8 +179,8 @@ def test_parameter_count_within_ten_percent_of_L3(policy):
 
     The spec (§3) demands L3.5 land within +-10% of L3's 7609 parameters, and
     (§3, §7.2) demands that constraint be *asserted* rather than documented. The
-    spec's own layout table, however, sums to **783** -- 10.8% of L3 -- so the
-    spec contradicts itself, and no honest implementation can satisfy both.
+    spec's own layout table, however, sums to **783** (roughly 10% of L3) -- so
+    the spec contradicts itself, and no honest implementation can satisfy both.
 
     This test asserts what was actually implemented, and asserts the *reason*:
     the level is deliberately lean and purely tied, with the budget gap spent on

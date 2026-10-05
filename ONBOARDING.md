@@ -53,7 +53,7 @@ Repo root: `C:/Users/Trinity/Programmes/Chess-player`.
 | `__init__.py` | `WHITE`, `BLACK`, `PLANE_ORDER` (12 piece planes; `plane ^ 6` flips colour) |
 | `bitboard.py` | L0. `board_to_planes`, `canonical`, `apply_canonical`, `attack_map`, `defended_map`, packing |
 | `masks.py` | L0. `legal_move_mask` `(64,64,5)`, flat-index converters, state masks |
-| `encode.py` | L0. **Shared by every level.** `encode()` -> `(26, 8, 8)` float32: 22 binary + 4 value planes |
+| `encode.py` | L0. **Shared by every level.** `encode()` -> `(28, 8, 8)` float32: 24 binary + 4 value planes |
 | `value.py` | L0. Material, PSTs, `evaluate`, `capture_value`, `recapture_risk`, `phase_weights` |
 | `cache.py` | L0. `PositionCache` (packed-plane keys), `MidstateStore` (stratified phase corpus) |
 | `game.py` | L0. `play_game`, `play_match`, `GameResult`; `RandomPolicy`, `MaterialPolicy` |
@@ -109,8 +109,8 @@ right.
 | L1 blind factored softmax | done | no board input; probability floor, not strength |
 | L1.5 trainer | done | diminishing credit, per-combination counters, prune < 0.01; strip counters before saving weights |
 | L2 alpha-beta | done | `MinimaxEngine`; `InformedMinimaxPolicy` holds no parameters |
-| L3 perceptron | done | 7225 params, ~1.8 ms/position, symmetry exact to 1.5e-08 |
-| L3.5 weight-tied per-square | done | 783 params (10.8% of L3); `L3-flat` control at 1445. **Not budget-matched** — see `bench/README.md` |
+| L3 perceptron | done | 7609 params, ~1.8 ms/position, symmetry exact to 1.5e-08 |
+| L3.5 weight-tied per-square | done | 787 params (10.3% of L3); `L3-flat` control at 1573. **Not budget-matched** — see `bench/README.md` |
 | L4 torch | done | parity with L3 is exact (diff 0.0); this is the reason it exists |
 | L5 guided alpha-beta | done | 95083 params; untrained, does not beat L2 |
 | L6 ensemble + tournament bench | **implemented; negative under default rule, neutral under relative rule** | blends L1/L3, votes L2-d2; weights fitted by `bench/ensemble_run.py`. Default (absolute) weights make it **worse than L2-d2 alone** — the blind pair holds 0.514 and outvotes the one member that sees material. `EnsembleConfig.relative=True` (`--relative`) fixes this structurally: below-mean members drop to ~0 and the ensemble equals its best member. See `bench/README.md` |

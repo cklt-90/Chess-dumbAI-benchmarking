@@ -167,23 +167,23 @@ measures nothing:
 
 | arm | tier | params | what it varies |
 |---|---|---|---|
-| `L3` | ladder | 7225 (100%) | baseline: separate weight row per square |
-| `L3.5` | ladder | 783 (10.8%) | the per-square function is **weight-tied** |
-| `L3-flat` | ablation | 1445 (20.0%) | **control**: no spatial structure at all |
+| `L3` | ladder | 7609 (100%) | baseline: separate weight row per square |
+| `L3.5` | ladder | 787 (10.3%) | the per-square function is **weight-tied** |
+| `L3-flat` | ablation | 1573 (20.7%) | **control**: no spatial structure at all |
 
 `L3-flat` is the control and is not optional. Without it, a win by L3.5 cannot
 be distinguished from "any change from L3 helps". It is a flat linear model over
 the flattened encoder output with a rectifier; measured, its origin head is
 *exactly constant* across squares (`std = 0.0`), which is precisely the spatial
 structure it gives up, and it is only viable at all because one hidden unit over
-a 22x64 input already costs 1408 weights.
+a 24x64 input already costs 1536 weights.
 
 ### The budget is not literally equal, and that is stated rather than hidden
 
-Spec §3 asks the three arms to land within +-10% of L3's 7225 parameters, then
-its own layout table lists **783**. Those two demands contradict each other and
-no honest implementation satisfies both. The arms above land at 100% / 10.8% /
-20.0%.
+Spec §3 asks the three arms to land within +-10% of L3's 7609 parameters, then
+its own layout table lists **787**. Those two demands contradict each other and
+no honest implementation satisfies both. The arms above land at 100% / 10.3% /
+20.7%.
 
 Closing the gap would require the tied arm to run a ReLU of width ~649 over a
 **9-dimensional** context input -- 5841 parameters of deliberate

@@ -137,7 +137,7 @@ def test_policy_selects_a_legal_move_for_both_colours(policy):
 def test_parameter_count_is_in_the_low_thousands(policy):
     """The whole design hinges on this being small.
 
-    A flattened perceptron over ``(22, 8, 8)`` needs 6.8M parameters for the
+    A flattened perceptron over ``(28, 8, 8)`` needs 7.3M parameters for the
     destination head alone; this factorised version must stay orders of
     magnitude below that or the level is untrainable in the games available.
     """

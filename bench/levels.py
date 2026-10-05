@@ -229,21 +229,23 @@ def default_roster() -> list[LevelSpec]:
     # alone cannot distinguish "the tied per-square prior helps" from "any
     # change helps", and L3-flat is the arm that rules the second out.
     #
-    # BUDGET NOTE. The spec's §3 asks for +-10% of L3's 7225 and its §3 layout
-    # table lists 783 -- an internal contradiction no honest implementation can
-    # satisfy. These three arms land at 7225 / 783 / 1445, i.e. 100% / 10.8% /
-    # 20.0% of L3. The comparison is therefore *not* equal-budget in the literal
+    # BUDGET NOTE. The spec's §3 asks for +-10% of L3's then-7225 and its §3
+    # layout table lists 783 -- an internal contradiction no honest
+    # implementation can satisfy. These three arms land at 7609 / 787 / 1573,
+    # i.e. 100% / 10.3% / 20.7% of L3 (the counts moved from 7225 / 783 / 1445
+    # when BINARY_CHANNELS went 22->24; see CHEAP-HARVEST.md). The comparison is
+    # therefore *not* equal-budget in the literal
     # sense; it is "same task, same features, same signal, architecture the only
     # free variable, at the width each architecture can honestly use". The
     # deviation and its reason are recorded in ``squarelocal.py`` and in the
     # test named ``test_parameter_count_within_ten_percent_of_L3``.
     specs.append(LevelSpec(
         "L3.5", _l35, "ladder", needs_torch=False,
-        notes="weight-tied per-square scorer, lean budget (783 params)",
+        notes="weight-tied per-square scorer, lean budget (787 params)",
     ))
     specs.append(LevelSpec(
         "L3-flat", _l3_flat, "ablation", needs_torch=False,
-        notes="flat linear over encode(), control arm (1445 params)",
+        notes="flat linear over encode(), control arm (1573 params)",
         tags=("ablation",),
     ))
 

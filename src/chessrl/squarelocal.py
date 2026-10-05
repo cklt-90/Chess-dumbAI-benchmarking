@@ -47,7 +47,8 @@ number. That is padding, and it would also make L3.5's context path *bigger*
 than L3's entire model, which destroys the comparison in the opposite
 direction.
 
-So L3.5 runs at **783 parameters, 1/9.23 of L3's 7225**, and the claim it
+So L3.5 runs at **787 parameters, 1/9.67 of L3's 7609** (the counts moved from
+783 / 7225 when BINARY_CHANNELS went 22->24), and the claim it
 supports is stated accordingly: *same task, same features, same action space,
 same training signal, at an order of magnitude fewer parameters, with the
 spatial-structure prior supplied by weight tying instead of by hand-shaped
@@ -115,7 +116,7 @@ __all__ = [
 ]
 
 # The context hidden width that realises the "lean, purely tied" budget:
-# 783 parameters, 1/9.23 of L3's 7225. See the module docstring.
+# 787 parameters, 1/9.67 of L3's 7609. See the module docstring.
 LEAN_H_CTX = 64
 
 # How many contributing squares the per-square heads receive credit from. L3's
@@ -153,7 +154,7 @@ def parameter_count(
 
 
 def implemented_fraction_of(h_ctx: int = LEAN_H_CTX) -> float:
-    """L3.5's parameter count as a fraction of L3's 7225."""
+    """L3.5's parameter count as a fraction of L3's (currently 7609)."""
     from .perceptron import PerceptronConfig, PerceptronScorer
 
     l3 = PerceptronScorer(PerceptronConfig()).n_parameters

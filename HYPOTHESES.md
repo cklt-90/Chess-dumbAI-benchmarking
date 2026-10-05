@@ -173,7 +173,7 @@ castling/en-passant term in `evaluate()`). See Group F.
 - **Falsified by**: L3.5 losing to L3 by more than ~1 SE over ≥20 games/pair.
 - **Command**: `python -m bench --only L3 L3.5 --games 20`
 - **Budget caveat, measured**: the arms are **not** budget-matched — they sit at  
-  7225 / 783 / 1445 (100% / 10.8% / 20.0%). The original ±10% demand was  
+  7609 / 787 / 1573 (100% / 10.3% / 20.7%). The original ±10% demand was  
   self-contradictory (see `bench/README.md`). So a *win* by L3.5 is strong  
   evidence for tying, but a *loss* is confounded by the 9x parameter deficit and  
   **cannot** be read as "tying is worse". Read H8 alongside H9 for that reason.
@@ -487,7 +487,7 @@ dataset**, or **needs the level** (a new arm such as `L3-flat` or L3.5).
      rewarded beyond the immediate pawn".
 
 - **Concrete, checkable defect found while testing**: the encoder has **no
-  castling-rights channel.** `CHANNELS` (22 binary) contains no `castling_*`
+  castling-rights channel.** `CHANNELS` (24 binary) contains no `castling_*`
   entry; `en_passant` is channel 21 and `promotion_rank_w/b` are 19/20. So a
   learner sees `has_castling_rights(me)` only as a single scalar in
   `board_context_features` (`encode.py:424`), **not as a spatial fact about which
