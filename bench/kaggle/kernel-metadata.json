@@ -8,5 +8,5 @@
   "enable_internet": true,
   "enable_gpu": false,
   "enable_tpu": false,
-  "keywords": ["chess", "reinforcement-learning", "benchmark", "numpy"]
+  "keywords": ["reinforcement-learning", "benchmark", "numpy"]
 }
