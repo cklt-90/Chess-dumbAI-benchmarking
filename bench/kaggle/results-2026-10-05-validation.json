@@ -1,0 +1,63 @@
+{
+  "title": "Kaggle validation run: L3 tiny-budget train+eval",
+  "date": "2026-10-05",
+  "platform": "Kaggle (CPU, no accelerator)",
+  "kernel": "https://www.kaggle.com/code/tests1234/chess-rl-bench-l3-training",
+  "purpose": "End-to-end pipeline validation (clone -> install -> train -> save -> reload -> eval). Not a strength claim: the budget is deliberately tiny.",
+  "config": {
+    "lr": 0.01,
+    "credit_decay": 0.99,
+    "search_weight": 1.0,
+    "top_k": 5,
+    "search_depth": 3,
+    "shaped_reward": true,
+    "shaped_weight": 0.3,
+    "max_plies": 120,
+    "no_progress_limit": 60,
+    "seed": 7
+  },
+  "training": {
+    "selfplay": {
+      "games": 20,
+      "outcomes": {
+        "1-0": 0,
+        "0-1": 2,
+        "1/2-1/2": 0,
+        "unfinished": 18
+      },
+      "updates": 18544,
+      "search_updates": 0,
+      "seconds": 5.72
+    },
+    "supervised": {
+      "positions_requested": 300,
+      "positions_applied": 300,
+      "search_depth": 3,
+      "seconds": 443.75
+    }
+  },
+  "eval": {
+    "a": "L3-both-trained",
+    "b": "greedy-material",
+    "games": 20,
+    "played": 17,
+    "unfinished": 3,
+    "wins": 0,
+    "draws": 0,
+    "losses": 17,
+    "score_a": -17.0,
+    "points_pct": -1.0
+  },
+  "model": {
+    "n_parameters": 7609,
+    "games_played": 20,
+    "updates": 30360,
+    "search_updates": 1481
+  },
+  "findings": [
+    "Pipeline validated end-to-end; model saved, reloaded from disk, played legal moves.",
+    "Trained L3 (tiny budget) loses 0-17-0 to greedy-material: the H5 prediction for a barely-trained learner, so it confirms the harness rather than indicting the model.",
+    "MEASURED Kaggle CPU labelling rate: depth-3 = 443.75s / 300 positions = 1.48 s/pos (local was ~0.24 s/pos; the earlier 1.6h-for-24k estimate was ~6x optimistic).",
+    "Self-play arm: 18/20 games unfinished at max_plies=120; only the weak shaped-reward branch teaches. With a lenient cap, 40/40 games end in insufficient-material draws -> zero reward. Self-play signal needs fixing before scaling (see KAGGLE-PLAN.md)."
+  ]
+}

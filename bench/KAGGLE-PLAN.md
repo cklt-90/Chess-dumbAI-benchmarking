@@ -51,28 +51,75 @@ optional extra.
 Recommended Kaggle sweep (each arm is a separate job / different seed):
 
 1. `randomwalk` — 4000 games, `--eval-against untrained`. **Must not beat untrained.** If it does, stop and fix the loop.
-2. `supervised` — 24k positions, `--search-depth 3`, `--eval-against material`. Does imitation reach material/L2-d1?
-3. `selfplay` — 4000 games, `--eval-against untrained` then `--eval-against material`.
-4. `both` — 4000 games + 24k positions, `--eval-against material`, longer eval (40 games).
+2. `supervised` — **4k positions, `--search-depth 3`, `--eval-against material`** (~1.6 h on Kaggle CPU at the measured rate). Does imitation reach material/L2-d1?
+3. `selfplay` — **BLOCKED** until the signal fix below is tested locally. Do not spend Kaggle hours here yet.
+4. `both` — as above; the self-play half contributes nothing until step 3 is fixed, so it is currently equivalent to `supervised` plus wasted time.
 
-### Cost note (measured locally — this is why training goes to Kaggle)
+### Cost note (measured — local vs Kaggle CPU)
 
 Per-position labelling is the dominant expense and scales steeply with search
-depth:
+depth. Local rates and the **measured Kaggle CPU rate** (2026-10-05 validation
+run, 300 positions at depth 3 took 443.75 s):
 
-| depth | seconds / position | 24k positions | 60k positions |
-|---|---|---|---|
-| 2 | ~0.04 | ~16 min | ~40 min |
-| 3 | ~0.24 | ~1.6 h | ~4 h |
-| 4 | ~4.5 | ~30 h | ~75 h |
-| 5 | ~45 (est.) | ~300 h | ~750 h |
+| depth | s/pos (local) | s/pos (Kaggle CPU, measured) | positions | Kaggle time |
+|---|---|---|---|---|
+| 2 | ~0.04 | ~0.25 (est., 6× local) | 4k | ~17 min |
+| 3 | ~0.24 | **~1.48** (measured) | 4k | **~1.6 h** |
+| 3 | ~0.24 | ~1.48 (measured) | 6k | ~2.5 h |
+| 3 | ~0.24 | ~1.48 (measured) | 24k | **~10 h** |
+| 4 | ~4.5 | ~27 (est.) | — | not viable |
 
-Self-play training is cheap (~0.15 s/game → 4000 games ≈ 10 min). The 20-game
-L3-vs-L3 **evaluation** is also cheap (~3 s for 8 games at numpy scale). So a
-full Kaggle job is gated almost entirely by the supervised labelling depth: use
-**depth 2–3** at scale, and reserve depth 4–5 for tiny local probes. The
-"weak master" in H25 is therefore a depth-2/3 search at this regime — which is
-honest: relative to an *untrained* L3 it is still a strong, real teacher.
+**The earlier "24k positions ≈ 1.6 h" estimate was ~6× optimistic** — it used the
+local rate. On a Kaggle CPU, depth-3 labelling runs at ~1.5 s/pos, so 24k
+positions is ~10 h, not 1.6 h. (Kaggle's session cap is 12 h; a 24k job would
+fit in one session but leave no headroom.)
+
+Recommended first scale run: **~4k positions at depth 3 (~1.6 h)**, which is
+already 13× the validation budget, rather than 24k in one shot. Record the
+per-arm `seconds` from `results.json` and revise again — the rate is the single
+most important number for planning.
+
+Self-play training is cheap (~0.15 s/game → 4000 games ≈ 10 min), *but see the
+self-play finding below: more self-play games are not useful until the signal
+problem is fixed.* A full Kaggle job is therefore gated almost entirely by the
+supervised labelling depth: use **depth 2–3** at scale, and reserve depth 4–5
+for tiny local probes. The "weak master" in H25 is therefore a depth-2/3 search
+at this regime — which is honest: relative to an *untrained* L3 it is still a
+strong, real teacher.
+
+### Self-play signal finding (measured locally, 2026-10-05)
+
+L3 self-play **does not generate a usable outcome-RL signal at this regime**, and
+the reason is a cap/signal trap, not a bug:
+
+- With the current caps (`max_plies=120`, `no_progress_limit=60`), **19–20 of 20
+  games hit the ply cap** → all `unfinished`. They still train, but *only* via
+  the `shaped_reward` branch in `L3Trainer.white_reward` (score the final
+  position's material, `tanh(eval/1000)*0.3`). Measured mean |shaped reward| on
+  unfinished games ≈ **0.053** — a weak, material-only gradient.
+- With a lenient cap (300 plies), the same self-play games terminate *naturally*
+  — **40/40 by `insufficient_material`**, median 288 plies — and every one is a
+  **draw**. `white_reward` returns exactly `(0.0, 0.0)` for finished draws, so
+  **total reward mass = 0.00 over 40 games: zero learning signal.**
+- Decisive games across every cap tested: **0/20** at each of 120/200/300/400.
+  Blind-vs-blind L3 trades everything off and drifts to bare kings.
+
+So the two settings are both dead ends: short cap → weak shaped-only gradient;
+long cap → zero signal. The arm as configured cannot learn strength. This is why
+the validation run's self-play arm (18,544 updates) showed no measurable gain.
+
+**Consequence for the sweep:** the `selfplay` and `both` arms are currently
+*not* informative at scale — more games just burn time. Before spending Kaggle
+hours on them, fix the signal, e.g. one of:
+1. **Exploration/opening diversity** — play self-play from varied `start_fen`
+   draws (midstate store) so games are not all identical trade-fests.
+2. **Adjudicate truncated games by material** as a *decisive* reward (a shaped
+   terminal, not a soft per-ply nudge), so a truncated game still yields ±1.
+3. **Reduce blunder-free drift** — a small temperature/randomness floor so the
+   policy does not always pick the (equal) trade.
+
+Until (1)/(2)/(3) are tested locally, the **supervised arm is the only arm
+worth running at Kaggle scale** — and it is also the H23 headline arm.
 
 Then drop the saved `l3_<mode>.json` into `python -m bench --only L3 <refs>`
 (trained L3 is just an `L3Policy`; build a small spec for it) to get a proper
@@ -107,10 +154,14 @@ python bench/kaggle/kaggle_l3_train.py --mode both --games 20 --positions 300 \
 Kaggle scale:
 
 ```bash
-python bench/kaggle/kaggle_l3_train.py --mode both --games 4000 --positions 60000 \
-    --search-depth 5 --eval-against material --eval-games 40 --seed 7 \
+# Supervised only (~1.6 h at the measured Kaggle rate). Depth 3, 4k positions.
+python bench/kaggle/kaggle_l3_train.py --mode supervised --positions 4000 \
+    --search-depth 3 --eval-against material --eval-games 40 --seed 7 \
     --out-dir /kaggle/working/out
 ```
+
+(Do **not** run depth 5 at scale — it is ~300 h. And do not run the `selfplay`
+or `both` arms at scale until the self-play signal finding above is addressed.)
 
 Kaggle environment notes: drop the repo on the notebook filesystem; the script
 bootstraps `src/` and `bench/` onto `sys.path` from its own location.
