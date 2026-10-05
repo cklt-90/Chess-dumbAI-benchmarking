@@ -1,6 +1,6 @@
 {
   "title": "chess-rl-bench L3 training",
-  "id": "chess-rl-bench-l3-training",
+  "id": "tests1234/chess-rl-bench-l3-training",
   "code_file": "kaggle_l3_run.ipynb",
   "language": "python",
   "kernel_type": "notebook",
