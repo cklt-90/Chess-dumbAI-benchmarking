@@ -14,8 +14,14 @@ Arms
   supervised   L3 imitates a depth-D search on a corpus of positions
                (H25 / H11). The cheapest *trained* arm and the one the
                literature review flagged as the first to run: a built-in
-               weak master (depth-5 search) supplies the label. Uses
+               weak master (alpha-beta search) supplies the label. Uses
                ``L3Trainer.train_on_search_feedback``.
+
+               **Cost note (measured locally):** labelling is the dominant
+               expense and scales steeply with depth -- ~0.04s/position at
+               depth 2, ~0.24s at depth 3, ~4.5s at depth 4. Depth 5 is
+               therefore NOT viable at scale (≈45s/pos). Use depth 2-3 at
+               Kaggle scale; reserve depth 4-5 for tiny local probes.
   randomwalk   L3 trains on the *outcomes* of random-vs-random games
                (H26 control). Uses ``L3Trainer.train_on_game`` over a
                generated random corpus. Must NOT beat untrained L3 -- it is
@@ -42,8 +48,8 @@ Usage
       --out-dir bench/kaggle/out_smoke
 
   # Kaggle scale (hours on CPU)
-  python bench/kaggle/kaggle_l3_train.py --mode both --games 4000 --positions 60000 \
-      --search-depth 5 --eval-against material --eval-games 40 --seed 7 \
+  python bench/kaggle/kaggle_l3_train.py --mode both --games 4000 --positions 24000 \
+      --search-depth 3 --eval-against material --eval-games 40 --seed 7 \
       --out-dir /kaggle/working/out
 
 Kaggle setup
@@ -252,10 +258,11 @@ def parse_args(argv=None) -> argparse.Namespace:
                    default="both")
     p.add_argument("--games", type=int, default=200,
                    help="self-play / random-walk training games")
-    p.add_argument("--positions", type=int, default=20000,
+    p.add_argument("--positions", type=int, default=24000,
                    help="supervised: number of search-feedback positions")
-    p.add_argument("--search-depth", type=int, default=5,
-                   help="supervised: depth of the labelling search")
+    p.add_argument("--search-depth", type=int, default=3,
+                   help="supervised: depth of the labelling search "
+                        "(2-3 at scale; depth 4+ is too slow per position)")
     p.add_argument("--lr", type=float, default=0.01)
     p.add_argument("--credit-decay", type=float, default=0.99)
     p.add_argument("--search-weight", type=float, default=1.0)

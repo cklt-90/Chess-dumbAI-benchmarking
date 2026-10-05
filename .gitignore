@@ -18,3 +18,11 @@ bench/ensemble.json
 # Torch checkpoints (L4/L5) are large binaries.
 *.pt
 *.pth
+
+# Local-only validation outputs (never part of the benchmark).
+out_smoke*/
+bench/kaggle/out_smoke*/
+kaggle_out/
+
+# NOTE: .workbuddy-ai/ is intentionally tracked -- it is the AI-use / decision
+# log released alongside the benchmark.

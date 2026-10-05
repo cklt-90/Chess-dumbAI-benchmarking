@@ -44,16 +44,35 @@ optional extra.
 | Arm (`--mode`) | Signal | Hypothesis | Why it is the right Kaggle job |
 |---|---|---|---|
 | `selfplay` | outcome RL vs frozen self-copy | H24 baseline / H26 reference | The incumbent. Establishes what naive self-play alone buys at scale. |
-| `supervised` | imitate depth-5 search on a position corpus | **H25 / H11** | The literature review's flagged first-run arm: a built-in weak master supplies the label. Cheapest *trained* path; also the arm most likely to make L3 castle (H23). |
+| `supervised` | imitate a search on a position corpus (depth **2–3**) | **H25 / H11** | The literature review's flagged first-run arm: a built-in weak master supplies the label. Cheapest *trained* path; also the arm most likely to make L3 castle (H23). **Depth 5 is not viable at scale** — see cost note below. |
 | `randomwalk` | outcome RL on random-vs-random games | **H26 control** | Run **first**. If this beats untrained, every comparison above is confounded by "more games = better". The load-bearing null. |
 | `both` | selfplay then supervised | H24 + H25 combined | Recommended single Kaggle job: learn from play, then sharpen with search. |
 
 Recommended Kaggle sweep (each arm is a separate job / different seed):
 
 1. `randomwalk` — 4000 games, `--eval-against untrained`. **Must not beat untrained.** If it does, stop and fix the loop.
-2. `supervised` — 60k positions, `--search-depth 5`, `--eval-against material`. Does imitation reach material/L2-d1?
+2. `supervised` — 24k positions, `--search-depth 3`, `--eval-against material`. Does imitation reach material/L2-d1?
 3. `selfplay` — 4000 games, `--eval-against untrained` then `--eval-against material`.
-4. `both` — 4000 games + 60k positions, `--eval-against material`, longer eval (40 games).
+4. `both` — 4000 games + 24k positions, `--eval-against material`, longer eval (40 games).
+
+### Cost note (measured locally — this is why training goes to Kaggle)
+
+Per-position labelling is the dominant expense and scales steeply with search
+depth:
+
+| depth | seconds / position | 24k positions | 60k positions |
+|---|---|---|---|
+| 2 | ~0.04 | ~16 min | ~40 min |
+| 3 | ~0.24 | ~1.6 h | ~4 h |
+| 4 | ~4.5 | ~30 h | ~75 h |
+| 5 | ~45 (est.) | ~300 h | ~750 h |
+
+Self-play training is cheap (~0.15 s/game → 4000 games ≈ 10 min). The 20-game
+L3-vs-L3 **evaluation** is also cheap (~3 s for 8 games at numpy scale). So a
+full Kaggle job is gated almost entirely by the supervised labelling depth: use
+**depth 2–3** at scale, and reserve depth 4–5 for tiny local probes. The
+"weak master" in H25 is therefore a depth-2/3 search at this regime — which is
+honest: relative to an *untrained* L3 it is still a strong, real teacher.
 
 Then drop the saved `l3_<mode>.json` into `python -m bench --only L3 <refs>`
 (trained L3 is just an `L3Policy`; build a small spec for it) to get a proper

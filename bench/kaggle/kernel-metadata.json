@@ -1,0 +1,12 @@
+{
+  "title": "chess-rl-bench L3 training",
+  "id": "chess-rl-bench-l3-training",
+  "code_file": "kaggle_l3_run.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_internet": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "keywords": ["chess", "reinforcement-learning", "benchmark", "numpy"]
+}
