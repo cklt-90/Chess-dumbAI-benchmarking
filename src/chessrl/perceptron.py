@@ -729,17 +729,18 @@ class L3Trainer:
             out.append((move, w))
         return out
 
-    def train_on_search_feedback(
-        self, board: chess.Board, *, depth: int | None = None
+    def train_on_targets(
+        self, board: chess.Board, targets: list[tuple[chess.Move, float]]
     ) -> dict:
-        """Imitate a depth-5 search in the current position.
+        """Apply explicit ``(move, weight)`` targets through the shared path.
 
-        The policy's own probabilities are compared against the search's top-k
-        and the gap is the gradient. This is the mechanism that lets a shallow
-        perceptron borrow the tactical competence of a deep search without
-        itself searching at inference time.
+        This is the single update loop behind every supervision source: the
+        built-in search (:meth:`train_on_search_feedback`) and any external
+        master (:meth:`train_on_master`). It was extracted from
+        ``train_on_search_feedback`` so that adding a new *source* of targets
+        changes only where the targets come from, never how they are applied —
+        a parity test asserts the two callers stay bit-identical.
         """
-        targets = self.search_feedback(board, depth=depth)
         if not targets:
             return {"applied": False, "k": 0}
 
@@ -750,12 +751,12 @@ class L3Trainer:
         for move, w in targets:
             idx = M.move_to_index(move)
             p_model = float(dist[idx])
-            # Target probability proportional to the search's preference.
+            # Target probability proportional to the source's preference.
             p_target = w / best_w
             # Nudge in proportion to how far behind the model is, so a move it
             # already likes is not pushed further and a move it is ignoring is
             # pulled up hard. Without the gap term this just collapses onto
-            # whatever the search likes first and forgets the rest.
+            # whatever the source likes first and forgets the rest.
             gap = p_target - p_model
             self.apply_credit(
                 board, move, self.config.search_weight * gap
@@ -763,6 +764,30 @@ class L3Trainer:
             self.search_updates += 1
 
         return {"applied": True, "k": len(targets)}
+
+    def train_on_search_feedback(
+        self, board: chess.Board, *, depth: int | None = None
+    ) -> dict:
+        """Imitate a depth-5 search in the current position.
+
+        The policy's own probabilities are compared against the search's top-k
+        and the gap is the gradient. This is the mechanism that lets a shallow
+        perceptron borrow the tactical competence of a deep search without
+        itself searching at inference time.
+        """
+        return self.train_on_targets(board, self.search_feedback(board, depth=depth))
+
+    def train_on_master(self, board: chess.Board, master) -> dict:
+        """Imitate an external master (engine or master-games corpus).
+
+        ``master`` is any object with a ``targets(board) -> [(Move, weight)]``
+        method, e.g. :class:`chessrl.master.EngineMaster` or
+        :class:`chessrl.master.PgnMaster`. The update is identical to
+        :meth:`train_on_search_feedback`; only the label source differs, which
+        is what makes a master arm a matched comparison rather than a new
+        learner. A position the master cannot label yields ``applied=False``.
+        """
+        return self.train_on_targets(board, master.targets(board))
 
     # ---- midstate incremental updates ----------------------------------
 

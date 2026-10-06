@@ -60,7 +60,8 @@ Repo root: `C:/Users/Trinity/Programmes/Chess-player`.
 | `policy.py` | L1. `Scorer` protocol, `masked_softmax`, `FactoredSoftmaxPolicy`, `BlindScorer` |
 | `train_naive.py` | L1.5. `FactoredSoftmaxTrainer`, `credit_curve`, `ProbCounter`, pruning |
 | `search.py` | L2. `MinimaxEngine` (negamax + alpha-beta + TT + iterative deepening + quiescence), `MinimaxPolicy`, `InformedMinimaxPolicy` |
-| `perceptron.py` | L3. `PerceptronScorer`, `L3Policy`, `L3Trainer` |
+| `perceptron.py` | L3. `PerceptronScorer`, `L3Policy`, `L3Trainer` (incl. `train_on_targets` / `train_on_master`) |
+| `master.py` | L3 supervision. `EngineMaster` (UCI, e.g. Stockfish), `PgnMaster` (master-games corpus), weight converters. H25's true-master source; inert until a binary/PGN is supplied |
 | `squarelocal.py` | L3.5. `SquareLocalScorer` (weight-tied per-square heads), `L35Policy`, `L35Trainer`, plus the `L3-flat` control |
 | `torch_model.py` | L4. `TorchScorer` (+ `TorchScorerAdapter`), `TorchPolicy`, `TorchTrainer` — parity-tested against L3 |
 | `guided.py` | L5. `GuidedModel` (shared trunk + policy head + value head), `GuidedEngine`, `GuidedPolicy`, `GuidedTrainer` |

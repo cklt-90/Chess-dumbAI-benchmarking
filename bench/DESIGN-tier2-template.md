@@ -1,4 +1,4 @@
-# Tier-2 design: "improved entries under fixed constraints"
+# Tier-2 design: repairs and verifications under fixed constraints
 
 *Status: **an empty slot with a pre-registered shape — a reserve, not a plan and
 not a workflow to run yet.***
@@ -8,6 +8,11 @@ not a workflow to run yet.***
 > to-do list: it says what a tier-2 entry must look like *when one is warranted*,
 > so that the first one is specified correctly instead of retrofitted. Do not
 > "build tier 2" — there is nothing to build until there is a defect to repair.
+>
+> "Defect" is broader than "the model is wrong". It includes **experimental-design
+> limitations** — see §0.1. A tier-1 result that cannot be *interpreted* (because
+> its interval covers only init seeds, or its control was missing) is a defect
+> too, and repairing it is a tier-2 job.
 >
 > The one worked example (`DESIGN-l1-mixing-layer.md`) is an **illustration of
 > the shape**, not a commitment to build it. It is included because a pattern
@@ -28,6 +33,50 @@ to do and this document should stay unopened.
 
 The correct posture toward it right now is: *written down so it is not
 re-invented later, and otherwise inert.*
+
+### 0.1 Two kinds of tier-1 output that justify a tier-2 entry
+
+"Located defect" was too narrow. A tier-2 entry is warranted when tier 1 leaves
+either of these:
+
+**(a) A mechanism defect.** A located limitation of a *model*: a computation that
+provably cannot express something the task needs. Example: the factored chain
+`P(from)·P(to|from)·P(promo)` cannot express cross-move interaction. Repairing it
+means changing the design of the computation under the same information budget.
+
+**(b) A design defect / unresolved verification.** A located limitation of the
+*experiment* — the evidence exists but cannot be interpreted, or a claim was
+established only under conditions too narrow to trust. Repairing it means
+building the missing control, replicating over the missing axis, or running the
+next-most-important verification the result raised. **This is a first-class
+reason to plan tier 2, not a lesser one.**
+
+The repo has a live instance of (b) right now, and it is the honest gap recorded
+on 2026-10-06: *the L3 held-out pilot's intervals cover initialization seeds
+only; they are conditional on one frozen corpus and held-out set.* That is not a
+model defect — the model may be fine. It is a **design defect**: the claim cannot
+be generalised because corpus sampling was never replicated. The tier-2 response
+would be a corpus-replication arm (fresh positions, same protocol, same budget),
+which is a *verification* entry, not an *improvement* entry.
+
+So tier 2 has two flavours:
+
+| Flavour | Tier-1 output it answers | What the entry does |
+|---|---|---|
+| **Repair** | a mechanism defect (a) | change the computation, same information budget |
+| **Verification** | a design defect (b) | add the missing control / replicate the missing axis |
+
+Both must still carry the constraint set (§3) and the matched control (§4 Step 4).
+A verification entry additionally has to state *which claim it is testing* and
+*what result would retire it*.
+
+**Where a verification entry's output goes.** Its result is typically "this
+caveat no longer applies" (or "it survives"), which is a *status transition* and
+does not fit `HYPOTHESES.md`'s hypothesis format. Those land in
+**`CLAIMS-CHANGELOG.md`** at the repo root — the append-only ledger of claims and
+caveats that changed status. The changelog records the *transition*; a future
+prove/not-prove ledger would record the *current state*. Use both if they
+diverge.
 
 ---
 
@@ -92,6 +141,47 @@ A tier-2 entry inherits, from the tier-1 level it improves:
 **The one free variable is the design of the computation.** Everything else is
 held fixed. That is what makes a tier-2 result interpretable.
 
+### 3.1 The control vocabulary — and what "disproof-style" means
+
+A caveat first, in the spirit of this repo: **"disproof-style control" is not a
+standard term of art.** I coined it in conversation on 2026-10-06; it does not
+appear in the experimental-design literature under that name. What follows is the
+definition I meant, so it can be used precisely or replaced by the standard term
+if one exists.
+
+Controls differ by *what they are built to prove*:
+
+| Control | Built so that… | If it behaves as designed, you learn… |
+|---|---|---|
+| **Positive control** | it *should* show an effect | the experiment can detect an effect at all (the harness works) |
+| **Negative control** | it *should* show no effect | the observed effect is not an artifact of the setup |
+| **Disproof-style control** | it *reproduces the effect by a known-spurious route* | if it matches the treatment, **the treatment's claimed mechanism is refuted** |
+
+The disproof-style control is the sharpest of the three, and it is the one this
+repo keeps reinventing. Its logic: *build an arm that gets the same measured win
+for the wrong reason. If the treatment does not beat it, the reason you believed
+was doing the work was not doing the work.*
+
+**The repo's own worked instance is `max_scaled`** in
+`bench/scripts/l3_target_rule_ablation.py` (2026-10-06). The claim was "the `max`
+target rule is wrong". The disproof-style control kept the `max` rule *and*
+matched the alternative arm's aggregate update magnitude. It reproduced most of
+the measured difference (`max_scaled` +0.095 vs `sum` −0.0006, against `max`
++0.830) — thereby **refuting the target-rule explanation** and relocating the
+cause to step size. That single control overturned the original framing.
+
+In the tier-2 three-arm experiment (§4 Step 4), **arm C is the disproof-style
+control**: `base + irrelevant capacity` reproduces the *size* of the improvement
+without its *structure*. If B ≈ C, the structural claim dies and only "more
+parameters help" survives. That is why arm C is mandatory and why B must beat C,
+not merely A.
+
+**What makes a control "disproof-style" rather than merely negative:** a negative
+control is passive (it should do nothing); a disproof-style control is *active* —
+it is engineered to succeed by the wrong mechanism, so that its success is
+falsifying rather than reassuring. In clinical-trial language it is closer to an
+*active comparator* than to a placebo.
+
 ## 4. The sequence, *when a tier-2 entry is warranted*
 
 **Step 0 is a gate, not a step.** If it is not satisfied, the rest does not apply
@@ -102,9 +192,13 @@ thing being built to succeed.
 
 ```
 Step 0 — GATE: a tier-1 experiment has produced a located defect, with evidence.
-         Not "L1 is weak" but "the factored chain cannot express cross-move
-         interaction" — a mechanism, demonstrated, not asserted.
-         If this gate is unmet, STOP. There is no tier-2 entry to design.
+         EITHER kind counts (§0.1):
+           (a) a mechanism defect — the computation cannot express something
+               the task needs ("the factored chain has no cross-move term");
+           (b) a design defect — the evidence exists but cannot be interpreted,
+               or a claim rests on one frozen corpus / one unreplicated axis.
+         Each must be demonstrated, not asserted. If neither is met, STOP.
+         There is no tier-2 entry to design.
 
 Step 1 — author the tier-2 hypothesis in HYPOTHESES.md, BEFORE implementing.
          State: the constraint set it inherits, the single changed variable,
@@ -120,13 +214,18 @@ Step 3 — implement the `Scorer` (or policy), reusing the shared machinery.
 Step 4 — the three-arm matched experiment:
            A  base tier-1 entry        (control)
            B  tier-2 improved entry    (the change)
-           C  base + irrelevant capacity, matched to B's size (the H9 control)
+           C  disproof-style control: base + the WRONG mechanism's advantage,
+              matched to B's size (the H9 control; §3.1)
          B must beat C, not just A, or the result is a parameter-count win.
+         A **verification** entry (flavour b) instead adds the missing axis —
+         e.g. a second frozen corpus — and reports whether the claim survives it.
 
 Step 5 — register as an **ablation**-tier entrant, not a ladder rung.
          A ladder entry asserts "beats the one below it". A tier-2 entry asserts
          "the repaired design beats a matched control under the SAME inputs".
          Different claim, different tier.
+         A **verification** entry need not be an entrant at all — a script plus a
+         results JSON is often the right artefact, as the cheap-harvest items are.
 
 Step 6 — report with SE, decided-game counts, and the residuals. A result
          inside one SE is "not established", never the preferred direction.
@@ -196,13 +295,17 @@ argument for having the shape on record *before* tier 2 has any content.
 | The result is claimed at 6 games/pair | ≥20 games/pair, SE reported, else "not established". |
 | Tier 2 quietly becomes a new ladder rung and inflates the ladder claim | Register as `ablation` tier; the ladder claim stays untouched. |
 | The "located defect" is asserted rather than measured | Step 0 requires evidence, not narrative. (Contrast: H10's located defect was found by construction and labelled as such — *missing-feature*, not proven *tying*.) |
+| A **design** defect (flavour b) is treated as second-class, so the experiment's own limitations are never fixed | §0.1 makes design defects a first-class trigger. An uninterpretable result is as good a reason to plan tier 2 as a broken model. |
+| The disproof-style control is replaced by a *weaker* control (e.g. just "no change") | §3.1: arm C must be engineered to succeed by the **wrong** mechanism, not merely to do nothing. A passive control cannot refute a mechanism claim. |
+| A verification entry is judged as if it were an improvement entry ("it didn't get stronger, so it failed") | Flavour (b) is judged by *what it retires* (a claim, a caveat), not by Elo gained. State the retirement condition in Step 1. |
 
 ## 8. One-line summary
 
 > **Tier 1** discovers which ingredient matters, by adding one at a time.
 > **Tier 2** is a *pre-registered container* — held empty until a tier-1
-> experiment produces a located, evidenced defect, at which point it says how a
-> repair must be specified: one design variable changed, against a
-> parameter-matched control, under an unchanged information budget. Tier 1
-> answers "what helps?"; tier 2, *when warranted*, answers "why, and can we do
-> better without cheating on the information budget?"
+> experiment produces a located, evidenced defect, of **either** kind: a broken
+> mechanism (repair) **or** an uninterpretable / unreplicated result
+> (verification). It then says how the response must be specified: one variable
+> changed, against a **disproof-style** control engineered to win by the wrong
+> mechanism, under an unchanged information budget. Tier 1 answers "what helps?";
+> tier 2, *when warranted*, answers "why — and is the result even trustworthy?"

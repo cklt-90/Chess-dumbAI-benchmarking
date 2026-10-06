@@ -924,6 +924,7 @@ is a *regime boundary*, which is the whole point of the project.
 | `bench/CHEAP-HARVEST.md` | Decisive experiments needing no training, with ready scripts |
 | `bench/KAGGLE-PLAN.md` | What to run at scale, what it costs, what a result would mean |
 | `hypothesis-lit-review/report.md` | How each hypothesis relates to the published literature |
+| `CLAIMS-CHANGELOG.md` | Append-only ledger of claims/caveats that changed status — retired, revised, relocated |
 | §11 of this file | The four external literature threads, with citations and the repo's position in each |
 | `.workbuddy-ai/memory/*.md` | The blow-by-blow history, including every bug fixed |
 
