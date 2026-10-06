@@ -1,0 +1,350 @@
+{
+  "design": {
+    "purpose": "matched held-out supervised-learning variance pilot",
+    "labeler": "L3Trainer.search_feedback",
+    "teacher_topk_cutoff_ties": "uses listed top-k; ties inherit legal-move iteration order",
+    "depth": 2,
+    "top_k": 5,
+    "train_positions": 4,
+    "heldout_positions": 4,
+    "training_seeds": [
+      1,
+      2
+    ],
+    "checkpoints_positions_seen": [
+      0,
+      2,
+      4
+    ],
+    "data_seed": 314159,
+    "same_cached_train_and_heldout_labels_across_seeds": true,
+    "mde_used_for_planning": 0.05,
+    "position_key_overlap": 0,
+    "primary_endpoint": "mean held-out probability mass on the teacher's listed top-k moves at final checkpoint",
+    "source_game_sampling": "one random nonterminal position per random-play game",
+    "training_target_normalization": "unchanged: weight / max(target weights)"
+  },
+  "summary": {
+    "primary_endpoint": "mean held-out probability mass on the teacher's listed top-k moves at final checkpoint",
+    "final_positions_seen": 4,
+    "training_seed_replications": 2,
+    "mean_seed_paired_gain": 0.0010175483366273441,
+    "sd_seed_paired_gain": 1.6960298787215232e-05,
+    "standard_error_across_seeds": 1.1992742283389868e-05,
+    "approx_95pct_t_interval_for_mean_gain": [
+      0.0008651685531745924,
+      0.0011699281200800958
+    ],
+    "minimum_meaningful_effect": 0.05,
+    "approx_seed_count_for_80pct_power_5pct_two_sided": 2,
+    "power_planning_method": "t critical value plus normal 80% power quantile; approximate, not exact noncentral-t",
+    "interval_scope": "conditional on this fixed training corpus and held-out set; estimates initialization-seed variability only",
+    "power_planning_scope": "conditional on the fixed corpora; excludes training-corpus and held-out-position sampling uncertainty; refine with an exact noncentral-t method before confirmation",
+    "seed_level_paired_differences": [
+      0.001029541078910734,
+      0.0010055555943439543
+    ],
+    "interpretation": "exploratory variance pilot only; no confirmatory claim"
+  },
+  "seed_results": [
+    {
+      "training_seed": 1,
+      "checkpoints": [
+        {
+          "positions_seen": 0,
+          "metrics": {
+            "teacher_topk_probability_mass": 0.3025278152750007,
+            "teacher_weighted_probability_score": 0.060062224523719523,
+            "teacher_weighted_cross_entropy_nats": 3.217479989747686,
+            "policy_top1_in_teacher_topk_rate_tie_aware": 0.5,
+            "policy_top1_in_teacher_best_set_rate_tie_aware": 0.0,
+            "mean_legal_move_entropy_nats": 2.5917992533105463,
+            "positions": 4
+          }
+        },
+        {
+          "positions_seen": 2,
+          "metrics": {
+            "teacher_topk_probability_mass": 0.3019613795059408,
+            "teacher_weighted_probability_score": 0.05996902858225953,
+            "teacher_weighted_cross_entropy_nats": 3.2210048198959287,
+            "policy_top1_in_teacher_topk_rate_tie_aware": 0.5,
+            "policy_top1_in_teacher_best_set_rate_tie_aware": 0.0,
+            "mean_legal_move_entropy_nats": 2.5899309387670932,
+            "positions": 4
+          }
+        },
+        {
+          "positions_seen": 4,
+          "metrics": {
+            "teacher_topk_probability_mass": 0.30355735635391146,
+            "teacher_weighted_probability_score": 0.06036942611819803,
+            "teacher_weighted_cross_entropy_nats": 3.1964065211002852,
+            "policy_top1_in_teacher_topk_rate_tie_aware": 0.25,
+            "policy_top1_in_teacher_best_set_rate_tie_aware": 0.0,
+            "mean_legal_move_entropy_nats": 2.5982912604798707,
+            "positions": 4
+          }
+        }
+      ]
+    },
+    {
+      "training_seed": 2,
+      "checkpoints": [
+        {
+          "positions_seen": 0,
+          "metrics": {
+            "teacher_topk_probability_mass": 0.3011143720251719,
+            "teacher_weighted_probability_score": 0.059530978630912744,
+            "teacher_weighted_cross_entropy_nats": 3.241971795649955,
+            "policy_top1_in_teacher_topk_rate_tie_aware": 0.5,
+            "policy_top1_in_teacher_best_set_rate_tie_aware": 0.25,
+            "mean_legal_move_entropy_nats": 2.591498558249069,
+            "positions": 4
+          }
+        },
+        {
+          "positions_seen": 2,
+          "metrics": {
+            "teacher_topk_probability_mass": 0.3005483356540749,
+            "teacher_weighted_probability_score": 0.0594406358236732,
+            "teacher_weighted_cross_entropy_nats": 3.245504171153269,
+            "policy_top1_in_teacher_topk_rate_tie_aware": 0.5,
+            "policy_top1_in_teacher_best_set_rate_tie_aware": 0.25,
+            "mean_legal_move_entropy_nats": 2.5896407195821673,
+            "positions": 4
+          }
+        },
+        {
+          "positions_seen": 4,
+          "metrics": {
+            "teacher_topk_probability_mass": 0.30211992761951584,
+            "teacher_weighted_probability_score": 0.05982489152864511,
+            "teacher_weighted_cross_entropy_nats": 3.2208050575922553,
+            "policy_top1_in_teacher_topk_rate_tie_aware": 0.5,
+            "policy_top1_in_teacher_best_set_rate_tie_aware": 0.25,
+            "mean_legal_move_entropy_nats": 2.5980258038932806,
+            "positions": 4
+          }
+        }
+      ]
+    }
+  ],
+  "cached_training_labels": [
+    {
+      "fen": "4qbr1/1rp3pp/1p2pk1n/p1Np3Q/P2P1N2/1P2P1P1/R2P1P1P/2B1K2R w K - 3 19",
+      "source_game": 0,
+      "targets": [
+        {
+          "uci": "h5e8",
+          "weight": 1.0
+        },
+        {
+          "uci": "h5e5",
+          "weight": 0.5100057221966218
+        },
+        {
+          "uci": "c5b7",
+          "weight": 0.4360492863215356
+        },
+        {
+          "uci": "f4d5",
+          "weight": 0.3114032239145977
+        },
+        {
+          "uci": "h5h4",
+          "weight": 0.11571017951578337
+        }
+      ]
+    },
+    {
+      "fen": "r3k1n1/8/1npb2pp/p6P/PP1pP1P1/3P1N2/8/5K2 b - - 1 37",
+      "source_game": 1,
+      "targets": [
+        {
+          "uci": "g6h5",
+          "weight": 1.0
+        },
+        {
+          "uci": "a5b4",
+          "weight": 0.9834714538216175
+        },
+        {
+          "uci": "d6b4",
+          "weight": 0.9048374180359595
+        },
+        {
+          "uci": "b6a4",
+          "weight": 0.8898817709880238
+        },
+        {
+          "uci": "g8e7",
+          "weight": 0.8324906126116027
+        }
+      ]
+    },
+    {
+      "fen": "4rkrn/1q6/1P3p1n/pPp2PNp/P2P4/4pB1P/4P3/R3K1NR b - - 0 33",
+      "source_game": 2,
+      "targets": [
+        {
+          "uci": "b7b6",
+          "weight": 1.0
+        },
+        {
+          "uci": "b7d7",
+          "weight": 0.8051983240180706
+        },
+        {
+          "uci": "b7c8",
+          "weight": 0.7583072240616969
+        },
+        {
+          "uci": "b7b8",
+          "weight": 0.7583072240616969
+        },
+        {
+          "uci": "b7e7",
+          "weight": 0.7583072240616969
+        }
+      ]
+    },
+    {
+      "fen": "1n2kr2/4b1p1/4pp1p/P2P3b/1ppP1P2/P3P3/1Q2N3/R3KR2 w - - 2 37",
+      "source_game": 3,
+      "targets": [
+        {
+          "uci": "d5e6",
+          "weight": 1.0
+        },
+        {
+          "uci": "e2g3",
+          "weight": 0.7762091023287752
+        },
+        {
+          "uci": "a3b4",
+          "weight": 0.7023430400071788
+        },
+        {
+          "uci": "e2c3",
+          "weight": 0.6461867911123843
+        },
+        {
+          "uci": "e2c1",
+          "weight": 0.6250022682827008
+        }
+      ]
+    }
+  ],
+  "cached_heldout_labels": [
+    {
+      "fen": "r4r2/np3pkB/2p5/p3p2P/P4P2/2P4N/q3KPP1/1N5R w - - 2 23",
+      "source_game": 0,
+      "targets": [
+        {
+          "uci": "b1d2",
+          "weight": 1.0
+        },
+        {
+          "uci": "e2f3",
+          "weight": 0.8464817248906141
+        },
+        {
+          "uci": "e2e3",
+          "weight": 0.8380590909996615
+        },
+        {
+          "uci": "e2d3",
+          "weight": 0.8380590909996615
+        },
+        {
+          "uci": "e2f1",
+          "weight": 0.8242071926138603
+        }
+      ]
+    },
+    {
+      "fen": "rn1kqbnr/1p2ppp1/p1p4p/3p4/2NQP1B1/5PP1/PPPP3P/R1B1K1NR b KQ - 2 11",
+      "source_game": 1,
+      "targets": [
+        {
+          "uci": "e7e6",
+          "weight": 1.0
+        },
+        {
+          "uci": "b8d7",
+          "weight": 0.9672161004820059
+        },
+        {
+          "uci": "e7e5",
+          "weight": 0.8187307530779818
+        },
+        {
+          "uci": "c6c5",
+          "weight": 0.7788007830714049
+        },
+        {
+          "uci": "f7f5",
+          "weight": 0.7659283383646487
+        }
+      ]
+    },
+    {
+      "fen": "rn2k1r1/p2pb2p/5n2/PPP2PPP/3pb3/1q4P1/2B3N1/R4KR1 w q - 2 30",
+      "source_game": 2,
+      "targets": [
+        {
+          "uci": "c2b3",
+          "weight": 1.0
+        },
+        {
+          "uci": "g5f6",
+          "weight": 0.09041606354088949
+        },
+        {
+          "uci": "c2e4",
+          "weight": 0.06856315415427791
+        },
+        {
+          "uci": "g2f4",
+          "weight": 0.052514462734425345
+        },
+        {
+          "uci": "a1c1",
+          "weight": 0.04831563812606779
+        }
+      ]
+    },
+    {
+      "fen": "rn3k2/8/2p4n/1pPp2pP/pP1b1pP1/P1B5/2R1Q1K1/3R1B2 b - - 2 47",
+      "source_game": 3,
+      "targets": [
+        {
+          "uci": "d4c3",
+          "weight": 1.0
+        },
+        {
+          "uci": "d4e3",
+          "weight": 0.9801986733067553
+        },
+        {
+          "uci": "d4g7",
+          "weight": 0.9769367838983476
+        },
+        {
+          "uci": "f4f3",
+          "weight": 0.679317496356421
+        },
+        {
+          "uci": "h6g4",
+          "weight": 0.5032507789287232
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "perceptron_py_sha256": "6253c8fabce7218abb830bf2b3112285ef6ae0c0d00a1da5cb554debca700b7e",
+    "diagnostic_script_sha256": "8acd95e446334edbe475588251cc5ffd45c058a9b5224070a3faad8cef345173",
+    "runtime_seconds": 0.982
+  }
+}

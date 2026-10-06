@@ -108,35 +108,55 @@ seed-reproducible, and loses to the level above it in a head-to-head match.
 `tests/conftest.py::colour_mirror` is the load-bearing helper for symmetry
 tests -- keep it correct, including castling rights and the en-passant target.
 
+## Evidence standard (user, 2026-10-05)
+- The goal is to prove or disprove hypotheses; negative results and justified
+  changes of direction are useful outcomes.
+- Rule out implementation, evaluator, data, metric, and protocol defects before
+  interpreting a result as a domain finding.
+- Smoke-test new code first, then run the smallest pre-specified experiment
+  with enough independent observations and uncertainty reporting to decide.
+  Label exploratory pilots as non-conclusive.
+
 ## Known traps
 - Piece-square tables are written White's-perspective and every lookup must
   rank-mirror for Black, **including the king**, which is in a separate branch.
   Forgetting it made the start position evaluate to +50.
 
-### Special moves: legal, but underplayed (measured 2026-10-02)
+### Special moves — current state (verified 2026-10-05)
 
-- Masks admit **everything** (castling, en passant, all 4 promotions) because
-  `legal_move_mask` is built from `board.legal_moves`. There is no legality gap.
-- `value.evaluate()` is **material + PST only** — no castling term, no en-passant
-  term, no mobility term. Castling is rewarded only incidentally via the king PST,
-  so the rooks' connectivity, the pawn shield and the tempo cost are invisible.
-- `encode.py` CHANNELS (22 binary) has **no castling-rights channel**. En passant
-  is channel 21; promotion ranks 19/20. `has_castling_rights` appears only as one
-  scalar in `board_context_features`, so a learner cannot express "I may still
-  castle kingside" as a board pattern. Likely a partial cause of underplay.
-- Measured self-play census: L2-d2 castles **3/3 games**; material 3/6; random
-  1/6; L1 and L3 **1 each**. En passant: 2 total across all L1/L3 games, 0 for
-  material/random/L2. So searching levels castle, blind/untrained ones do not —
-  castling needs a *reason*, and only search has one.
-- Verified **not** a bug: the `en_passant` plane canonicalises correctly
-  (black f6 -> plane f3 after rank reflection; `encode(pos) ==
-  encode(colour_mirror(pos))` exactly 0.0). Promotion slots have **no queen
-  bias** — uniform logits give 0.25 each over N/B/R/Q.
-- Fixing this means appending channels (append-only rule) — a castling-rights
-  plane per colour, and if castling is to be *preferred*, an eval term, since
-  PST alone will not do it.
-- Unfinished games (ply cap, no-progress cap) must not be scored as draws; that
-  teaches a naive policy that shuffling equals winning. `GameResult.score_for`
-  returns 0 for them and `is_finished` is False.
-- `MidstateStore.sample` samples without replacement and caps at the corpus
-  size. Duplicates would silently reweight the phase mix.
+- `legal_move_mask` comes from `board.legal_moves`, so castling, en passant, and
+  all promotions are legal in the action mask.
+- `encode.CHANNELS` has 24 binary planes; `castle_w`/`castle_b` are appended at
+  22/23 and mark whether each colour has any castling right (not which wing).
+- `value.evaluate()` now includes `king_shelter_score`. The 2026-10-02
+  material+PST-only description and census are pre-fix history, not current code.
+- The trained-L3 20-game census had zero castling, but every game ended by
+  fivefold repetition; it does not diagnose the feature. Test castling on a
+  filtered, oracle-labelled position set instead of inferring from self-play.
+- En-passant canonicalisation and equal promotion-slot priors were checked; keep
+  unfinished games out of ratings. `MidstateStore.sample` is without replacement
+  and caps at corpus size.
+
+## Bug-fix evidence workflow
+
+- For numeric learning bugs, test the derivative of the actual forward quantity
+  with deterministic finite differences; first show the regression fails on the
+  old implementation, then make the smallest correction and rerun the focused
+  test plus its full module.
+- Treat smoke runs as wiring checks only. Assert non-empty train/held-out splits
+  and use dtype-appropriate numeric tolerances. Do not infer learning or strength
+  from tiny samples; use a pre-specified, adequately powered held-out experiment
+  with uncertainty reporting before making hypothesis claims.
+- Human-approved plans and prose guards establish scope, not mechanical
+  correctness. Independent LLM review is supplementary; report unavailable
+  review honestly and rely on executable evidence for correctness claims.
+- For learning diagnostics, cache identical training/held-out labels and use them
+  across initialization seeds; checkpoint by positions seen and compute the
+  primary paired effect at the independent-seed level. Intervals from shared,
+  frozen corpora are conditional on those corpora; add dataset/position sampling
+  uncertainty before generalizing beyond them.
+- Predeclare one primary endpoint and its meaningful effect, but report
+  complementary set-based and weight-sensitive teacher metrics plus policy
+  entropy. A gain in top-k set mass alongside worse weighted cross-entropy or
+  collapsing entropy is mixed evidence, not a go signal for expensive scaling.
+  Treat pilot plug-in sample sizes as planning aids, never as confirmation.

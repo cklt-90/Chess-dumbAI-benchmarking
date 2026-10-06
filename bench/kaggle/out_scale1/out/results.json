@@ -1,0 +1,24 @@
+{
+  "mode": "supervised",
+  "seed": 7,
+  "arms": {
+    "supervised": {
+      "positions_requested": 4000,
+      "positions_applied": 3999,
+      "search_depth": 3,
+      "seconds": 6659.22
+    }
+  },
+  "eval": {
+    "a": "L3-supervised-trained",
+    "b": "greedy-material",
+    "games": 40,
+    "played": 34,
+    "unfinished": 6,
+    "wins": 0,
+    "draws": 1,
+    "losses": 33,
+    "score_a": -33.0,
+    "points_pct": -0.9705882352941176
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "design": {
+    "purpose": "matched local ablation of the L3 search-feedback target rule",
+    "source_pilot": "bench/l3_heldout_gradient_pilot.json",
+    "reuses_cached_labels": true,
+    "arms": {
+      "max": "control: p_target = weight / max(weights) (current production rule)",
+      "sum": "alternative: p_target = weight / sum(weights)",
+      "max_scaled": "magnitude-matched control: same 'max' target rule, search_weight * 0.3742 so aggregate update magnitude matches the sum arm"
+    },
+    "magnitude_scale": 0.3742,
+    "held_constant": [
+      "300cp squash margin",
+      "credit/update path",
+      "checkpoint schedule",
+      "metrics",
+      "corpus",
+      "seeds"
+    ],
+    "training_seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108
+    ],
+    "checkpoints_positions_seen": [
+      125,
+      250,
+      500
+    ],
+    "provenance_guard": {
+      "current_perceptron_sha256": "6253c8fabce7218abb830bf2b3112285ef6ae0c0d00a1da5cb554debca700b7e",
+      "pilot_perceptron_sha256": "6253c8fabce7218abb830bf2b3112285ef6ae0c0d00a1da5cb554debca700b7e",
+      "matches": true
+    }
+  },
+  "scope": "separate matched exploratory ablation; conditional on this one frozen corpus and held-out set; not a bug fix, not folded into the pilot result, and not a scale signal; does not establish generality to freshly sampled positions",
+  "comparison": [
+    {
+      "positions_seen": 125,
+      "max": {
+        "weighted_cross_entropy_delta": 0.05022855851630144,
+        "best_move_mass_delta": 0.011616928869747058,
+        "topk_mass_delta": 0.026940890812447396,
+        "entropy_delta": -0.11162357305395772,
+        "ce_regressed_positions": 83
+      },
+      "sum": {
+        "weighted_cross_entropy_delta": -0.014511048460041137,
+        "best_move_mass_delta": 0.002344997979812512,
+        "topk_mass_delta": 0.004915211802923965,
+        "entropy_delta": -0.003362014518685709,
+        "ce_regressed_positions": 61
+      },
+      "max_scaled": {
+        "weighted_cross_entropy_delta": -0.011404074789042757,
+        "best_move_mass_delta": 0.0038528384473819057,
+        "topk_mass_delta": 0.009176924481323477,
+        "entropy_delta": -0.012186225956446074,
+        "ce_regressed_positions": 72
+      }
+    },
+    {
+      "positions_seen": 250,
+      "max": {
+        "weighted_cross_entropy_delta": 0.2236918349313129,
+        "best_move_mass_delta": 0.018906408646657616,
+        "topk_mass_delta": 0.04255406674347288,
+        "entropy_delta": -0.30070705748697174,
+        "ce_regressed_positions": 92
+      },
+      "sum": {
+        "weighted_cross_entropy_delta": -0.013716721971180743,
+        "best_move_mass_delta": 0.003784376597558838,
+        "topk_mass_delta": 0.007728992960725208,
+        "entropy_delta": -0.01077842039981507,
+        "ce_regressed_positions": 65
+      },
+      "max_scaled": {
+        "weighted_cross_entropy_delta": 0.005868542430824145,
+        "best_move_mass_delta": 0.006473774241521921,
+        "topk_mass_delta": 0.014896235122356234,
+        "entropy_delta": -0.038770710885434684,
+        "ce_regressed_positions": 73
+      }
+    },
+    {
+      "positions_seen": 500,
+      "max": {
+        "weighted_cross_entropy_delta": 0.8295653470584132,
+        "best_move_mass_delta": 0.02612319118135998,
+        "topk_mass_delta": 0.061126762900030385,
+        "entropy_delta": -0.8094216073318841,
+        "ce_regressed_positions": 107
+      },
+      "sum": {
+        "weighted_cross_entropy_delta": -0.0006182372663977934,
+        "best_move_mass_delta": 0.006277665427975529,
+        "topk_mass_delta": 0.013698438222032976,
+        "entropy_delta": -0.03470673078714921,
+        "ce_regressed_positions": 68
+      },
+      "max_scaled": {
+        "weighted_cross_entropy_delta": 0.09451272738177385,
+        "best_move_mass_delta": 0.011728869485976089,
+        "topk_mass_delta": 0.026696877635432888,
+        "entropy_delta": -0.1386541733767807,
+        "ce_regressed_positions": 84
+      }
+    }
+  ],
+  "seed_conditional_ce_intervals": {
+    "max": {
+      "125": {
+        "mean": 0.05022855851630144,
+        "sd": 0.0016357581075000921,
+        "n_seeds": 8,
+        "ci95": [
+          0.04886081320994681,
+          0.051596303822656064
+        ]
+      },
+      "250": {
+        "mean": 0.2236918349313129,
+        "sd": 0.002102381381019591,
+        "n_seeds": 8,
+        "ci95": [
+          0.22193392081621705,
+          0.22544974904640874
+        ]
+      },
+      "500": {
+        "mean": 0.8295653470584132,
+        "sd": 0.028278255121141637,
+        "n_seeds": 8,
+        "ci95": [
+          0.8059203774651093,
+          0.8532103166517172
+        ]
+      }
+    },
+    "sum": {
+      "125": {
+        "mean": -0.014511048460041117,
+        "sd": 0.0003725793717680958,
+        "n_seeds": 8,
+        "ci95": [
+          -0.01482258210590467,
+          -0.014199514814177564
+        ]
+      },
+      "250": {
+        "mean": -0.013716721971180743,
+        "sd": 0.0004786445700859134,
+        "n_seeds": 8,
+        "ci95": [
+          -0.014116942432351284,
+          -0.013316501510010202
+        ]
+      },
+      "500": {
+        "mean": -0.0006182372663977769,
+        "sd": 0.0007191707204837377,
+        "n_seeds": 8,
+        "ci95": [
+          -0.001219574574707131,
+          -1.689995808842285e-05
+        ]
+      }
+    },
+    "max_scaled": {
+      "125": {
+        "mean": -0.011404074789042764,
+        "sd": 0.0006436489792865867,
+        "n_seeds": 8,
+        "ci95": [
+          -0.011942264308827324,
+          -0.010865885269258203
+        ]
+      },
+      "250": {
+        "mean": 0.005868542430824124,
+        "sd": 0.001052614716273752,
+        "n_seeds": 8,
+        "ci95": [
+          0.004988394668766859,
+          0.006748690192881389
+        ]
+      },
+      "500": {
+        "mean": 0.09451272738177388,
+        "sd": 0.0016581216971807004,
+        "n_seeds": 8,
+        "ci95": [
+          0.09312628267562496,
+          0.0958991720879228
+        ]
+      }
+    }
+  },
+  "runtime_seconds": 58.624
+}

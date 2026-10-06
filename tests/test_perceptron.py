@@ -421,6 +421,40 @@ def test_weight_cache_is_bounded():
 # training: credit application
 # --------------------------------------------------------------------------
 
+def test_context_credit_matches_finite_difference_origin_logit_gradient():
+    """The shared context path must update through the selected origin's W_hid."""
+    trainer = L3Trainer(
+        L3Policy(seed=13), L3Config(seed=13, lr=0.01)
+    )
+    scorer = trainer.policy.perceptron
+    scorer.config.quantised = False
+    board = chess.Board()
+    move = chess.Move.from_uci("b1c3")
+    assert move in board.legal_moves
+
+    # Compare one W_ctx derivative against the scorer's actual forward pass.
+    # Seed 13 makes this active derivative negative, catching a missing W_hid
+    # multiplier that would otherwise push the logit in the opposite direction.
+    scorer.set_position(board)
+    hidden, context_feature = 5, 2
+    original = float(scorer.W_ctx[hidden, context_feature])
+    epsilon = 1e-2
+    scorer.W_ctx[hidden, context_feature] = original + epsilon
+    plus = float(scorer.from_logits(board)[move.from_square])
+    scorer.W_ctx[hidden, context_feature] = original - epsilon
+    minus = float(scorer.from_logits(board)[move.from_square])
+    scorer.W_ctx[hidden, context_feature] = original
+    finite_difference = (plus - minus) / (2 * epsilon)
+    assert finite_difference < -1e-3
+
+    credit = 0.5
+    before = float(scorer.W_ctx[hidden, context_feature])
+    trainer.apply_credit(board, move, credit)
+    actual_delta = float(scorer.W_ctx[hidden, context_feature]) - before
+    expected_delta = trainer.config.lr * credit * finite_difference
+    assert actual_delta == pytest.approx(expected_delta, abs=1e-6)
+
+
 def test_credit_moves_the_move_it_is_given_up_the_ranking():
     """Positive credit on a move must raise that move's own probability."""
     trainer = L3Trainer(L3Config(lr=0.05, seed=2))

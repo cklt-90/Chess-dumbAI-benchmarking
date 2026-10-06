@@ -645,7 +645,11 @@ class L3Trainer:
             # steps, and it is easy to omit by accident since a linear version
             # still trains -- just worse.
             gate = (pre > 0).astype(np.float32)
-            grad_ctx = np.outer(gate, ctx).astype(np.float32)
+            # Chain rule: each context-to-hidden derivative is weighted by
+            # this origin's hidden-to-logit coefficient, then gated by ReLU.
+            grad_ctx = (
+                np.outer(scorer.W_hid[f_c], ctx) * gate[:, None]
+            ).astype(np.float32)
             self._nudge(scorer.W_ctx, grad_ctx, credit)
             self._nudge(scorer.W_hid[f_c], hidden, credit)
 

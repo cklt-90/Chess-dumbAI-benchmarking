@@ -1,0 +1,347 @@
+{
+  "protocol": "initial-position self-play; 20 games per model; max_plies=120; no_progress_limit=60; separate RNG seeds per side/game",
+  "trained_model": "Kaggle supervised L3, 3999 positions, depth 3, seed 7",
+  "baseline": "fresh untrained L3 seed varied by game",
+  "censuses": {
+    "trained": {
+      "games": 20,
+      "castling": 0,
+      "en_passant": 0,
+      "promotions": 0,
+      "total_plies": 714,
+      "unfinished": 0,
+      "per_game": [
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 26,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 37,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 27,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 27,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 37,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 28,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 28,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 36,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 36,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 36,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 43,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 28,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 36,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 26,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 27,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 36,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 112,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 26,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 36,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "1/2-1/2",
+          "reason": "fivefold_repetition",
+          "plies": 26,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        }
+      ]
+    },
+    "untrained": {
+      "games": 20,
+      "castling": 1,
+      "en_passant": 0,
+      "promotions": 32,
+      "total_plies": 2300,
+      "unfinished": 18,
+      "per_game": [
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 1
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 2
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 1,
+          "en_passant": 0,
+          "promotions": 2
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 1
+        },
+        {
+          "result": "0-1",
+          "reason": "checkmate",
+          "plies": 96,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 3
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 1
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 3
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 3
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 2
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 2
+        },
+        {
+          "result": "0-1",
+          "reason": "checkmate",
+          "plies": 44,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 2
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 0
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 2
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 1
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 1
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 1
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 2
+        },
+        {
+          "result": "unfinished",
+          "reason": "max_plies",
+          "plies": 120,
+          "castling": 0,
+          "en_passant": 0,
+          "promotions": 3
+        }
+      ]
+    }
+  }
+}

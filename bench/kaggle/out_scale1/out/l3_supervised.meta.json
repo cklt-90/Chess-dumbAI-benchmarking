@@ -1,0 +1,18 @@
+{
+  "games_played": 0,
+  "updates": 157608,
+  "search_updates": 19758,
+  "n_parameters": 7609,
+  "config": {
+    "lr": 0.01,
+    "credit_decay": 0.99,
+    "search_weight": 1.0,
+    "top_k": 5,
+    "search_depth": 3,
+    "shaped_reward": true,
+    "shaped_weight": 0.3,
+    "max_plies": 120,
+    "no_progress_limit": 60,
+    "seed": 7
+  }
+}

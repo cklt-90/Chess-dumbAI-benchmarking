@@ -1,0 +1,79 @@
+[{"stream_name":"stderr","time":10.099308627,"data":"/usr/local/lib/python3.13/dist-packages/nbformat/validator.py:434: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.\n"}
+,{"stream_name":"stderr","time":10.099361678,"data":"  _validate(nbdict, ref, version, version_minor, relax_add_props)\n"}
+,{"stream_name":"stderr","time":11.521288315,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":11.521325293,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":11.521329769,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":11.521332729000001,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":12.425369374,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":12.425408848,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":12.425414758,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":12.425419007,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":13.884868581,"data":"Cloning into '/kaggle/temp/repo'...\n"}
+,{"stream_name":"stderr","time":14.088092648,"data":"Cloning into '/kaggle/temp/repo'...\n"}
+,{"stream_name":"stderr","time":14.088128188,"data":"\n"}
+,{"stream_name":"stderr","time":14.088133216,"data":"Cloning into '/kaggle/temp/repo'...\n"}
+,{"stream_name":"stdout","time":15.315777568,"data":"Found training script: /kaggle/temp/repo/bench/kaggle/kaggle_l3_train.py\n"}
+,{"stream_name":"stdout","time":18.49655268,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.1/6.1 MB 57.2 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":18.699207365,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.1/6.1 MB 57.2 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":26.905628932,"data":"Dependencies ready.\n"}
+,{"stream_name":"stdout","time":27.110339728,"data":"Running: python /kaggle/temp/repo/bench/kaggle/kaggle_l3_train.py --mode supervised --games 20 --positions 4000 --search-depth 3 --eval-against material --eval-games 40 --seed 7 --out-dir /kaggle/working/out\n"}
+,{"stream_name":"stdout","time":6693.068875442,"data":"{\n"}
+,{"stream_name":"stdout","time":6693.069039575,"data":"  \"a\": \"L3-supervised-trained\",\n"}
+,{"stream_name":"stdout","time":6693.069049578,"data":"  \"b\": \"greedy-material\",\n"}
+,{"stream_name":"stdout","time":6693.069055294,"data":"  \"games\": 40,\n"}
+,{"stream_name":"stdout","time":6693.069060373,"data":"  \"played\": 34,\n"}
+,{"stream_name":"stdout","time":6693.069065091,"data":"  \"unfinished\": 6,\n"}
+,{"stream_name":"stdout","time":6693.069070024,"data":"  \"wins\": 0,\n"}
+,{"stream_name":"stdout","time":6693.069074825,"data":"  \"draws\": 1,\n"}
+,{"stream_name":"stdout","time":6693.069079846,"data":"  \"losses\": 33,\n"}
+,{"stream_name":"stdout","time":6693.06908473,"data":"  \"score_a\": -33.0,\n"}
+,{"stream_name":"stdout","time":6693.069093565,"data":"  \"points_pct\": -0.9705882352941176\n"}
+,{"stream_name":"stdout","time":6693.069120886,"data":"}\n"}
+,{"stream_name":"stdout","time":6693.069125134,"data":"\n"}
+,{"stream_name":"stdout","time":6693.069129462,"data":"Wrote outputs to /kaggle/working/out\n"}
+,{"stream_name":"stdout","time":6693.216954892,"data":"{\n"}
+,{"stream_name":"stdout","time":6693.2170136,"data":"  \"a\": \"L3-supervised-trained\",\n"}
+,{"stream_name":"stdout","time":6693.217019967,"data":"  \"b\": \"greedy-material\",\n"}
+,{"stream_name":"stdout","time":6693.217025309,"data":"  \"games\": 40,\n"}
+,{"stream_name":"stdout","time":6693.217034345,"data":"  \"played\": 34,\n"}
+,{"stream_name":"stdout","time":6693.217039123,"data":"  \"unfinished\": 6,\n"}
+,{"stream_name":"stdout","time":6693.217043139,"data":"  \"wins\": 0,\n"}
+,{"stream_name":"stdout","time":6693.21705847,"data":"  \"draws\": 1,\n"}
+,{"stream_name":"stdout","time":6693.217062856,"data":"  \"losses\": 33,\n"}
+,{"stream_name":"stdout","time":6693.217066746,"data":"  \"score_a\": -33.0,\n"}
+,{"stream_name":"stdout","time":6693.217084742,"data":"  \"points_pct\": -0.9705882352941176\n"}
+,{"stream_name":"stdout","time":6693.217088907,"data":"}\n"}
+,{"stream_name":"stdout","time":6693.217092946,"data":"\n"}
+,{"stream_name":"stdout","time":6693.217097024,"data":"Wrote outputs to /kaggle/working/out\n"}
+,{"stream_name":"stdout","time":6693.246989681,"data":"# L3 training run\n"}
+,{"stream_name":"stdout","time":6693.247039498,"data":"\n"}
+,{"stream_name":"stdout","time":6693.247046553,"data":"**mode:** `supervised`  **seed:** 7\n"}
+,{"stream_name":"stdout","time":6693.247051401,"data":"\n"}
+,{"stream_name":"stdout","time":6693.2470559,"data":"## Training\n"}
+,{"stream_name":"stdout","time":6693.247060707,"data":"### supervised  (6659.22s)\n"}
+,{"stream_name":"stdout","time":6693.247064747,"data":"- positions_requested: 4000\n"}
+,{"stream_name":"stdout","time":6693.247069118,"data":"- positions_applied: 3999\n"}
+,{"stream_name":"stdout","time":6693.24707313,"data":"- search_depth: 3\n"}
+,{"stream_name":"stdout","time":6693.247077158,"data":"\n"}
+,{"stream_name":"stdout","time":6693.247080845,"data":"## Evaluation\n"}
+,{"stream_name":"stdout","time":6693.247084739,"data":"L3-supervised-trained  vs  greedy-material  (40 games)\n"}
+,{"stream_name":"stdout","time":6693.247088592,"data":"\n"}
+,{"stream_name":"stdout","time":6693.247092566,"data":"- wins: 0  draws: 1  losses: 33  unfinished: 6\n"}
+,{"stream_name":"stdout","time":6693.247097265,"data":"- points_pct (wins / played): -0.971\n"}
+,{"stream_name":"stdout","time":6693.247102451,"data":"\n"}
+,{"stream_name":"stdout","time":6693.247107503,"data":"\u003e `points_pct` counts only decisive wins; the bench's own Bradley-Terry fit (which scores draws as 0.5) is the authoritative metric. Re-run the trained model through `python -m bench` for that.\n"}
+,{"stream_name":"stdout","time":6693.247114542,"data":"\n"}
+,{"stream_name":"stdout","time":6693.247118673,"data":"Artifacts in /kaggle/working/out (downloadable from the notebook output):\n"}
+,{"stream_name":"stdout","time":6693.247123158,"data":" - l3_supervised.json (154 KB)\n"}
+,{"stream_name":"stdout","time":6693.24712693,"data":" - l3_supervised.meta.json (0 KB)\n"}
+,{"stream_name":"stdout","time":6693.247130863,"data":" - results.json (0 KB)\n"}
+,{"stream_name":"stdout","time":6693.247135347,"data":" - summary.md (1 KB)\n"}
+,{"stream_name":"stderr","time":6697.456344775,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":6697.456397529,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":6697.717918215,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":6697.717966511,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":6698.740301161,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":6698.834429712,"data":"[NbConvertApp] Writing 10318 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":6702.29137495,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":6702.986773056,"data":"[NbConvertApp] Writing 287562 bytes to __results__.html\n"}
+]

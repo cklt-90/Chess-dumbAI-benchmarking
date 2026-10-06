@@ -1,0 +1,780 @@
+{
+  "design": {
+    "purpose": "exploratory per-position diagnosis of held-out metric disagreement",
+    "source_pilot": "bench/l3_heldout_gradient_pilot.json",
+    "reuses_cached_labels": true,
+    "depth": 3,
+    "top_k": 5,
+    "training_seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108
+    ],
+    "checkpoints_positions_seen": [
+      0,
+      125,
+      250,
+      500
+    ],
+    "train_positions": 500,
+    "heldout_positions": 128,
+    "training_target_normalization": "unchanged: weight / max(target weights)",
+    "position_delta_reference": "shared baseline at 0 positions seen, averaged across seeds",
+    "per_position_metrics_averaged_across_seeds": true,
+    "provenance_guard": {
+      "current_perceptron_sha256": "6253c8fabce7218abb830bf2b3112285ef6ae0c0d00a1da5cb554debca700b7e",
+      "pilot_perceptron_sha256": "6253c8fabce7218abb830bf2b3112285ef6ae0c0d00a1da5cb554debca700b7e",
+      "matches": true
+    }
+  },
+  "scope": "exploratory; conditional on this one frozen training corpus and held-out set; does not establish generality to freshly sampled positions; not a scale signal",
+  "checkpoint_views": [
+    {
+      "positions_seen": 125,
+      "seed_mean_position_summary": {
+        "positions": 128,
+        "teacher_topk_probability_mass": {
+          "mean_delta": 0.026940890812447396,
+          "improved_positions": 66,
+          "regressed_positions": 62,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": 0.07231480625351738,
+          "mean_delta_over_regressed": -0.02136037401191744
+        },
+        "teacher_best_probability_mass_tie_aware": {
+          "mean_delta": 0.011616928869747058,
+          "improved_positions": 48,
+          "regressed_positions": 80,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": 0.04638600253768881,
+          "mean_delta_over_regressed": -0.009244515331017993
+        },
+        "teacher_weighted_probability_score": {
+          "mean_delta": 0.004945487991586648,
+          "improved_positions": 61,
+          "regressed_positions": 67,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": 0.015882708414016344,
+          "mean_delta_over_regressed": -0.005012279855700089
+        },
+        "teacher_weighted_cross_entropy_nats": {
+          "mean_delta": 0.05022855851630144,
+          "improved_positions": 45,
+          "regressed_positions": 83,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": -0.259955888371699,
+          "mean_delta_over_regressed": 0.21840084899774745
+        },
+        "mean_legal_move_entropy_nats": {
+          "mean_delta": -0.11162357305395772,
+          "reduced_entropy_positions": 113,
+          "increased_entropy_positions": 15,
+          "unchanged_positions": 0
+        }
+      },
+      "worst_regression_positions": [
+        {
+          "fen": "rn2k1r1/p2pb2p/2P2n2/PP3PPP/3pb3/1q4P1/2B3N1/R4KR1 b q - 0 30",
+          "cross_entropy_delta": 0.9470297859206838,
+          "baseline_cross_entropy": 5.234674336185997,
+          "final_cross_entropy": 6.181704122106681,
+          "baseline_topk_mass": 0.03399366345131214,
+          "final_topk_mass": 0.014407723152547815,
+          "baseline_best_mass": 0.0053301553656799686,
+          "final_best_mass": 0.0020675852181245014,
+          "baseline_entropy": 3.5010596084213805,
+          "final_entropy": 3.400106682488855,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "4Nbnr/4k3/rpb5/R2Pp1pp/3qn3/3P3B/2P1QP1P/3K3R b - - 1 36",
+          "cross_entropy_delta": 0.8792514743092994,
+          "baseline_cross_entropy": 4.796988388127845,
+          "final_cross_entropy": 5.676239862437145,
+          "baseline_topk_mass": 0.1093641990758974,
+          "final_topk_mass": 0.07412002433040149,
+          "baseline_best_mass": 0.00825732046263681,
+          "final_best_mass": 0.0034277642387825647,
+          "baseline_entropy": 3.4192096229771938,
+          "final_entropy": 3.1879028090786,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "4kbnr/rpp1q1pp/4bp2/p2p4/1n1Bp3/P2P2NP/2P1PPP1/RN1QKB1R b KQk - 0 12",
+          "cross_entropy_delta": 0.6331929727518539,
+          "baseline_cross_entropy": 3.4105810206272174,
+          "final_cross_entropy": 4.043773993379071,
+          "baseline_topk_mass": 0.16996133476076697,
+          "final_topk_mass": 0.09659660917040246,
+          "baseline_best_mass": 0.0390166643364839,
+          "final_best_mass": 0.01659304974481038,
+          "baseline_entropy": 3.353372132688964,
+          "final_entropy": 3.0626118782680116,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "r2qk1nr/2pn1pbp/1p1p2N1/p5p1/1P2PP2/B6b/P1PP1KPP/RN1Q1B1R b kq - 2 12",
+          "cross_entropy_delta": 0.6011303364299874,
+          "baseline_cross_entropy": 4.006646543641681,
+          "final_cross_entropy": 4.607776880071668,
+          "baseline_topk_mass": 0.10895978345285112,
+          "final_topk_mass": 0.06781477446531523,
+          "baseline_best_mass": 0.009490657754937626,
+          "final_best_mass": 0.005626275194617707,
+          "baseline_entropy": 3.5807557121347484,
+          "final_entropy": 3.3508406073471613,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "4kb2/3pn3/4pr2/p1p2p1p/1pPP3P/1q1bB1PR/1P1NPP2/1R2KB2 b - - 4 37",
+          "cross_entropy_delta": 0.6011164221101453,
+          "baseline_cross_entropy": 4.065267090523609,
+          "final_cross_entropy": 4.666383512633754,
+          "baseline_topk_mass": 0.1426036645271589,
+          "final_topk_mass": 0.10911678328127739,
+          "baseline_best_mass": 0.011214858726168744,
+          "final_best_mass": 0.005874730003098579,
+          "baseline_entropy": 3.164602718348799,
+          "final_entropy": 3.0653033727870653,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "r1b1qbkr/1pppp1pp/5p1n/1B1P3Q/pnP1P3/6P1/PP3P1P/RNB1K1NR w KQ - 1 13",
+          "cross_entropy_delta": 0.5706196737610316,
+          "baseline_cross_entropy": 5.090333600361813,
+          "final_cross_entropy": 5.6609532741228445,
+          "baseline_topk_mass": 0.09313144556995326,
+          "final_topk_mass": 0.06366409051974697,
+          "baseline_best_mass": 0.005520679436647739,
+          "final_best_mass": 0.0030841604680090177,
+          "baseline_entropy": 3.3942538132253794,
+          "final_entropy": 3.248637175233264,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "rnb1kbr1/ppppn1pp/5q2/4p3/P3Pp1P/8/1PPP1PPN/RNBQKB1R w KQq - 1 8",
+          "cross_entropy_delta": 0.5415202864441291,
+          "baseline_cross_entropy": 3.5507722508638775,
+          "final_cross_entropy": 4.092292537308007,
+          "baseline_topk_mass": 0.1735016413167949,
+          "final_topk_mass": 0.12272460953083614,
+          "baseline_best_mass": 0.05277015321790138,
+          "final_best_mass": 0.01679331620586317,
+          "baseline_entropy": 3.198263341248689,
+          "final_entropy": 3.0667855804372888,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "3n2nr/7b/3N1p1k/1pp4p/6PN/3R4/4r2P/1K2R3 b - - 8 50",
+          "cross_entropy_delta": 0.5388978420473398,
+          "baseline_cross_entropy": 3.8326753391586132,
+          "final_cross_entropy": 4.371573181205953,
+          "baseline_topk_mass": 0.2663551944338862,
+          "final_topk_mass": 0.3993628674084361,
+          "baseline_best_mass": 0.027280224258684788,
+          "final_best_mass": 0.014904585518821858,
+          "baseline_entropy": 2.8761206756154722,
+          "final_entropy": 2.573881345326585,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "rnbqkbnr/1pp1p3/p5pp/3p4/1P1Pp1B1/1Q6/P1P2PPP/RNB1K1NR w - - 0 12",
+          "cross_entropy_delta": 0.4966030257256637,
+          "baseline_cross_entropy": 4.760176956872838,
+          "final_cross_entropy": 5.256779982598502,
+          "baseline_topk_mass": 0.04269548612841541,
+          "final_topk_mass": 0.02589345794108345,
+          "baseline_best_mass": 0.009318548770441332,
+          "final_best_mass": 0.0065995294879780085,
+          "baseline_entropy": 3.5582753539198064,
+          "final_entropy": 3.3952983779742807,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "1n1qkr1b/2p2pB1/3p4/4p2p/r1pPP3/PP3p1b/2Q2N2/1R3BK1 w - - 6 40",
+          "cross_entropy_delta": 0.40149356553034954,
+          "baseline_cross_entropy": 3.5605598876376585,
+          "final_cross_entropy": 3.962053453168008,
+          "baseline_topk_mass": 0.1413693054533061,
+          "final_topk_mass": 0.09894463341121479,
+          "baseline_best_mass": 0.02549886708848026,
+          "final_best_mass": 0.014000907984712235,
+          "baseline_entropy": 3.4714553466273053,
+          "final_entropy": 3.364817002010037,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "rnbk1br1/1p1p1ppp/4q2n/p1p1p1P1/1PP5/P4P1B/R2PP2P/1NBQ1KNR w - - 3 10",
+          "cross_entropy_delta": 0.39415661329698715,
+          "baseline_cross_entropy": 3.792592788080559,
+          "final_cross_entropy": 4.186749401377546,
+          "baseline_topk_mass": 0.13131525681367245,
+          "final_topk_mass": 0.100645922066817,
+          "baseline_best_mass": 0.02053079032576187,
+          "final_best_mass": 0.012317960878869154,
+          "baseline_entropy": 3.161536015423952,
+          "final_entropy": 3.0371348276246573,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "r1bqkbnr/ppp1ppp1/n2p4/7p/1P4P1/N7/P1PPPP1P/R1BQKBNR w KQkq - 0 4",
+          "cross_entropy_delta": 0.36304102480293254,
+          "baseline_cross_entropy": 2.9041429896252864,
+          "final_cross_entropy": 3.267184014428219,
+          "baseline_topk_mass": 0.2902291379439092,
+          "final_topk_mass": 0.23715316304451295,
+          "baseline_best_mass": 0.04150562607966665,
+          "final_best_mass": 0.020287359118301887,
+          "baseline_entropy": 3.037641372374421,
+          "final_entropy": 2.791203532797054,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "1n1r1n2/3k4/6Pp/1p1pPp2/1PPbP2R/3B2PN/4K3/1q6 b - - 6 42",
+          "cross_entropy_delta": 0.35231329564949565,
+          "baseline_cross_entropy": 4.855081671689585,
+          "final_cross_entropy": 5.207394967339081,
+          "baseline_topk_mass": 0.038991618367579334,
+          "final_topk_mass": 0.029864463483841266,
+          "baseline_best_mass": 0.007826773998810793,
+          "final_best_mass": 0.004673786166172658,
+          "baseline_entropy": 3.3585458866124895,
+          "final_entropy": 3.2486241358941506,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "rn1k3r/1bp2pp1/qQ2pP2/1pb4p/1P1p4/2PPBP1P/P3P3/RN2KBNR w KQ - 0 14",
+          "cross_entropy_delta": 0.35228722822513703,
+          "baseline_cross_entropy": 3.845785429612622,
+          "final_cross_entropy": 4.198072657837759,
+          "baseline_topk_mass": 0.1917386520360583,
+          "final_topk_mass": 0.15557899682899334,
+          "baseline_best_mass": 0.0831200024113059,
+          "final_best_mass": 0.05692848144099116,
+          "baseline_entropy": 3.1001806443568176,
+          "final_entropy": 2.9485059041091475,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "3k1r1r/1p3p2/4R2p/p4bp1/2P3Q1/7P/2P5/3K1BNR w - - 1 40",
+          "cross_entropy_delta": 0.3433868352035514,
+          "baseline_cross_entropy": 4.704718351731962,
+          "final_cross_entropy": 5.048105186935514,
+          "baseline_topk_mass": 0.046083905055781506,
+          "final_topk_mass": 0.033112654954870244,
+          "baseline_best_mass": 0.007705556809719828,
+          "final_best_mass": 0.0042255982923682,
+          "baseline_entropy": 3.1091627474946337,
+          "final_entropy": 2.908573342399984,
+          "n_teacher_targets": 5
+        }
+      ],
+      "concentration": {
+        "gross_positive_cross_entropy_increase": 18.127270466813037,
+        "n_positions_worst_decile": 13,
+        "top_decile_share": 0.4038316928178374,
+        "correlation_ce_rise_with_entropy_fall": 0.01589760757568202
+      }
+    },
+    {
+      "positions_seen": 250,
+      "seed_mean_position_summary": {
+        "positions": 128,
+        "teacher_topk_probability_mass": {
+          "mean_delta": 0.04255406674347288,
+          "improved_positions": 63,
+          "regressed_positions": 65,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": 0.12363351866016678,
+          "mean_delta_over_regressed": -0.03603063280655351
+        },
+        "teacher_best_probability_mass_tie_aware": {
+          "mean_delta": 0.018906408646657616,
+          "improved_positions": 48,
+          "regressed_positions": 80,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": 0.07455474613281837,
+          "mean_delta_over_regressed": -0.014482593845038841
+        },
+        "teacher_weighted_probability_score": {
+          "mean_delta": 0.00859689164882071,
+          "improved_positions": 58,
+          "regressed_positions": 70,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": 0.028715097236398673,
+          "mean_delta_over_regressed": -0.008072478695172457
+        },
+        "teacher_weighted_cross_entropy_nats": {
+          "mean_delta": 0.2236918349313129,
+          "improved_positions": 36,
+          "regressed_positions": 92,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": -0.3728725814352222,
+          "mean_delta_over_regressed": 0.4571300848138701
+        },
+        "mean_legal_move_entropy_nats": {
+          "mean_delta": -0.30070705748697174,
+          "reduced_entropy_positions": 120,
+          "increased_entropy_positions": 8,
+          "unchanged_positions": 0
+        }
+      },
+      "worst_regression_positions": [
+        {
+          "fen": "rn2k1r1/p2pb2p/2P2n2/PP3PPP/3pb3/1q4P1/2B3N1/R4KR1 b q - 0 30",
+          "cross_entropy_delta": 1.9051734118783665,
+          "baseline_cross_entropy": 5.234674336185997,
+          "final_cross_entropy": 7.139847748064364,
+          "baseline_topk_mass": 0.03399366345131214,
+          "final_topk_mass": 0.0058167972748507345,
+          "baseline_best_mass": 0.0053301553656799686,
+          "final_best_mass": 0.0007931799902806749,
+          "baseline_entropy": 3.5010596084213805,
+          "final_entropy": 3.1931048829510167,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "4Nbnr/4k3/rpb5/R2Pp1pp/3qn3/3P3B/2P1QP1P/3K3R b - - 1 36",
+          "cross_entropy_delta": 1.8497244131585822,
+          "baseline_cross_entropy": 4.796988388127845,
+          "final_cross_entropy": 6.646712801286427,
+          "baseline_topk_mass": 0.1093641990758974,
+          "final_topk_mass": 0.04648380640870495,
+          "baseline_best_mass": 0.00825732046263681,
+          "final_best_mass": 0.0012988683977701934,
+          "baseline_entropy": 3.4192096229771938,
+          "final_entropy": 2.862513551932157,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "r1b1qbkr/1pppp1pp/5p1n/1B1P3Q/pnP1P3/6P1/PP3P1P/RNB1K1NR w KQ - 1 13",
+          "cross_entropy_delta": 1.4535565990485448,
+          "baseline_cross_entropy": 5.090333600361813,
+          "final_cross_entropy": 6.543890199410358,
+          "baseline_topk_mass": 0.09313144556995326,
+          "final_topk_mass": 0.03832075544089622,
+          "baseline_best_mass": 0.005520679436647739,
+          "final_best_mass": 0.0011729534304133864,
+          "baseline_entropy": 3.3942538132253794,
+          "final_entropy": 2.943641256213538,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "4kb2/3pn3/4pr2/p1p2p1p/1pPP3P/1q1bB1PR/1P1NPP2/1R2KB2 b - - 4 37",
+          "cross_entropy_delta": 1.2011460775701197,
+          "baseline_cross_entropy": 4.065267090523609,
+          "final_cross_entropy": 5.266413168093728,
+          "baseline_topk_mass": 0.1426036645271589,
+          "final_topk_mass": 0.08682215844542564,
+          "baseline_best_mass": 0.011214858726168744,
+          "final_best_mass": 0.0029897928136545203,
+          "baseline_entropy": 3.164602718348799,
+          "final_entropy": 2.845133486348354,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "4kbnr/rpp1q1pp/4bp2/p2p4/1n1Bp3/P2P2NP/2P1PPP1/RN1QKB1R b KQk - 0 12",
+          "cross_entropy_delta": 1.1825480294035455,
+          "baseline_cross_entropy": 3.4105810206272174,
+          "final_cross_entropy": 4.593129050030763,
+          "baseline_topk_mass": 0.16996133476076697,
+          "final_topk_mass": 0.05927940265254833,
+          "baseline_best_mass": 0.0390166643364839,
+          "final_best_mass": 0.010044451760086809,
+          "baseline_entropy": 3.353372132688964,
+          "final_entropy": 2.6078065492680125,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "3n2nr/7b/3N1p1k/1pp4p/6PN/3R4/4r2P/1K2R3 b - - 8 50",
+          "cross_entropy_delta": 1.1808827282863188,
+          "baseline_cross_entropy": 3.8326753391586132,
+          "final_cross_entropy": 5.013558067444932,
+          "baseline_topk_mass": 0.2663551944338862,
+          "final_topk_mass": 0.5139570827209327,
+          "baseline_best_mass": 0.027280224258684788,
+          "final_best_mass": 0.007438124706431418,
+          "baseline_entropy": 2.8761206756154722,
+          "final_entropy": 2.203251300419965,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "r2qk1nr/2pn1pbp/1p1p2N1/p5p1/1P2PP2/B6b/P1PP1KPP/RN1Q1B1R b kq - 2 12",
+          "cross_entropy_delta": 0.9950281531396765,
+          "baseline_cross_entropy": 4.006646543641681,
+          "final_cross_entropy": 5.0016746967813575,
+          "baseline_topk_mass": 0.10895978345285112,
+          "final_topk_mass": 0.03958695135060956,
+          "baseline_best_mass": 0.009490657754937626,
+          "final_best_mass": 0.004973357841664885,
+          "baseline_entropy": 3.5807557121347484,
+          "final_entropy": 2.992025971222078,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "rnb1kbr1/ppppn1pp/5q2/4p3/P3Pp1P/8/1PPP1PPN/RNBQKB1R w KQq - 1 8",
+          "cross_entropy_delta": 0.967552486842524,
+          "baseline_cross_entropy": 3.5507722508638775,
+          "final_cross_entropy": 4.5183247377064015,
+          "baseline_topk_mass": 0.1735016413167949,
+          "final_topk_mass": 0.0917021287292536,
+          "baseline_best_mass": 0.05277015321790138,
+          "final_best_mass": 0.009493903953622734,
+          "baseline_entropy": 3.198263341248689,
+          "final_entropy": 2.911986281821317,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "r1bqkbnr/ppp1ppp1/n2p4/7p/1P4P1/N7/P1PPPP1P/R1BQKBNR w KQkq - 0 4",
+          "cross_entropy_delta": 0.9088807329236164,
+          "baseline_cross_entropy": 2.9041429896252864,
+          "final_cross_entropy": 3.8130237225489028,
+          "baseline_topk_mass": 0.2902291379439092,
+          "final_topk_mass": 0.23416232577199753,
+          "baseline_best_mass": 0.04150562607966665,
+          "final_best_mass": 0.008103948114257534,
+          "baseline_entropy": 3.037641372374421,
+          "final_entropy": 2.463400412559224,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "3k1r1r/1p3p2/4R2p/p4bp1/2P3Q1/7P/2P5/3K1BNR w - - 1 40",
+          "cross_entropy_delta": 0.893106102766895,
+          "baseline_cross_entropy": 4.704718351731962,
+          "final_cross_entropy": 5.597824454498857,
+          "baseline_topk_mass": 0.046083905055781506,
+          "final_topk_mass": 0.021016845696028852,
+          "baseline_best_mass": 0.007705556809719828,
+          "final_best_mass": 0.0022662564706792503,
+          "baseline_entropy": 3.1091627474946337,
+          "final_entropy": 2.608938994071539,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "rnbqkbnr/1pp1p3/p5pp/3p4/1P1Pp1B1/1Q6/P1P2PPP/RNB1K1NR w - - 0 12",
+          "cross_entropy_delta": 0.8852689137439427,
+          "baseline_cross_entropy": 4.760176956872838,
+          "final_cross_entropy": 5.645445870616781,
+          "baseline_topk_mass": 0.04269548612841541,
+          "final_topk_mass": 0.01758410463898024,
+          "baseline_best_mass": 0.009318548770441332,
+          "final_best_mass": 0.005407072040531147,
+          "baseline_entropy": 3.5582753539198064,
+          "final_entropy": 3.136293619922439,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "rn1k3r/1bp2pp1/qQ2pP2/1pb4p/1P1p4/2PPBP1P/P3P3/RN2KBNR w KQ - 0 14",
+          "cross_entropy_delta": 0.8682825014620512,
+          "baseline_cross_entropy": 3.845785429612622,
+          "final_cross_entropy": 4.714067931074673,
+          "baseline_topk_mass": 0.1917386520360583,
+          "final_topk_mass": 0.10892251793977609,
+          "baseline_best_mass": 0.0831200024113059,
+          "final_best_mass": 0.036907441914081573,
+          "baseline_entropy": 3.1001806443568176,
+          "final_entropy": 2.7142438206233943,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "Q4b1r/1rp1kpp1/PP5p/2p5/1n1P2P1/5P1q/R5B1/6KR b - - 1 39",
+          "cross_entropy_delta": 0.8513548632210695,
+          "baseline_cross_entropy": 4.152155270518667,
+          "final_cross_entropy": 5.003510133739736,
+          "baseline_topk_mass": 0.08700911260833641,
+          "final_topk_mass": 0.044364946862655186,
+          "baseline_best_mass": 0.01276770673231127,
+          "final_best_mass": 0.005478161250749104,
+          "baseline_entropy": 3.283730563914866,
+          "final_entropy": 3.0456664289905664,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "1n1r1n2/3k4/6Pp/1p1pPp2/1PPbP2R/3B2PN/4K3/1q6 b - - 6 42",
+          "cross_entropy_delta": 0.8276887281248433,
+          "baseline_cross_entropy": 4.855081671689585,
+          "final_cross_entropy": 5.682770399814428,
+          "baseline_topk_mass": 0.038991618367579334,
+          "final_topk_mass": 0.021442924760154126,
+          "baseline_best_mass": 0.007826773998810793,
+          "final_best_mass": 0.002508854750974227,
+          "baseline_entropy": 3.3585458866124895,
+          "final_entropy": 3.117093397205962,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "2n3r1/k2N1R2/2pp4/pp2p1pr/2P3PP/3PP3/P1nKQ3/RNB2B2 w - - 2 27",
+          "cross_entropy_delta": 0.7551762474520682,
+          "baseline_cross_entropy": 3.9969346816201696,
+          "final_cross_entropy": 4.752110929072238,
+          "baseline_topk_mass": 0.1415115476060255,
+          "final_topk_mass": 0.08527575586593371,
+          "baseline_best_mass": 0.012669616390718105,
+          "final_best_mass": 0.0021403851805269734,
+          "baseline_entropy": 3.357617682704766,
+          "final_entropy": 3.1623906697056396,
+          "n_teacher_targets": 5
+        }
+      ],
+      "concentration": {
+        "gross_positive_cross_entropy_increase": 42.05596780287605,
+        "n_positions_worst_decile": 13,
+        "top_decile_share": 0.36005603495848487,
+        "correlation_ce_rise_with_entropy_fall": -0.14379924619194287
+      }
+    },
+    {
+      "positions_seen": 500,
+      "seed_mean_position_summary": {
+        "positions": 128,
+        "teacher_topk_probability_mass": {
+          "mean_delta": 0.061126762900030385,
+          "improved_positions": 56,
+          "regressed_positions": 72,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": 0.21872168867173908,
+          "mean_delta_over_regressed": -0.06144706825574309
+        },
+        "teacher_best_probability_mass_tie_aware": {
+          "mean_delta": 0.02612319118135998,
+          "improved_positions": 33,
+          "regressed_positions": 95,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": 0.1581627117372381,
+          "mean_delta_over_regressed": -0.019743168590681887
+        },
+        "teacher_weighted_probability_score": {
+          "mean_delta": 0.011160172817956716,
+          "improved_positions": 51,
+          "regressed_positions": 77,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": 0.048512336080714764,
+          "mean_delta_over_regressed": -0.013579571680753157
+        },
+        "teacher_weighted_cross_entropy_nats": {
+          "mean_delta": 0.8295653470584132,
+          "improved_positions": 21,
+          "regressed_positions": 107,
+          "unchanged_positions": 0,
+          "mean_delta_over_improved": -0.49217697871742533,
+          "mean_delta_over_regressed": 1.0889727194069423
+        },
+        "mean_legal_move_entropy_nats": {
+          "mean_delta": -0.8094216073318841,
+          "reduced_entropy_positions": 127,
+          "increased_entropy_positions": 1,
+          "unchanged_positions": 0
+        }
+      },
+      "worst_regression_positions": [
+        {
+          "fen": "rn2k1r1/p2pb2p/2P2n2/PP3PPP/3pb3/1q4P1/2B3N1/R4KR1 b q - 0 30",
+          "cross_entropy_delta": 3.7046155386529316,
+          "baseline_cross_entropy": 5.234674336185997,
+          "final_cross_entropy": 8.939289874838929,
+          "baseline_topk_mass": 0.03399366345131214,
+          "final_topk_mass": 0.0009632648928678485,
+          "baseline_best_mass": 0.0053301553656799686,
+          "final_best_mass": 0.00013158557898750088,
+          "baseline_entropy": 3.5010596084213805,
+          "final_entropy": 2.699479875077178,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "4Nbnr/4k3/rpb5/R2Pp1pp/3qn3/3P3B/2P1QP1P/3K3R b - - 1 36",
+          "cross_entropy_delta": 3.571904940282078,
+          "baseline_cross_entropy": 4.796988388127845,
+          "final_cross_entropy": 8.368893328409923,
+          "baseline_topk_mass": 0.1093641990758974,
+          "final_topk_mass": 0.016749841335036493,
+          "baseline_best_mass": 0.00825732046263681,
+          "final_best_mass": 0.00023253707871618927,
+          "baseline_entropy": 3.4192096229771938,
+          "final_entropy": 2.1992758527604086,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "4kbnr/rpp1q1pp/4bp2/p2p4/1n1Bp3/P2P2NP/2P1PPP1/RN1QKB1R b KQk - 0 12",
+          "cross_entropy_delta": 3.2728431040564616,
+          "baseline_cross_entropy": 3.4105810206272174,
+          "final_cross_entropy": 6.683424124683679,
+          "baseline_topk_mass": 0.16996133476076697,
+          "final_topk_mass": 0.014368444748573215,
+          "baseline_best_mass": 0.0390166643364839,
+          "final_best_mass": 0.0006239034399486997,
+          "baseline_entropy": 3.353372132688964,
+          "final_entropy": 1.6694954401798583,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "r1b1qbkr/1pppp1pp/5p1n/1B1P3Q/pnP1P3/6P1/PP3P1P/RNB1K1NR w KQ - 1 13",
+          "cross_entropy_delta": 3.114108180901347,
+          "baseline_cross_entropy": 5.090333600361813,
+          "final_cross_entropy": 8.20444178126316,
+          "baseline_topk_mass": 0.09313144556995326,
+          "final_topk_mass": 0.009710573942429666,
+          "baseline_best_mass": 0.005520679436647739,
+          "final_best_mass": 0.000214156538944809,
+          "baseline_entropy": 3.3942538132253794,
+          "final_entropy": 1.983057952151178,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "r2qk1nr/2pn1pbp/1p1p2N1/p5p1/1P2PP2/B6b/P1PP1KPP/RN1Q1B1R b kq - 2 12",
+          "cross_entropy_delta": 2.481770459536815,
+          "baseline_cross_entropy": 4.006646543641681,
+          "final_cross_entropy": 6.488417003178496,
+          "baseline_topk_mass": 0.10895978345285112,
+          "final_topk_mass": 0.012685374162338472,
+          "baseline_best_mass": 0.009490657754937626,
+          "final_best_mass": 0.0011830049734412812,
+          "baseline_entropy": 3.5807557121347484,
+          "final_entropy": 2.1154050179289885,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "r3kb1r/pp1bp1p1/n1p2n1p/1q1N1p2/P1PP4/1P4PN/4PP1P/R1BQKB1R w KQkq - 1 11",
+          "cross_entropy_delta": 2.4521675793627304,
+          "baseline_cross_entropy": 4.040370599671026,
+          "final_cross_entropy": 6.492538179033756,
+          "baseline_topk_mass": 0.0998050182474425,
+          "final_topk_mass": 0.05885291585200045,
+          "baseline_best_mass": 0.008903070698303366,
+          "final_best_mass": 8.049259276041144e-05,
+          "baseline_entropy": 3.358857033952791,
+          "final_entropy": 2.1343186663110965,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "4kb2/3pn3/4pr2/p1p2p1p/1pPP3P/1q1bB1PR/1P1NPP2/1R2KB2 b - - 4 37",
+          "cross_entropy_delta": 2.402644154067085,
+          "baseline_cross_entropy": 4.065267090523609,
+          "final_cross_entropy": 6.467911244590693,
+          "baseline_topk_mass": 0.1426036645271589,
+          "final_topk_mass": 0.035394781525708505,
+          "baseline_best_mass": 0.011214858726168744,
+          "final_best_mass": 0.0008695597236765109,
+          "baseline_entropy": 3.164602718348799,
+          "final_entropy": 2.372469865950813,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "rnb1kbr1/ppppn1pp/5q2/4p3/P3Pp1P/8/1PPP1PPN/RNBQKB1R w KQq - 1 8",
+          "cross_entropy_delta": 2.3645929273926676,
+          "baseline_cross_entropy": 3.5507722508638775,
+          "final_cross_entropy": 5.915365178256545,
+          "baseline_topk_mass": 0.1735016413167949,
+          "final_topk_mass": 0.03259497951793947,
+          "baseline_best_mass": 0.05277015321790138,
+          "final_best_mass": 0.0018463412275746668,
+          "baseline_entropy": 3.198263341248689,
+          "final_entropy": 2.125597258991271,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "3n2nr/7b/3N1p1k/1pp4p/6PN/3R4/4r2P/1K2R3 b - - 8 50",
+          "cross_entropy_delta": 2.2458635616520466,
+          "baseline_cross_entropy": 3.8326753391586132,
+          "final_cross_entropy": 6.07853890081066,
+          "baseline_topk_mass": 0.2663551944338862,
+          "final_topk_mass": 0.7489739224310523,
+          "baseline_best_mass": 0.027280224258684788,
+          "final_best_mass": 0.0026864006802242695,
+          "baseline_entropy": 2.8761206756154722,
+          "final_entropy": 1.3092763940410828,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "rnbqkbnr/1pp1p3/p5pp/3p4/1P1Pp1B1/1Q6/P1P2PPP/RNB1K1NR w - - 0 12",
+          "cross_entropy_delta": 2.2154599091249807,
+          "baseline_cross_entropy": 4.760176956872838,
+          "final_cross_entropy": 6.975636865997819,
+          "baseline_topk_mass": 0.04269548612841541,
+          "final_topk_mass": 0.0051490918215426635,
+          "baseline_best_mass": 0.009318548770441332,
+          "final_best_mass": 0.00205404104650821,
+          "baseline_entropy": 3.5582753539198064,
+          "final_entropy": 2.209016372988428,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "1n1r1n2/3k4/6Pp/1p1pPp2/1PPbP2R/3B2PN/4K3/1q6 b - - 6 42",
+          "cross_entropy_delta": 2.11890104699554,
+          "baseline_cross_entropy": 4.855081671689585,
+          "final_cross_entropy": 6.973982718685125,
+          "baseline_topk_mass": 0.038991618367579334,
+          "final_topk_mass": 0.007393689401202804,
+          "baseline_best_mass": 0.007826773998810793,
+          "final_best_mass": 0.0005441648064045757,
+          "baseline_entropy": 3.3585458866124895,
+          "final_entropy": 2.4957161834908246,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "rn1k3r/1bp2pp1/qQ2pP2/1pb4p/1P1p4/2PPBP1P/P3P3/RN2KBNR w KQ - 0 14",
+          "cross_entropy_delta": 2.069822400186295,
+          "baseline_cross_entropy": 3.845785429612622,
+          "final_cross_entropy": 5.915607829798917,
+          "baseline_topk_mass": 0.1917386520360583,
+          "final_topk_mass": 0.05258130390957798,
+          "baseline_best_mass": 0.0831200024113059,
+          "final_best_mass": 0.011601871228776872,
+          "baseline_entropy": 3.1001806443568176,
+          "final_entropy": 2.114034865165804,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "2n3r1/k2N1R2/2pp4/pp2p1pr/2P3PP/3PP3/P1nKQ3/RNB2B2 w - - 2 27",
+          "cross_entropy_delta": 1.9666115417284438,
+          "baseline_cross_entropy": 3.9969346816201696,
+          "final_cross_entropy": 5.963546223348613,
+          "baseline_topk_mass": 0.1415115476060255,
+          "final_topk_mass": 0.038302586203323115,
+          "baseline_best_mass": 0.012669616390718105,
+          "final_best_mass": 0.00031846455410122635,
+          "baseline_entropy": 3.357617682704766,
+          "final_entropy": 2.640805107617361,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "1n1qkr1b/2p2pB1/3p4/4p2p/r1pPP3/PP3p1b/2Q2N2/1R3BK1 w - - 6 40",
+          "cross_entropy_delta": 1.952226798255348,
+          "baseline_cross_entropy": 3.5605598876376585,
+          "final_cross_entropy": 5.512786685893007,
+          "baseline_topk_mass": 0.1413693054533061,
+          "final_topk_mass": 0.06193776936125273,
+          "baseline_best_mass": 0.02549886708848026,
+          "final_best_mass": 0.0014916043818230182,
+          "baseline_entropy": 3.4714553466273053,
+          "final_entropy": 2.862445147688189,
+          "n_teacher_targets": 5
+        },
+        {
+          "fen": "r1bqkbnr/ppp1ppp1/n2p4/7p/1P4P1/N7/P1PPPP1P/R1BQKBNR w KQkq - 0 4",
+          "cross_entropy_delta": 1.9400586919835923,
+          "baseline_cross_entropy": 2.9041429896252864,
+          "final_cross_entropy": 4.844201681608879,
+          "baseline_topk_mass": 0.2902291379439092,
+          "final_topk_mass": 0.22416678020362557,
+          "baseline_best_mass": 0.04150562607966665,
+          "final_best_mass": 0.0019967061603061286,
+          "baseline_entropy": 3.037641372374421,
+          "final_entropy": 1.9803238386698558,
+          "n_teacher_targets": 5
+        }
+      ],
+      "concentration": {
+        "gross_positive_cross_entropy_increase": 116.52008097654281,
+        "n_positions_worst_decile": 13,
+        "top_decile_share": 0.291634755650233,
+        "correlation_ce_rise_with_entropy_fall": -0.3367888887765635
+      }
+    }
+  ],
+  "runtime_seconds": 37.731
+}

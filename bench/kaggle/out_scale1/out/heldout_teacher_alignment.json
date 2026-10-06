@@ -1,0 +1,22 @@
+{
+  "positions": 128,
+  "position_seed": 99,
+  "labeler": "L3Trainer.search_feedback depth=3 top_k=5",
+  "models": {
+    "trained": {
+      "top1_matches": 9,
+      "top1_rate": 0.0703125,
+      "top5_hits": 39,
+      "top5_hit_rate": 0.3046875,
+      "mean_probability_mass_on_teacher_top5": 0.30640597785784385
+    },
+    "untrained_seed7": {
+      "top1_matches": 10,
+      "top1_rate": 0.078125,
+      "top5_hits": 34,
+      "top5_hit_rate": 0.265625,
+      "mean_probability_mass_on_teacher_top5": 0.199564398485837
+    }
+  },
+  "caveat": "This is an exploratory held-out imitation diagnostic on random-play FENs, not a strength rating; top-1 tie-breaking follows python-chess legal-move order."
+}
