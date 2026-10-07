@@ -830,10 +830,315 @@ def conditioning_summary(policies, ranked_records: list[dict]) -> dict:
     }
 
 
+# --------------------------------------------------------------------------
+# two-class conditioning: is the flatness castling-specific or architectural?
+# --------------------------------------------------------------------------
+
+_MOVE_CLASSES = ("castling", "capture")
+
+
+def move_in_class(board: chess.Board, move: chess.Move, kind: str) -> bool:
+    """Is ``move`` a member of ``kind``?
+
+    'castling' is a *board-wide* decision -- whether the king is safe after
+    castling depends on the pawn structure and open files across a whole flank,
+    none of which reach the two-square receptive field of ``score(from, to)``.
+    'capture' is *locally* decidable: the destination square's own channel
+    vector already carries ``capture_targets``, ``opponent_defends`` and
+    ``contested``, so the scorer can in principle tell a winning capture from a
+    losing one.
+
+    Running the identical conditioning test on both separates "the learner
+    cannot condition on board-wide context" (the tier-2 claim) from "the
+    learner cannot condition at all" (a training-signal or corpus problem,
+    which would mean the tier-2 entry is aimed at the wrong defect).
+    """
+    if kind == "castling":
+        return bool(board.is_castling(move))
+    if kind == "capture":
+        return bool(board.is_capture(move))
+    raise ValueError(f"unknown move class: {kind!r}")
+
+
+def class_moves(board: chess.Board, kind: str) -> list[chess.Move]:
+    """Legal moves belonging to ``kind``."""
+    return [m for m in board.legal_moves if move_in_class(board, m, kind)]
+
+
+def class_mass(policy, board: chess.Board, kind: str) -> float:
+    """Total probability the policy puts on moves of ``kind``."""
+    distribution = policy.move_distribution(board)
+    return float(sum(distribution[move_to_index(m)] for m in class_moves(board, kind)))
+
+
+def analyse_scored(board: chess.Board, engine, depth: int,
+                   multipv: int) -> list[tuple[chess.Move, int]]:
+    """The engine's MultiPV ordering as ``(move, cp_from_side_to_move)``.
+
+    Split out so one engine call serves every move class. Analysing twice per
+    position would double the dominant cost of the probe for no information.
+    """
+    import chess.engine
+
+    infos = engine.analyse(board, chess.engine.Limit(depth=depth), multipv=multipv)
+    scored = []
+    for info in infos:
+        pv = info.get("pv")
+        score = info.get("score")
+        if pv and score is not None:
+            scored.append((pv[0], score.pov(board.turn).score(mate_score=100000)))
+    return scored
+
+
+def rank_within(scored: list[tuple[chess.Move, int]], members: set,
+                multipv: int) -> dict:
+    """Rank (1-based) of the best member of ``members`` inside a scored list."""
+    if not scored:
+        return {"rank": multipv + 1, "gap_cp": None}
+    best = scored[0][1]
+    for index, (move, cp) in enumerate(scored, start=1):
+        if move in members:
+            return {"rank": index, "gap_cp": best - cp}
+    return {"rank": len(scored) + 1, "gap_cp": best - scored[-1][1]}
+
+
+def class_rank(board: chess.Board, engine, depth: int, multipv: int, kind: str) -> dict:
+    """The engine's rank (1-based) of the best move belonging to ``kind``.
+
+    Mirrors :func:`castling_rank` but for an arbitrary move class. A rank beyond
+    ``multipv`` is reported as ``multipv + 1`` ("worse than everything
+    measured"). ``class_legal`` records how many members the class had, which
+    is what makes the rank interpretable: a rank of 5 means something very
+    different when there were 3 captures legal than when there were 40.
+    """
+    members = set(class_moves(board, kind))
+    if not members:
+        return {"rank": multipv + 1, "gap_cp": None, "class_legal": 0}
+    info = rank_within(analyse_scored(board, engine, depth, multipv), members, multipv)
+    return {**info, "class_legal": len(members)}
+
+
+def compute_class_ranks(records: list[dict], engine_path: str, depth: int,
+                        multipv: int, kinds: tuple[str, ...]) -> list[dict]:
+    """Attach every class's rank/gap to each position, one engine call each."""
+    import chess.engine
+
+    engine = chess.engine.SimpleEngine.popen_uci(str(engine_path))
+    out = []
+    try:
+        for record in records:
+            board = chess.Board(record["fen"])
+            scored = analyse_scored(board, engine, depth, multipv)
+            row = dict(record)
+            for kind in kinds:
+                members = set(class_moves(board, kind))
+                info = ({"rank": multipv + 1, "gap_cp": None} if not members
+                        else rank_within(scored, members, multipv))
+                row[f"{kind}_rank"] = info["rank"]
+                row[f"{kind}_gap_cp"] = info["gap_cp"]
+                row[f"{kind}_legal"] = len(members)
+            out.append(row)
+    finally:
+        engine.quit()
+    return out
+
+
+def class_in_targets(board: chess.Board, record: dict, kind: str) -> bool:
+    """Does the teacher's listed top-k contain a move of ``kind``?"""
+    return any(move_in_class(board, chess.Move.from_uci(row["uci"]), kind)
+               for row in record["targets"])
+
+
+def class_mass_over_uniform(policy, board: chess.Board, kind: str) -> float:
+    """Class probability mass divided by the no-preference share.
+
+    Raw class mass is not comparable across classes: there are ~35 legal moves
+    but only 1-2 castling moves, so castling mass and capture mass live on
+    different scales. Dividing by ``n_class / n_legal`` puts both on a common
+    axis where 1.0 means "indifferent" and values above 1 mean a preference.
+    Without this, a cross-class comparison would mostly measure how many moves
+    each class contains.
+    """
+    legal = list(board.legal_moves)
+    members = [m for m in legal if move_in_class(board, m, kind)]
+    if not members or not legal:
+        return float("nan")
+    distribution = policy.move_distribution(board)
+    mass = float(sum(distribution[move_to_index(m)] for m in members))
+    return mass / (len(members) / len(legal))
+
+
+def bootstrap_spearman_ci(ranks: list[float], values: list[float], *,
+                          resamples: int = 4000, seed: int = 7001) -> list[float]:
+    """95% bootstrap interval for a Spearman rho.
+
+    Reported because a bare rho invites reading a sign as a finding. At n=194
+    the interval is roughly +/-0.14 wide, which is the difference between "this
+    class conditions" and "this class is flat"; the interval is the only thing
+    that separates those readings.
+    """
+    rng = np.random.default_rng(seed)
+    n = len(ranks)
+    if n < 3:
+        return [float("nan"), float("nan")]
+    r = np.asarray(ranks, dtype=np.float64)
+    v = np.asarray(values, dtype=np.float64)
+    out = []
+    for _ in range(resamples):
+        idx = rng.integers(0, n, n)
+        value = spearman(list(r[idx]), list(v[idx]))
+        if math.isfinite(value):
+            out.append(value)
+    if not out:
+        return [float("nan"), float("nan")]
+    return [float(v) for v in np.percentile(out, [2.5, 97.5])]
+
+
+def paired_spearman_difference(rows_a: list[dict], rows_b: list[dict], *,
+                               resamples: int = 4000, seed: int = 7002) -> dict:
+    """Bootstrap interval for ``rho(a) - rho(b)`` on shared positions.
+
+    The primary endpoint of the two-class test. Both arms are scored on the same
+    held-out FENs, so the difference is paired and resampling positions is the
+    right unit -- resampling seeds would answer a different question (does the
+    effect survive re-initialisation, which the 8-seed mean already covers).
+    """
+    by_a = {r["fen"]: r for r in rows_a}
+    by_b = {r["fen"]: r for r in rows_b}
+    common = sorted(set(by_a) & set(by_b))
+    if len(common) < 3:
+        return {"n_common_positions": len(common), "mean": None,
+                "ci95": [None, None], "excludes_zero": False}
+    rng = np.random.default_rng(seed)
+    ra = np.asarray([by_a[f]["rank"] for f in common], dtype=np.float64)
+    va = np.asarray([by_a[f]["class_mass_over_uniform"] for f in common], dtype=np.float64)
+    rb = np.asarray([by_b[f]["rank"] for f in common], dtype=np.float64)
+    vb = np.asarray([by_b[f]["class_mass_over_uniform"] for f in common], dtype=np.float64)
+    diffs = []
+    for _ in range(resamples):
+        idx = rng.integers(0, len(common), len(common))
+        s_a = spearman(list(ra[idx]), list(va[idx]))
+        s_b = spearman(list(rb[idx]), list(vb[idx]))
+        if math.isfinite(s_a) and math.isfinite(s_b):
+            diffs.append(s_a - s_b)
+    if not diffs:
+        return {"n_common_positions": len(common), "mean": None,
+                "ci95": [None, None], "excludes_zero": False}
+    lo, hi = (float(v) for v in np.percentile(diffs, [2.5, 97.5]))
+    return {
+        "n_common_positions": len(common),
+        "mean": float(np.mean(diffs)),
+        "ci95": [lo, hi],
+        "excludes_zero": bool(lo > 0 or hi < 0),
+        "orientation": "rho(first_class) - rho(second_class)",
+    }
+
+
+def class_conditioning_summary(policies, ranked_records: list[dict], kind: str) -> dict:
+    """Normalised class preference by the teacher's class rank.
+
+    A model that learned the teacher's *judgement* shows preference falling as
+    the teacher's rank for that class worsens. A blanket habit shows a flat
+    profile and a Spearman rho near zero -- but only if the class actually has
+    rank spread, which :func:`class_rank_variance_report` checks separately.
+    """
+    rows = []
+    for record in ranked_records:
+        board = chess.Board(record["fen"])
+        values = [class_mass_over_uniform(policy, board, kind) for policy in policies]
+        rows.append({
+            "fen": record["fen"],
+            "rank": int(record[f"{kind}_rank"]),
+            "gap_cp": record[f"{kind}_gap_cp"],
+            "class_mass_over_uniform": float(np.mean(values)),
+        })
+    buckets: dict[str, list[float]] = {}
+    for row in rows:
+        buckets.setdefault(rank_bucket(row["rank"]), []).append(row["class_mass_over_uniform"])
+    finite = [r for r in rows if math.isfinite(r["class_mass_over_uniform"])]
+    rho = (spearman([float(r["rank"]) for r in finite],
+                    [r["class_mass_over_uniform"] for r in finite])
+           if len(finite) >= 2 else float("nan"))
+    ci = (bootstrap_spearman_ci([float(r["rank"]) for r in finite],
+                                [r["class_mass_over_uniform"] for r in finite])
+          if len(finite) >= 3 else [float("nan"), float("nan")])
+    return {
+        "class": kind,
+        "positions": len(rows),
+        "spearman_teacher_rank_vs_preference": rho if math.isfinite(rho) else None,
+        "spearman_95pct_bootstrap_interval": ci,
+        "spearman_interval_excludes_zero": bool(
+            math.isfinite(ci[0]) and math.isfinite(ci[1])
+            and (ci[0] > 0 or ci[1] < 0)),
+        "buckets": {
+            name: {"n": len(buckets[name]),
+                   "class_mass_over_uniform": float(np.mean(buckets[name]))}
+            for name in _BUCKET_ORDER if name in buckets
+        },
+        "rows": rows,
+    }
+
+
+def match_corpus_sizes(per_class: dict, cap: int, seed: int) -> dict:
+    """Trim every class's RICH/POOR lists to a common size.
+
+    Without this the two classes would train on different corpora (91 castling-
+    rich positions exist, ~496 capture-rich ones), and any difference in
+    conditioning would be confounded with training-set size. Selection is
+    deterministic given ``seed`` so the arm is reproducible.
+    """
+    rng = np.random.default_rng(seed)
+    out = {}
+    for kind, (rich, poor) in per_class.items():
+        chosen_rich = list(rich)
+        chosen_poor = list(poor)
+        if len(chosen_rich) > cap:
+            idx = rng.choice(len(chosen_rich), size=cap, replace=False)
+            chosen_rich = [chosen_rich[i] for i in sorted(idx)]
+        if len(chosen_poor) > cap:
+            idx = rng.choice(len(chosen_poor), size=cap, replace=False)
+            chosen_poor = [chosen_poor[i] for i in sorted(idx)]
+        out[kind] = (chosen_rich, chosen_poor)
+    return out
+
+
+def class_rank_variance_report(ranked: list[dict], kinds: tuple[str, ...]) -> dict:
+    """Is there enough teacher-rank variance for the conditioning test to mean anything?
+
+    A class whose best member is ranked 1 in essentially every position has no
+    rank spread, so a Spearman correlation against it is undefined rather than
+    zero. That distinction decides whether a flat rho is evidence of "does not
+    condition" or evidence of "the instrument cannot see anything here", so it
+    is reported explicitly rather than left implicit in a near-zero number.
+    """
+    report = {}
+    for kind in kinds:
+        ranks = [r[f"{kind}_rank"] for r in ranked if r.get(f"{kind}_legal")]
+        gaps = [r[f"{kind}_gap_cp"] for r in ranked
+                if r.get(f"{kind}_legal") and r.get(f"{kind}_gap_cp") is not None]
+        if not ranks:
+            report[kind] = {"positions_class_legal": 0}
+            continue
+        counts: dict[int, int] = {}
+        for rank in ranks:
+            counts[int(rank)] = counts.get(int(rank), 0) + 1
+        report[kind] = {
+            "positions_class_legal": len(ranks),
+            "distinct_ranks": len(counts),
+            "rank_1_share": counts.get(1, 0) / len(ranks),
+            "rank_histogram": {str(k): counts[k] for k in sorted(counts)},
+            "gap_cp_distinct_values": len(set(gaps)),
+            "gap_cp_zero_share": (sum(1 for g in gaps if g == 0) / len(gaps)) if gaps else None,
+            "usable_rank_variance": len(counts) > 1 and counts.get(1, 0) / len(ranks) < 0.95,
+        }
+    return report
+
+
 def parse_args(argv=None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mode",
-                        choices=("probe", "static", "train", "conditioning", "probe_features"),
+                        choices=("probe", "static", "train", "conditioning", "probe_features",
+                                 "probe_classes", "conditioning2"),
                         default="probe")
     parser.add_argument("--games", type=int, default=200,
                         help="random games to scan for castling-legal positions")
@@ -862,6 +1167,12 @@ def parse_args(argv=None) -> argparse.Namespace:
                         help="passes over the (small) castling-rich corpus")
     parser.add_argument("--multipv", type=int, default=20,
                         help="engine MultiPV width for the conditioning rank measurement")
+    parser.add_argument("--move-classes", default="castling,capture",
+                        help="comma-separated move classes for probe_classes/conditioning2")
+    parser.add_argument("--max-per-class", type=int, default=10_000,
+                        help="cap on RICH/POOR corpus size per class, so the classes are matched")
+    parser.add_argument("--class-ranks", default="bench/h23_class_rank_variance.json",
+                        help="cached per-class teacher ranks from --mode probe_classes")
     parser.add_argument("--out", default=None)
     return parser.parse_args(argv)
 
@@ -870,7 +1181,8 @@ def main(argv=None) -> int:
     args = parse_args(argv)
     started = time.perf_counter()
 
-    if args.mode in ("train", "conditioning", "probe_features"):
+    if args.mode in ("train", "conditioning", "probe_features", "probe_classes",
+                     "conditioning2"):
         labels_path = Path(args.labels)
         if not labels_path.exists():
             print(f"{args.mode} mode needs cached labels at {labels_path}; run --mode static first")
@@ -1046,6 +1358,152 @@ def main(argv=None) -> int:
             "seeds": seeds, "search_weights": weights, "epochs": args.epochs,
             "heldout_fraction": args.heldout_fraction, "split_seed": args.split_seed,
         }
+    elif args.mode == "conditioning2":
+        # The two-class test. Same positions, same teacher, same seeds, same
+        # update path; the only thing that varies is which move class the
+        # corpus targets. The three-way read is pre-registered:
+        #   captures condition + castling does not -> the defect is board-wide
+        #       context, and the tier-2 entry is aimed correctly;
+        #   neither conditions -> the defect is in the training signal, and the
+        #       tier-2 entry is aimed at the wrong thing;
+        #   both condition -> castling's flatness was a corpus artefact and the
+        #       tier-2 gate should not have been opened on it.
+        ranks_path = Path(args.class_ranks)
+        if not ranks_path.exists():
+            print(f"conditioning2 needs cached class ranks at {ranks_path}; "
+                  f"run --mode probe_classes first")
+            return 1
+        ranked_all = json.loads(ranks_path.read_text(encoding="utf-8"))["positions"]
+        by_fen = {r["fen"]: r for r in ranked_all}
+        seeds = [int(v) for v in args.seeds.split(",") if v.strip()]
+        weights = [float(v) for v in args.search_weights.split(",") if v.strip()]
+        kinds = tuple(v for v in args.move_classes.split(",") if v.strip())
+
+        # ONE shared held-out set for every class. Splitting separately per class
+        # (as the castling-only path does) leaves the classes evaluated on almost
+        # disjoint positions -- measured overlap was 4 of 48 -- which makes the
+        # paired comparison of their conditioning meaningless. Training corpora
+        # still differ by class, because that is the variable under test.
+        common_legal = []
+        for record in labeled:
+            board = chess.Board(record["fen"])
+            if all(class_moves(board, kind) for kind in kinds):
+                common_legal.append(record)
+        pool_train, pool_held = split_records(common_legal, args.heldout_fraction,
+                                              args.split_seed)
+        ranked = [by_fen[r["fen"]] for r in pool_held if r["fen"] in by_fen]
+        print(f"  common-legal {len(common_legal)} -> shared train "
+              f"{len(pool_train)} / held {len(pool_held)} (ranked {len(ranked)})",
+              flush=True)
+
+        per_class = {}
+        for kind in kinds:
+            rich, poor = [], []
+            for record in pool_train:
+                board = chess.Board(record["fen"])
+                (rich if class_in_targets(board, record, kind) else poor).append(record)
+            per_class[kind] = (rich, poor)
+        available = {k: (len(r), len(p)) for k, (r, p) in per_class.items()}
+        cap = min([min(r, p) for r, p in available.values()] + [args.max_per_class])
+        print(f"  available RICH/POOR per class: "
+              f"{ {k: v for k, v in available.items()} }; matched cap {cap}", flush=True)
+        per_class = match_corpus_sizes(per_class, cap, args.split_seed)
+
+        payload_arms = {}
+        for kind in kinds:
+            rich, poor = per_class[kind]
+            print(f"  [{kind}] rich train {len(rich)} / poor train {len(poor)}",
+                  flush=True)
+            for weight in weights:
+                policies = train_policies(
+                    rich, seeds, depth=args.depth, top_k=args.top_k,
+                    search_weight=weight, epochs=args.epochs)
+                summary = class_conditioning_summary(policies, ranked, kind)
+                payload_arms[f"{kind}@sw{weight:g}"] = summary
+                print(f"    {kind}@sw{weight:g}: rho="
+                      f"{summary['spearman_teacher_rank_vs_preference']:+.3f}", flush=True)
+
+        print("\n=== two-class conditioning: preference (mass / uniform) by teacher rank ===")
+        print(f"  {'arm':<18} " + " ".join(f"{b:>7}" for b in _BUCKET_ORDER)
+              + f" {'rho':>7}")
+        for name, arm in payload_arms.items():
+            cells = []
+            for bucket in _BUCKET_ORDER:
+                entry = arm["buckets"].get(bucket)
+                cells.append(f"{entry['class_mass_over_uniform']:.2f}" if entry else "-")
+            rho = arm["spearman_teacher_rank_vs_preference"]
+            lo, hi = arm["spearman_95pct_bootstrap_interval"]
+            flag = "" if arm["spearman_interval_excludes_zero"] else "  (includes 0)"
+            print(f"  {name:<18} " + " ".join(f"{c:>7}" for c in cells)
+                  + f" {(rho if rho is not None else float('nan')):+7.3f}"
+                  + f"  [{lo:+.3f},{hi:+.3f}]{flag}")
+        # Primary endpoint: the paired difference in rho between the classes.
+        # A per-class rho alone cannot say whether castling is *worse at
+        # conditioning* than a locally-decidable class -- that needs the
+        # difference and its interval.
+        paired = {}
+        if len(kinds) == 2:
+            first, second = kinds
+            for weight in weights:
+                key = f"sw{weight:g}"
+                paired[key] = paired_spearman_difference(
+                    payload_arms[f"{first}@{key}"]["rows"],
+                    payload_arms[f"{second}@{key}"]["rows"],
+                )
+                row = paired[key]
+                print(f"  paired rho({first}) - rho({second}) @ {key}: "
+                      f"{row['mean']:+.3f} [{row['ci95'][0]:+.3f},{row['ci95'][1]:+.3f}]"
+                      f"  n={row['n_common_positions']}"
+                      f"  {'excludes 0' if row['excludes_zero'] else 'includes 0'}",
+                      flush=True)
+        payload["two_class_conditioning"] = payload_arms
+        payload["two_class_paired_difference"] = paired
+        payload["two_class_meta"] = {
+            "kinds": list(kinds), "matched_cap": cap,
+            "available_rich_poor": available,
+            "shared_heldout_positions": len(ranked),
+            "heldout_is_shared_across_classes": True,
+            "seeds": seeds, "search_weights": weights, "epochs": args.epochs,
+            "multipv": args.multipv, "engine_depth": args.oracle_depth,
+            "bucket_order": list(_BUCKET_ORDER),
+            "metric": "class mass divided by the no-preference share (n_class/n_legal)",
+            "predeclared_read": {
+                "captures_condition_castling_does_not": "defect is board-wide context",
+                "neither_conditions": "defect is the training signal, not the receptive field",
+                "both_condition": "castling flatness was a corpus artefact",
+            },
+        }
+    elif args.mode == "probe_classes":
+        # Gate the two-class comparison on instrument validity BEFORE running it.
+        # If a class's best member is ranked 1 in nearly every position there is
+        # no rank spread to correlate against, and a flat rho would be an
+        # artefact of the instrument rather than a finding about the learner.
+        if not args.engine:
+            print("probe_classes mode needs --engine <path>")
+            return 1
+        kinds = tuple(v for v in args.move_classes.split(",") if v.strip())
+        print(f"  measuring class ranks (multipv {args.multipv}, depth "
+              f"{args.oracle_depth}) for {len(labeled)} positions ...", flush=True)
+        ranked = compute_class_ranks(labeled, args.engine, args.oracle_depth,
+                                     args.multipv, kinds)
+        report = class_rank_variance_report(ranked, kinds)
+        print("\n=== is there usable teacher-rank variance per move class? ===")
+        for kind, row in report.items():
+            if not row.get("positions_class_legal"):
+                print(f"  {kind:<10} class legal in 0 positions")
+                continue
+            print(f"  {kind:<10} legal {row['positions_class_legal']:>4}  "
+                  f"distinct ranks {row['distinct_ranks']:>3}  "
+                  f"rank-1 share {row['rank_1_share']:.3f}  "
+                  f"gap-cp distinct {row['gap_cp_distinct_values']:>4}  "
+                  f"usable {row['usable_rank_variance']}")
+            print(f"             rank histogram: {row['rank_histogram']}")
+        payload["class_rank_variance"] = report
+        # Cache the ranked records, not just the summary: this engine pass is
+        # the expensive step (~6 min for 583 positions at depth 12 / MultiPV 20)
+        # and conditioning2 consumes the per-position ranks. Writing only the
+        # summary threw that work away and forced a re-measurement.
+        payload["positions"] = ranked
     else:  # conditioning
         if not args.engine:
             print("conditioning mode needs --engine <path>")

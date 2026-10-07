@@ -1,12 +1,30 @@
+import chess
 import numpy as np
 import pytest
 
 from bench.scripts.l3_target_rule_ablation import (
+    _AdamL3Trainer,
+    _array_key,
+    _behaviour_digest,
     _BUILD_TARGET,
     _final_means,
     _seed_ci,
     build_arms,
 )
+
+
+def test_behaviour_digest_is_deterministic_and_corpus_sensitive():
+    # The digest exists to separate "the file was edited" from "the model
+    # behaves differently". It must be stable for a fixed corpus (so a refactor
+    # does not trip it) and must move when the updates actually differ.
+    record = {"fen": chess.STARTING_FEN,
+              "targets": [{"uci": "b1c3", "weight": 1.0}]}
+    other = {"fen": chess.STARTING_FEN,
+             "targets": [{"uci": "g1f3", "weight": 1.0}]}
+    corpus = {"cached_training_labels": [record]}
+    assert _behaviour_digest(corpus) == _behaviour_digest(corpus)
+    assert _behaviour_digest(corpus) != _behaviour_digest(
+        {"cached_training_labels": [other]})
 
 
 def test_max_rule_assigns_best_move_target_one():
@@ -68,13 +86,32 @@ def test_final_means_averages_each_metric_across_positions():
     assert means["mean_legal_move_entropy_nats"] == pytest.approx(3.0)
 
 
-def test_three_arms_are_defined_with_expected_rules_and_scaling():
+def test_named_arms_are_defined_with_expected_rules_scaling_and_optimiser():
     # The magnitude-matched arm must reuse the max rule but request a scale
     # factor, so that the step-size confound is separated from the target rule.
     arms = build_arms(mag_scale=0.3742)
-    assert arms["max"] == ("max", 1.0)
-    assert arms["sum"] == ("sum", 1.0)
-    assert arms["max_scaled"] == ("max", 0.3742)
+    assert arms["max"] == ("max", 1.0, "sgd", 1.0)
+    assert arms["sum"] == ("sum", 1.0, "sgd", 1.0)
+    assert arms["max_scaled"] == ("max", 0.3742, "sgd", 1.0)
+
+
+def test_adam_arms_vary_only_the_optimiser_against_the_max_control():
+    # The whole point of the arm: identical target rule and identical scale as
+    # 'max', differing solely in optimiser, so the comparison cannot be
+    # confounded with a rule or step change.
+    arms = build_arms(mag_scale=0.3742)
+    control_rule, control_scale, control_opt, _ = arms["max"]
+    rule, scale, optimiser, lr_scale = arms["adam"]
+    assert (rule, scale, control_opt, lr_scale) == (control_rule, control_scale,
+                                                    "sgd", 1.0)
+    assert optimiser == "adam"
+    # The lower-lr Adam arms must differ from 'adam' only in lr, so that
+    # "Adam just needs a smaller learning rate" is answered by an experiment
+    # rather than by an assumption.
+    for name, expected in (("adam@0.1", 0.1), ("adam@0.01", 0.01)):
+        arm_rule, arm_scale, arm_opt, arm_lr = arms[name]
+        assert (arm_rule, arm_scale, arm_opt) == (rule, scale, optimiser)
+        assert arm_lr == pytest.approx(expected)
 
 
 def test_sweep_mode_keeps_the_max_rule_and_varies_only_the_step():
@@ -82,10 +119,53 @@ def test_sweep_mode_keeps_the_max_rule_and_varies_only_the_step():
     # Sweep mode is defined solely by the multipliers; every arm uses the max
     # rule, and a sweep containing 1.0 does not duplicate an arm.
     assert set(sweep) == {"max@1", "max@0.5", "max@0.25", "max@0.125"}
-    assert all(rule == "max" for rule, _ in sweep.values())
+    assert all(rule == "max" for rule, _, _, _ in sweep.values())
+    assert all(opt == "sgd" for _, _, opt, _ in sweep.values())
     # Only the search_weight multiplier changes between sweep arms.
-    multipliers = sorted(scale for _, scale in sweep.values())
+    multipliers = sorted(scale for _, scale, _, _ in sweep.values())
     assert multipliers == [0.125, 0.25, 0.5, 1.0]
+
+
+def test_array_key_distinguishes_rows_of_one_tensor_and_is_stable():
+    # apply_credit passes row slices, which are fresh view objects each call.
+    # If the key collapsed to id() the Adam moments would reset every step.
+    tensor = np.zeros((4, 3), dtype=np.float32)
+    row0, row1 = tensor[0], tensor[1]
+    assert _array_key(row0) != _array_key(row1)
+    # Same row, asked twice (as two separate slice operations), must agree.
+    assert _array_key(tensor[0]) == _array_key(tensor[0])
+    # A whole tensor keys on itself, not on a base that does not exist.
+    assert _array_key(tensor) == _array_key(tensor)
+
+
+def test_adam_first_step_is_approximately_scale_invariant():
+    # At step 1, m_hat = g and v_hat = g^2, so the step is lr*g/(|g|+eps),
+    # which is ~lr regardless of how large g is. This is the property the
+    # experiment is testing: whether per-parameter scale invariance is
+    # sufficient to neutralise an aggregate target-scale mismatch.
+    trainer = _AdamL3Trainer()
+    # Quantisation is on by default (1/1024 grid) and would round lr=0.01 to
+    # 0.0098, which is outside the tolerance. The property under test is the
+    # optimiser's scale handling, so turn the grid off for this check.
+    trainer.policy.perceptron.config.quantised = False
+    weights_small = np.zeros(2, dtype=np.float32)
+    weights_large = np.zeros(2, dtype=np.float32)
+    features = np.ones(2, dtype=np.float64)
+    trainer._nudge(weights_small, features, credit=0.01)
+    trainer._nudge(weights_large, features, credit=1.0)
+    assert float(weights_small[0]) == pytest.approx(trainer.config.lr, rel=1e-3)
+    assert float(weights_large[0]) == pytest.approx(trainer.config.lr, rel=1e-3)
+
+
+def test_adam_keeps_separate_moment_state_per_parameter_view():
+    # Two rows must not share an accumulator, or the second row's step would be
+    # biased by the first row's history.
+    trainer = _AdamL3Trainer()
+    tensor = np.zeros((2, 2), dtype=np.float32)
+    trainer._nudge(tensor[0], np.ones(2), credit=1.0)
+    trainer._nudge(tensor[1], np.ones(2), credit=1.0)
+    assert len(trainer._steps) == 2
+    assert set(trainer._steps.values()) == {1}
 
 
 def test_sweep_mode_deduplicates_repeated_multipliers():

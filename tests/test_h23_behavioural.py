@@ -18,14 +18,21 @@ from bench.scripts.h23_behavioural import (
     apply_negative_castling,
     build_corpora,
     census,
+    class_in_targets,
+    class_mass_over_uniform,
+    class_moves,
+    class_rank_variance_report,
     conditioning_summary,
     d3_label_fn,
     fit_linear_probe,
     legal_castling_moves,
+    match_corpus_sizes,
+    move_in_class,
     oracle_label,
     probe_feature_rows,
     probe_scores,
     rank_bucket,
+    rank_within,
     roc_auc,
     scan_castling_positions,
     spearman,
@@ -334,3 +341,141 @@ def test_conditioning_summary_buckets_and_bounds():
     assert sum(block["n"] for block in summary["buckets"].values()) == 6
     rho = summary["spearman_teacher_rank_vs_castling_mass"]
     assert rho is None or -1.0 <= rho <= 1.0
+
+
+def test_move_in_class_separates_castling_from_capture():
+    # The two-class conditioning test is only meaningful if the classes are
+    # actually disjoint and each recognises its own moves.
+    board = _board([
+        (chess.E1, chess.Piece(chess.KING, chess.WHITE)),
+        (chess.H1, chess.Piece(chess.ROOK, chess.WHITE)),
+        (chess.C3, chess.Piece(chess.PAWN, chess.WHITE)),
+        (chess.D4, chess.Piece(chess.PAWN, chess.BLACK)),
+        (chess.E8, chess.Piece(chess.KING, chess.BLACK)),
+    ], castling=chess.BB_H1, turn=chess.WHITE)
+    castle = chess.Move.from_uci("e1g1")
+    capture = chess.Move.from_uci("c3d4")
+    assert move_in_class(board, castle, "castling")
+    assert not move_in_class(board, castle, "capture")
+    assert move_in_class(board, capture, "capture")
+    assert not move_in_class(board, capture, "castling")
+    assert class_moves(board, "castling") == [castle]
+    assert capture in class_moves(board, "capture")
+    with pytest.raises(ValueError):
+        move_in_class(board, castle, "nonsense")
+
+
+def test_rank_within_finds_the_best_member_or_reports_beyond_multipv():
+    a, b, c = (chess.Move.from_uci(uci) for uci in ("a2a3", "b2b3", "c2c3"))
+    scored = [(a, 50), (b, 40), (c, 30)]
+    assert rank_within(scored, {b}, 20) == {"rank": 2, "gap_cp": 10}
+    # A member the engine did not list is ranked just past the end, with the gap
+    # measured against the worst line rather than silently reported as rank 1.
+    missing = rank_within(scored, {chess.Move.from_uci("d2d4")}, 20)
+    assert missing == {"rank": 4, "gap_cp": 20}
+    # No engine output at all must give the sentinel, not a crash.
+    assert rank_within([], {a}, 20) == {"rank": 21, "gap_cp": None}
+
+
+def test_class_rank_variance_report_flags_a_saturated_class():
+    # A class whose best member ranks 1 everywhere has no spread, so a flat
+    # correlation against it would be an instrument artefact. The report has to
+    # say that explicitly instead of leaving it to be inferred from a near-zero
+    # rho -- this is the gate that decides whether the two-class comparison can
+    # be run at all.
+    rows = [
+        {"castling_legal": 2, "castling_rank": 1, "castling_gap_cp": 0},
+        {"castling_legal": 2, "castling_rank": 1, "castling_gap_cp": 0},
+        {"capture_legal": 5, "capture_rank": 1, "capture_gap_cp": 0},
+        {"capture_legal": 5, "capture_rank": 7, "capture_gap_cp": 120},
+    ]
+    report = class_rank_variance_report(rows, ("castling", "capture"))
+    assert report["castling"]["usable_rank_variance"] is False
+    assert report["castling"]["rank_1_share"] == pytest.approx(1.0)
+    assert report["castling"]["distinct_ranks"] == 1
+    assert report["capture"]["usable_rank_variance"] is True
+    assert report["capture"]["distinct_ranks"] == 2
+    assert report["capture"]["gap_cp_zero_share"] == pytest.approx(0.5)
+
+
+class _UniformPolicy:
+    """A policy with no preference at all -- uniform over legal moves.
+
+    Used to pin the normalisation: by construction, an indifferent policy must
+    score exactly 1.0 on `class_mass_over_uniform` for every move class.
+    """
+
+    def move_distribution(self, board):
+        from chessrl.masks import ACTION_SPACE, move_to_index
+
+        legal = list(board.legal_moves)
+        distribution = np.zeros(ACTION_SPACE, dtype=np.float64)
+        for move in legal:
+            distribution[move_to_index(move)] = 1.0 / len(legal)
+        return distribution
+
+
+def test_class_mass_over_uniform_is_one_for_an_indifferent_policy():
+    # This is what makes castling and captures comparable at all: raw mass is
+    # dominated by how many moves the class contains (1-2 castles vs many
+    # captures), so the normalised value is the only cross-class-readable one.
+    board = _board([
+        (chess.E1, chess.Piece(chess.KING, chess.WHITE)),
+        (chess.H1, chess.Piece(chess.ROOK, chess.WHITE)),
+        (chess.C3, chess.Piece(chess.PAWN, chess.WHITE)),
+        (chess.D4, chess.Piece(chess.PAWN, chess.BLACK)),
+        (chess.E8, chess.Piece(chess.KING, chess.BLACK)),
+    ], castling=chess.BB_H1, turn=chess.WHITE)
+    policy = _UniformPolicy()
+    assert class_mass_over_uniform(policy, board, "castling") == pytest.approx(1.0)
+    assert class_mass_over_uniform(policy, board, "capture") == pytest.approx(1.0)
+
+
+def test_class_mass_over_uniform_exceeds_one_when_the_class_is_favoured():
+    class _Favouring:
+        def move_distribution(self, board):
+            from chessrl.masks import ACTION_SPACE, move_to_index
+
+            distribution = np.zeros(ACTION_SPACE, dtype=np.float64)
+            castles = [m for m in board.legal_moves if board.is_castling(m)]
+            others = [m for m in board.legal_moves if not board.is_castling(m)]
+            for move in castles:
+                distribution[move_to_index(move)] = 0.5 / len(castles)
+            for move in others:
+                distribution[move_to_index(move)] = 0.5 / len(others)
+            return distribution
+
+    board = _board([
+        (chess.E1, chess.Piece(chess.KING, chess.WHITE)),
+        (chess.H1, chess.Piece(chess.ROOK, chess.WHITE)),
+        (chess.E8, chess.Piece(chess.KING, chess.BLACK)),
+    ], castling=chess.BB_H1, turn=chess.WHITE)
+    value = class_mass_over_uniform(_Favouring(), board, "castling")
+    assert value > 1.0
+
+
+def test_class_in_targets_reads_the_teacher_list():
+    board = _board([
+        (chess.E1, chess.Piece(chess.KING, chess.WHITE)),
+        (chess.H1, chess.Piece(chess.ROOK, chess.WHITE)),
+        (chess.E8, chess.Piece(chess.KING, chess.BLACK)),
+    ], castling=chess.BB_H1, turn=chess.WHITE)
+    with_castle = {"targets": [{"uci": "e1g1", "weight": 1.0}]}
+    without = {"targets": [{"uci": "h1h2", "weight": 1.0}]}
+    assert class_in_targets(board, with_castle, "castling") is True
+    assert class_in_targets(board, without, "castling") is False
+
+
+def test_match_corpus_sizes_caps_both_classes_and_is_deterministic():
+    # Unmatched corpora would confound "does this class condition?" with "how
+    # much data did this class get", so the sizes must be forced equal.
+    per_class = {
+        "castling": ([{"id": i} for i in range(9)], [{"id": i} for i in range(5)]),
+        "capture": ([{"id": i} for i in range(3)], [{"id": i} for i in range(7)]),
+    }
+    matched = match_corpus_sizes(per_class, cap=4, seed=11)
+    assert [len(r) for r, _ in matched.values()] == [4, 3]
+    assert [len(p) for _, p in matched.values()] == [4, 4]
+    # Same seed -> same subsample; a different seed is allowed to differ.
+    again = match_corpus_sizes(per_class, cap=4, seed=11)
+    assert matched == again
