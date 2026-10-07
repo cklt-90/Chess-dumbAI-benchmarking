@@ -49,7 +49,10 @@ want a result on the board this week, start there rather than with L3.5.
 half tested 2026-10-07: under-play is a signal-*coverage* gap (the corpus never
 presents the choice), but a trained L3 acquires only a **blanket** castling
 habit, un-conditioned on the teacher's rank. The old "no castling-rights
-channel" defect is fixed. See Group F.
+channel" defect is fixed (and its text has been deleted — see §H23). A two-class
+verification (captures vs castling, same 194-position held-out set) landed on
+the pre-registered branch that the binding constraint is **board-wide context**,
+marginally. See Group F.
 
 ---
 
@@ -493,19 +496,17 @@ dataset**, or **needs the level** (a new arm such as `L3-flat` or L3.5).
      times for material/random/L2 in this sample — consistent with "never
      rewarded beyond the immediate pawn".
 
-- **Corrected 2026-10-07 — the "no castling-rights channel" defect below is
-  STALE, kept as history.** `encode.CHANNELS` now has 24 planes including
-  `castle_w`/`castle_b` (22/23), registered in `COLOUR_PAIRED_CHANNELS`, and
-  `value.evaluate()` now includes `king_shelter_score`. Both landed with the
-  H23-fix; the paragraph below predates it and describes a gap that no longer
-  exists in code.
-- **Superseded (2026-10-07)**: *"the encoder has **no castling-rights channel.**
-  `CHANNELS` (24 binary) contains no `castling_*` entry; `en_passant` is channel
-  21 and `promotion_rank_w/b` are 19/20. So a learner sees
-  `has_castling_rights(me)` only as a single scalar in `board_context_features`
-  (`encode.py:424`), **not as a spatial fact about which squares the rights
-  attach to.**"* — false as of the H23-fix. The user's own framing supersedes it:
-  the ability was always present, there was no *incentive*.
+- **Corrected 2026-10-07 — the encoder *does* carry castling rights; the old
+  "no castling-rights channel" text has been deleted.** `CHANNELS` (24 binary)
+  currently includes `castle_w` and `castle_b` at indices 22/23, registered in
+  `COLOUR_PAIRED_CHANNELS`, and `value.evaluate()` includes
+  `king_shelter_score`. Both landed with the H23-fix. The defect the old text
+  described — a learner seeing `has_castling_rights(me)` only as a scalar in
+  `board_context_features`, not as a spatial fact — **no longer exists in code**.
+  The user's framing replaces it: the ability was always present, there was no
+  *incentive*. Note that `castle_*` marks that a colour **has some** castling
+  right, not which wing; and the spatial fact of *which squares* the rights
+  attach to remains per-square-only, which is a separate, still-open point.
 - **Verified incidentally (no bug)**: the `en_passant` plane survives
   canonicalisation correctly — black-to-move `f6` becomes plane `f3` after rank
   reflection, matching `colour_mirror`, with `encode(pos) == encode(mirror(pos))`
@@ -546,18 +547,31 @@ dataset**, or **needs the level** (a new arm such as `L3-flat` or L3.5).
      logit cannot see (intervals overlap — suggestive, not established).
      **Registered as `bench/DESIGN-tier2-move-conditioning.md`: this must be
      repaired before further *conditional* evaluation is interpretable.** The
-     repair itself is deliberately not chosen there.
+     repair itself is deliberately not chosen there; the standalone tier-2 paper
+     is `bench/TIER2-BOARD-WIDE-CONTEXT.md`.
+  6. *Verification (2026-10-07): the defect binds beyond castling.* A two-class
+     test on one **shared** 194-position held-out set (captures = locally
+     decidable at the destination; castling = board-wide) gives capture
+     preference ρ = **−0.192** [−0.311, −0.023] at `sw=1.0` and **−0.204**
+     [−0.352, −0.065] at `sw=0.125`, against castling ρ = **+0.022** [−0.107,
+     +0.181] and **−0.033** [−0.163, +0.127]. The paired difference excludes
+     zero at both step sizes (**+0.206** [+0.003, +0.410]; **+0.194** [+0.007,
+     +0.381]). **Read: branch 1 — the defect is board-wide context** — but
+     marginally (lower bounds barely off zero; captures only weakly negative), so
+     the receptive field is *a* binding constraint, **not established to be the
+     only one.** Source: `bench/h23_two_class_conditioning.json`.
 - **Falsified by**: a learner demonstrating castling/ep in proportion to a
   depth-3 search on a filtered set of positions where castling is clearly best.
   **Restated 2026-10-07**: that set is nearly empty under every distribution
   tested (≤8/583), so the criterion needs re-specifying (e.g. "castling in the
   teacher's top-k") before it can be used.
-- **Command**: `python bench/scripts/h23_behavioural.py --mode probe|static|train|conditioning`
+- **Command**: `python bench/scripts/h23_behavioural.py --mode probe|static|train|conditioning2`
   (also: `python -m bench --games 20` and count `O-O` in recorded SAN).
 - **Runnable today**: **yes**
 - **Status**: `[~]` mechanical half `[x]` supported; behavioural half tested
-  2026-10-07 — under-play is a signal-coverage gap, but the learned behaviour is
-  un-conditioned; no fix attempted
+  2026-10-07 — under-play is a signal-coverage gap, the learned behaviour is
+  un-conditioned, and the located constraint is board-wide context (two-class
+  verification, marginally); no fix attempted
 
 ---
 

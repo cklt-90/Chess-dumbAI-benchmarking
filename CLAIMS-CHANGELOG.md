@@ -402,6 +402,100 @@ here; the resulting verdict lands in the ledger.
 
 ---
 
+## 2026-10-07 — the prove/not-prove ledger exists; the merge question is settled
+
+- **Claim/caveat**: the register promises a separate prove/not-prove document,
+  and this changelog's own footer flags it as an open question ("changelog vs
+  stateful ledger — merge or not?").
+- **Change**: introduced
+- **Was** → **Now**: "to be created" → **`PROOF-LEDGER.md` created, standalone**
+- **Because**: the three artefacts answer three different questions and two of
+  them need *opposite* write policies — the register and the ledger rewrite in
+  place; the changelog is append-only. Merging the ledger into the changelog
+  would force a stateful verdict table into an append-only log.
+- **Source**: `PROOF-LEDGER.md`; `HYPOTHESES.md` header; this file's footer
+- **Knock-on**: the footer's open question is answered; the ledger carries a state
+  row per hypothesis with an explicit **basis** column, and names the flags
+  (DQ-3, H15) that make several states *conditional*.
+
+## 2026-10-07 — H23's stale "no castling-rights channel" text deleted
+
+- **Claim/caveat**: `HYPOTHESES.md` §H23 stated, in the present tense, that the
+  encoder has no castling-rights channel — the paragraph was kept as a
+  struck-through quote so `test_docs_consistency.py` stayed green.
+- **Change**: retired (delete-and-replace, user-chosen)
+- **Was** → **Now**: "kept as history under a superseded marker" → **replaced
+  with current text**
+- **Because**: the user chose delete-and-replace over strike-through. Verified in
+  code: `CHANNELS` (24 binary) includes `castle_w`/`castle_b` at 22/23,
+  registered in `COLOUR_PAIRED_CHANNELS`. The replacement keeps the
+  `` `CHANNELS` (24 binary) `` phrase in a *present-tense, true* sentence, so
+  `test_hypotheses_channel_note_matches_code` stays green without modification.
+- **Source**: `HYPOTHESES.md` §H23; verified against `src/chessrl/encode.py`
+- **Knock-on**: the older review's C4 (same stale claim) is a *dated snapshot* and
+  must not be quoted as current — flagged in `HYPOTHESIS-REVIEW-2026-10-07.md` S-2.
+
+## 2026-10-07 — tier-2 subject fixed: board-wide context, marginally
+
+- **Claim/caveat**: the H23 behavioural work located a two-square receptive field
+  but could not say whether the defect was **castling-specific** or
+  **architectural** — the Step-4 verification sub-item the tier-2 entry attached.
+- **Change**: upgraded (partially; the verification was run)
+- **Was** → **Now**: "defect located; scope unknown" → **pre-registered branch 1:
+  the defect is board-wide context** — but **marginally**
+- **Because**: two-class conditioning on one **shared** 194-position held-out set
+  (captures = locally decidable; castling = board-wide) with 8 seeds, two step
+  sizes: capture ρ = −0.192 [−0.311, −0.023] / −0.204 [−0.352, −0.065] (excludes
+  0) vs castling ρ = +0.022 [−0.107, +0.181] / −0.033 [−0.163, +0.127] (includes
+  0); paired difference +0.206 [+0.003, +0.410] / +0.194 [+0.007, +0.381].
+- **Honest limits**: both paired lower bounds are barely off zero and captures are
+  only *weakly* negative, so the receptive field is *a* binding constraint, **not
+  established to be the only one.** An earlier per-class split left a 4-of-48
+  overlap and was discarded; the two classes are also differently shaped.
+- **Source**: `bench/h23_two_class_conditioning.json`;
+  `bench/h23_class_rank_variance.json`; `bench/TIER2-BOARD-WIDE-CONTEXT.md`
+- **Knock-on**: `bench/TIER2-BOARD-WIDE-CONTEXT.md` is the standalone tier-2
+  paper; its subject is board-wide context, and it carries this marginality
+  explicitly.
+
+## 2026-10-07 — Adam amplifies the overshoot rather than curing it
+
+- **Claim/caveat**: the L3 imitation overshoot is a step-magnitude problem, so a
+  standard scale-invariant optimiser (Adam) should remove it.
+- **Change**: retired (for this regime)
+- **Was** → **Now**: "use a standard optimiser" → **Adam amplifies the artifact
+  ~23× and its failure *is* the diagnosis**
+- **Because**: in the frozen-corpus ablation (`adam` at `lr × 1`, identical target
+  rule and credit) CE = **+19.2** and entropy = **−2.14** against the `max@1`
+  control's +0.83 / −0.81; best-over-top-k **fell** (0.252 → 0.222). This is the
+  pre-registered *second* branch: the overshoot is **aggregate across ranks, not
+  per-parameter in scale**, so a per-parameter scale-invariant step cannot shrink
+  it. All three SGD controls reproduced exactly.
+- **Note**: `adam@0.01` is **not** evidence Adam works at small `lr` — its step
+  (1e-4) is below the fixed-point grid and `np.round` zeroes it (the X5 trap).
+- **Source**: `bench/l3_target_rule_ablation.json`;
+  `.workbuddy-ai/memory/2026-10-07.md`
+- **Knock-on**: `L3Config.search_weight` is still **1.0**, the damaging value —
+  the step-size finding remains unwired into production.
+
+## 2026-10-07 — a byte sha is not a behaviour guard
+
+- **Claim/caveat**: the `bench/scripts/l3_*` provenance guards used a **byte** sha
+  of `perceptron.py` to detect behaviour drift.
+- **Change**: revised (guard strengthened)
+- **Was** → **Now**: "byte sha mismatch ⇒ behaviour changed" → **a byte mismatch
+  alone is not evidence of a behaviour change**
+- **Because**: the guard fired (`byte_matches: false`) on a refactor that was
+  verified inert *executably* — replaying the pilot trajectory reproduced the
+  top-k delta to 15 significant figures (0.061126762900030385 vs …04). Also ruled
+  out line endings (pure LF). Fixed by adding a **behaviour digest**: replay the
+  first 32 cached records through the update path and hash the resulting weights.
+- **Source**: `bench/scripts/l3_target_rule_ablation.py`; `tests/test_l3_target_rule_ablation.py`
+- **Knock-on**: **not yet propagated to the other three byte-sha guards** — named
+  as open work in the review (§7, S-7).
+
+---
+
 ## Open question for this file
 
 **Is a changelog the right form, or should it be a stateful ledger?** This file
