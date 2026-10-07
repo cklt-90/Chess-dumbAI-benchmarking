@@ -1,0 +1,1295 @@
+{
+  "mode": "train",
+  "oracle": "d3",
+  "source": "random",
+  "games_scanned": 200,
+  "candidates": 0,
+  "both_wings": 0,
+  "one_wing": 0,
+  "oracle_best_is_castle": 7,
+  "oracle_topk_has_castle": 91,
+  "depth": 3,
+  "oracle_depth": 3,
+  "top_k": 5,
+  "min_since_capture": 4,
+  "train_arms": {
+    "rich@sw1": {
+      "per_seed": [
+        {
+          "seed": 101,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.027395483824764012
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.029940119760479042,
+              "castling_probability_mass": 0.02508938384108349
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.5483870967741935,
+              "castling_probability_mass": 0.557307652973517
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.46706586826347307,
+              "castling_probability_mass": 0.5464663807136763
+            }
+          }
+        },
+        {
+          "seed": 102,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.027778410908106767
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.041916167664670656,
+              "castling_probability_mass": 0.025380705484566776
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.5483870967741935,
+              "castling_probability_mass": 0.5554152656078865
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.5449101796407185,
+              "castling_probability_mass": 0.5473373805083276
+            }
+          }
+        },
+        {
+          "seed": 103,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.0271599909191096
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.017964071856287425,
+              "castling_probability_mass": 0.025147080703415273
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.5483870967741935,
+              "castling_probability_mass": 0.5541071922406757
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.5389221556886228,
+              "castling_probability_mass": 0.5466905789664939
+            }
+          }
+        },
+        {
+          "seed": 104,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.028503161356493497
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.04790419161676647,
+              "castling_probability_mass": 0.025815954220084748
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.5483870967741935,
+              "castling_probability_mass": 0.5574293202639697
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.5748502994011976,
+              "castling_probability_mass": 0.5476272584419777
+            }
+          }
+        },
+        {
+          "seed": 105,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.028371855703074992
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.023952095808383235,
+              "castling_probability_mass": 0.025529567816081043
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.7096774193548387,
+              "castling_probability_mass": 0.5551312919869987
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.49700598802395207,
+              "castling_probability_mass": 0.5445140978049008
+            }
+          }
+        },
+        {
+          "seed": 106,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.0288747151757727
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.03592814371257485,
+              "castling_probability_mass": 0.026505719340641876
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.6129032258064516,
+              "castling_probability_mass": 0.5557653657069962
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.5089820359281437,
+              "castling_probability_mass": 0.5465612461097886
+            }
+          }
+        },
+        {
+          "seed": 107,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.027910167791236097
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.04790419161676647,
+              "castling_probability_mass": 0.02584523565550872
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.5483870967741935,
+              "castling_probability_mass": 0.5559436400265408
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.5508982035928144,
+              "castling_probability_mass": 0.5475842185105054
+            }
+          }
+        },
+        {
+          "seed": 108,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.06451612903225806,
+              "castling_probability_mass": 0.028856473430660237
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.03592814371257485,
+              "castling_probability_mass": 0.026269113447645962
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.5483870967741935,
+              "castling_probability_mass": 0.5567696124515364
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.6586826347305389,
+              "castling_probability_mass": 0.5472081515726861
+            }
+          }
+        }
+      ],
+      "summary": {
+        "rich_held": {
+          "select_castle_rate": {
+            "trained_mean": 0.5766129032258065,
+            "untrained_mean": 0.028225806451612902,
+            "paired_gain_mean": 0.5483870967741935,
+            "paired_gain_95pct_t_interval": [
+              0.49844335705727844,
+              0.5983308364911085
+            ],
+            "seed_level_paired_differences": [
+              0.5483870967741935,
+              0.5161290322580645,
+              0.5161290322580645,
+              0.5161290322580645,
+              0.6774193548387097,
+              0.5806451612903226,
+              0.5483870967741935,
+              0.48387096774193544
+            ]
+          },
+          "castling_probability_mass": {
+            "trained_mean": 0.5559836676572651,
+            "untrained_mean": 0.02810628238865224,
+            "paired_gain_mean": 0.5278773852686129,
+            "paired_gain_95pct_t_interval": [
+              0.5269607453186027,
+              0.5287940252186232
+            ],
+            "seed_level_paired_differences": [
+              0.529912169148753,
+              0.5276368546997797,
+              0.5269472013215661,
+              0.5289261589074763,
+              0.5267594362839237,
+              0.5268906505312235,
+              0.5280334722353047,
+              0.5279131390208762
+            ]
+          },
+          "interval_scope": "conditional on this fixed corpus/split; initialization-seed variability only"
+        },
+        "poor_held": {
+          "select_castle_rate": {
+            "trained_mean": 0.5426646706586826,
+            "untrained_mean": 0.035179640718562874,
+            "paired_gain_mean": 0.5074850299401198,
+            "paired_gain_95pct_t_interval": [
+              0.4614595808383234,
+              0.5535104790419162
+            ],
+            "seed_level_paired_differences": [
+              0.437125748502994,
+              0.5029940119760479,
+              0.5209580838323353,
+              0.5269461077844311,
+              0.4730538922155688,
+              0.47305389221556887,
+              0.5029940119760479,
+              0.6227544910179641
+            ]
+          },
+          "castling_probability_mass": {
+            "trained_mean": 0.5467486640785446,
+            "untrained_mean": 0.02569784506362849,
+            "paired_gain_mean": 0.521050819014916,
+            "paired_gain_95pct_t_interval": [
+              0.5201856489500208,
+              0.5219159890798112
+            ],
+            "seed_level_paired_differences": [
+              0.5213769968725928,
+              0.5219566750237609,
+              0.5215434982630786,
+              0.5218113042218929,
+              0.5189845299888197,
+              0.5200555267691468,
+              0.5217389828549968,
+              0.5209390381250402
+            ]
+          },
+          "interval_scope": "conditional on this fixed corpus/split; initialization-seed variability only"
+        }
+      }
+    },
+    "poor@sw1": {
+      "per_seed": [
+        {
+          "seed": 101,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.027395483824764012
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.029940119760479042,
+              "castling_probability_mass": 0.02508938384108349
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.01667356412079249
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.005988023952095809,
+              "castling_probability_mass": 0.014624068608401252
+            }
+          }
+        },
+        {
+          "seed": 102,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.027778410908106767
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.041916167664670656,
+              "castling_probability_mass": 0.025380705484566776
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.016751757787100245
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.011976047904191617,
+              "castling_probability_mass": 0.014710501533625391
+            }
+          }
+        },
+        {
+          "seed": 103,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.0271599909191096
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.017964071856287425,
+              "castling_probability_mass": 0.025147080703415273
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.016396045195414304
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.011976047904191617,
+              "castling_probability_mass": 0.01454103540018039
+            }
+          }
+        },
+        {
+          "seed": 104,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.028503161356493497
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.04790419161676647,
+              "castling_probability_mass": 0.025815954220084748
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.017276152819347603
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.011976047904191617,
+              "castling_probability_mass": 0.015012114941952445
+            }
+          }
+        },
+        {
+          "seed": 105,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.028371855703074992
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.023952095808383235,
+              "castling_probability_mass": 0.025529567816081043
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.01715399041355893
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.005988023952095809,
+              "castling_probability_mass": 0.014822323008573599
+            }
+          }
+        },
+        {
+          "seed": 106,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.0288747151757727
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.03592814371257485,
+              "castling_probability_mass": 0.026505719340641876
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.01747633745752573
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.011976047904191617,
+              "castling_probability_mass": 0.015375456015746348
+            }
+          }
+        },
+        {
+          "seed": 107,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.027910167791236097
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.04790419161676647,
+              "castling_probability_mass": 0.02584523565550872
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.016848468720279418
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.017964071856287425,
+              "castling_probability_mass": 0.014969456809661776
+            }
+          }
+        },
+        {
+          "seed": 108,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.06451612903225806,
+              "castling_probability_mass": 0.028856473430660237
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.03592814371257485,
+              "castling_probability_mass": 0.026269113447645962
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.017399004303786596
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.023952095808383235,
+              "castling_probability_mass": 0.015195327548176828
+            }
+          }
+        }
+      ],
+      "summary": {
+        "rich_held": {
+          "select_castle_rate": {
+            "trained_mean": 0.016129032258064516,
+            "untrained_mean": 0.028225806451612902,
+            "paired_gain_mean": -0.012096774193548387,
+            "paired_gain_95pct_t_interval": [
+              -0.04070564516129032,
+              0.016512096774193546
+            ],
+            "seed_level_paired_differences": [
+              0.03225806451612903,
+              -0.03225806451612903,
+              -0.03225806451612903,
+              -0.03225806451612903,
+              0.0,
+              0.0,
+              0.03225806451612903,
+              -0.06451612903225806
+            ]
+          },
+          "castling_probability_mass": {
+            "trained_mean": 0.016996915102225667,
+            "untrained_mean": 0.02810628238865224,
+            "paired_gain_mean": -0.011109367286426572,
+            "paired_gain_95pct_t_interval": [
+              -0.011334809773635957,
+              -0.010883924799217187
+            ],
+            "seed_level_paired_differences": [
+              -0.010721919703971523,
+              -0.011026653121006522,
+              -0.010763945723695295,
+              -0.011227008537145894,
+              -0.011217865289516061,
+              -0.01139837771824697,
+              -0.01106169907095668,
+              -0.011457469126873641
+            ]
+          },
+          "interval_scope": "conditional on this fixed corpus/split; initialization-seed variability only"
+        },
+        "poor_held": {
+          "select_castle_rate": {
+            "trained_mean": 0.012724550898203593,
+            "untrained_mean": 0.035179640718562874,
+            "paired_gain_mean": -0.02245508982035928,
+            "paired_gain_95pct_t_interval": [
+              -0.030811850520315417,
+              -0.014098329120403144
+            ],
+            "seed_level_paired_differences": [
+              -0.023952095808383235,
+              -0.02994011976047904,
+              -0.005988023952095807,
+              -0.035928143712574856,
+              -0.017964071856287428,
+              -0.02395209580838323,
+              -0.029940119760479045,
+              -0.011976047904191614
+            ]
+          },
+          "castling_probability_mass": {
+            "trained_mean": 0.014906285483289754,
+            "untrained_mean": 0.02569784506362849,
+            "paired_gain_mean": -0.010791559580338731,
+            "paired_gain_95pct_t_interval": [
+              -0.010982311237563366,
+              -0.010600807923114096
+            ],
+            "seed_level_paired_differences": [
+              -0.01046531523268224,
+              -0.010670203950941384,
+              -0.010606045303234883,
+              -0.010803839278132303,
+              -0.010707244807507444,
+              -0.011130263324895528,
+              -0.010875778845846945,
+              -0.011073785899469134
+            ]
+          },
+          "interval_scope": "conditional on this fixed corpus/split; initialization-seed variability only"
+        }
+      }
+    },
+    "rich@sw0.125": {
+      "per_seed": [
+        {
+          "seed": 101,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.027395483824764012
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.029940119760479042,
+              "castling_probability_mass": 0.02508938384108349
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.12903225806451613,
+              "castling_probability_mass": 0.13495843984853925
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.11377245508982035,
+              "castling_probability_mass": 0.11808364643057973
+            }
+          }
+        },
+        {
+          "seed": 102,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.027778410908106767
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.041916167664670656,
+              "castling_probability_mass": 0.025380705484566776
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.1935483870967742,
+              "castling_probability_mass": 0.1352153390845571
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.1497005988023952,
+              "castling_probability_mass": 0.1184213495424701
+            }
+          }
+        },
+        {
+          "seed": 103,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.0271599909191096
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.017964071856287425,
+              "castling_probability_mass": 0.025147080703415273
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.1935483870967742,
+              "castling_probability_mass": 0.13354498451927718
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.10778443113772455,
+              "castling_probability_mass": 0.11783129309294463
+            }
+          }
+        },
+        {
+          "seed": 104,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.028503161356493497
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.04790419161676647,
+              "castling_probability_mass": 0.025815954220084748
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.06451612903225806,
+              "castling_probability_mass": 0.1372672447417164
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.1497005988023952,
+              "castling_probability_mass": 0.1198770509930699
+            }
+          }
+        },
+        {
+          "seed": 105,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.028371855703074992
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.023952095808383235,
+              "castling_probability_mass": 0.025529567816081043
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.1935483870967742,
+              "castling_probability_mass": 0.13683616702370835
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.11377245508982035,
+              "castling_probability_mass": 0.11890067824721463
+            }
+          }
+        },
+        {
+          "seed": 106,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.0288747151757727
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.03592814371257485,
+              "castling_probability_mass": 0.026505719340641876
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.16129032258064516,
+              "castling_probability_mass": 0.13929929146478626
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.09580838323353294,
+              "castling_probability_mass": 0.12254353822842447
+            }
+          }
+        },
+        {
+          "seed": 107,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.027910167791236097
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.04790419161676647,
+              "castling_probability_mass": 0.02584523565550872
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.06451612903225806,
+              "castling_probability_mass": 0.135954233343268
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.07784431137724551,
+              "castling_probability_mass": 0.12005067796887697
+            }
+          }
+        },
+        {
+          "seed": 108,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.06451612903225806,
+              "castling_probability_mass": 0.028856473430660237
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.03592814371257485,
+              "castling_probability_mass": 0.026269113447645962
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.12903225806451613,
+              "castling_probability_mass": 0.1384351792652619
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.15568862275449102,
+              "castling_probability_mass": 0.12130711599417618
+            }
+          }
+        }
+      ],
+      "summary": {
+        "rich_held": {
+          "select_castle_rate": {
+            "trained_mean": 0.1411290322580645,
+            "untrained_mean": 0.028225806451612902,
+            "paired_gain_mean": 0.1129032258064516,
+            "paired_gain_95pct_t_interval": [
+              0.06965067845160536,
+              0.15615577316129783
+            ],
+            "seed_level_paired_differences": [
+              0.12903225806451613,
+              0.16129032258064516,
+              0.16129032258064516,
+              0.03225806451612903,
+              0.16129032258064516,
+              0.12903225806451613,
+              0.06451612903225806,
+              0.06451612903225806
+            ]
+          },
+          "castling_probability_mass": {
+            "trained_mean": 0.13643885991138932,
+            "untrained_mean": 0.02810628238865224,
+            "paired_gain_mean": 0.10833257752273706,
+            "paired_gain_95pct_t_interval": [
+              0.10726534387453755,
+              0.10939981117093657
+            ],
+            "seed_level_paired_differences": [
+              0.10756295602377525,
+              0.10743692817645034,
+              0.10638499360016758,
+              0.10876408338522289,
+              0.10846431132063336,
+              0.11042457628901356,
+              0.10804406555203191,
+              0.10957870583460165
+            ]
+          },
+          "interval_scope": "conditional on this fixed corpus/split; initialization-seed variability only"
+        },
+        "poor_held": {
+          "select_castle_rate": {
+            "trained_mean": 0.12050898203592814,
+            "untrained_mean": 0.035179640718562874,
+            "paired_gain_mean": 0.08532934131736528,
+            "paired_gain_95pct_t_interval": [
+              0.06142917054368631,
+              0.10922951209104424
+            ],
+            "seed_level_paired_differences": [
+              0.08383233532934131,
+              0.10778443113772454,
+              0.08982035928143713,
+              0.10179640718562873,
+              0.08982035928143711,
+              0.05988023952095809,
+              0.029940119760479042,
+              0.11976047904191617
+            ]
+          },
+          "castling_probability_mass": {
+            "trained_mean": 0.11962691881221957,
+            "untrained_mean": 0.02569784506362849,
+            "paired_gain_mean": 0.0939290737485911,
+            "paired_gain_95pct_t_interval": [
+              0.09296557615241521,
+              0.09489257134476697
+            ],
+            "seed_level_paired_differences": [
+              0.09299426258949624,
+              0.09304064405790333,
+              0.09268421238952936,
+              0.09406109677298516,
+              0.0933711104311336,
+              0.0960378188877826,
+              0.09420544231336825,
+              0.09503800254653022
+            ]
+          },
+          "interval_scope": "conditional on this fixed corpus/split; initialization-seed variability only"
+        }
+      }
+    },
+    "poor@sw0.125": {
+      "per_seed": [
+        {
+          "seed": 101,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.027395483824764012
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.029940119760479042,
+              "castling_probability_mass": 0.02508938384108349
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.026435405281520823
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.023952095808383235,
+              "castling_probability_mass": 0.023945409482144055
+            }
+          }
+        },
+        {
+          "seed": 102,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.027778410908106767
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.041916167664670656,
+              "castling_probability_mass": 0.025380705484566776
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.02677656060433455
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.011976047904191617,
+              "castling_probability_mass": 0.024204323956419575
+            }
+          }
+        },
+        {
+          "seed": 103,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.0271599909191096
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.017964071856287425,
+              "castling_probability_mass": 0.025147080703415273
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.026180677328749156
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.011976047904191617,
+              "castling_probability_mass": 0.023964534957725738
+            }
+          }
+        },
+        {
+          "seed": 104,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.028503161356493497
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.04790419161676647,
+              "castling_probability_mass": 0.025815954220084748
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.027485345731897405
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.029940119760479042,
+              "castling_probability_mass": 0.024637445435532958
+            }
+          }
+        },
+        {
+          "seed": 105,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.028371855703074992
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.023952095808383235,
+              "castling_probability_mass": 0.025529567816081043
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.06451612903225806,
+              "castling_probability_mass": 0.02734371551903354
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.005988023952095809,
+              "castling_probability_mass": 0.024345718524372985
+            }
+          }
+        },
+        {
+          "seed": 106,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.0288747151757727
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.03592814371257485,
+              "castling_probability_mass": 0.026505719340641876
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.06451612903225806,
+              "castling_probability_mass": 0.027822848709438706
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.011976047904191617,
+              "castling_probability_mass": 0.025268768762591376
+            }
+          }
+        },
+        {
+          "seed": 107,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.0,
+              "castling_probability_mass": 0.027910167791236097
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.04790419161676647,
+              "castling_probability_mass": 0.02584523565550872
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.02688904811184891
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.011976047904191617,
+              "castling_probability_mass": 0.024618754587901887
+            }
+          }
+        },
+        {
+          "seed": 108,
+          "updates": 1200,
+          "untrained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.06451612903225806,
+              "castling_probability_mass": 0.028856473430660237
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.03592814371257485,
+              "castling_probability_mass": 0.026269113447645962
+            }
+          },
+          "trained": {
+            "rich_held": {
+              "positions": 31,
+              "select_castle_rate": 0.03225806451612903,
+              "castling_probability_mass": 0.027793309030772113
+            },
+            "poor_held": {
+              "positions": 167,
+              "select_castle_rate": 0.023952095808383235,
+              "castling_probability_mass": 0.025022003637262074
+            }
+          }
+        }
+      ],
+      "summary": {
+        "rich_held": {
+          "select_castle_rate": {
+            "trained_mean": 0.03629032258064516,
+            "untrained_mean": 0.028225806451612902,
+            "paired_gain_mean": 0.008064516129032258,
+            "paired_gain_95pct_t_interval": [
+              -0.015844229004818394,
+              0.03197326126288291
+            ],
+            "seed_level_paired_differences": [
+              0.03225806451612903,
+              -0.03225806451612903,
+              0.0,
+              0.0,
+              0.03225806451612903,
+              0.03225806451612903,
+              0.03225806451612903,
+              -0.03225806451612903
+            ]
+          },
+          "castling_probability_mass": {
+            "trained_mean": 0.027090863789699403,
+            "untrained_mean": 0.02810628238865224,
+            "paired_gain_mean": -0.0010154185989528376,
+            "paired_gain_95pct_t_interval": [
+              -0.0010443119809116438,
+              -0.0009865252169940313
+            ],
+            "seed_level_paired_differences": [
+              -0.0009600785432431896,
+              -0.0010018503037722178,
+              -0.0009793135903604436,
+              -0.001017815624596092,
+              -0.0010281401840414525,
+              -0.0010518664663339942,
+              -0.0010211196793871863,
+              -0.0010631643998881245
+            ]
+          },
+          "interval_scope": "conditional on this fixed corpus/split; initialization-seed variability only"
+        },
+        "poor_held": {
+          "select_castle_rate": {
+            "trained_mean": 0.016467065868263474,
+            "untrained_mean": 0.035179640718562874,
+            "paired_gain_mean": -0.0187125748502994,
+            "paired_gain_95pct_t_interval": [
+              -0.02776367169540843,
+              -0.00966147800519037
+            ],
+            "seed_level_paired_differences": [
+              -0.005988023952095807,
+              -0.02994011976047904,
+              -0.005988023952095807,
+              -0.017964071856287428,
+              -0.017964071856287428,
+              -0.02395209580838323,
+              -0.035928143712574856,
+              -0.011976047904191614
+            ]
+          },
+          "castling_probability_mass": {
+            "trained_mean": 0.024500869917993832,
+            "untrained_mean": 0.02569784506362849,
+            "paired_gain_mean": -0.0011969751456346552,
+            "paired_gain_95pct_t_interval": [
+              -0.0012268515408166085,
+              -0.001167098750452702
+            ],
+            "seed_level_paired_differences": [
+              -0.0011439743589394362,
+              -0.0011763815281472002,
+              -0.0011825457456895345,
+              -0.0011785087845517898,
+              -0.0011838492917080577,
+              -0.0012369505780505004,
+              -0.0012264810676068348,
+              -0.0012471098103838882
+            ]
+          },
+          "interval_scope": "conditional on this fixed corpus/split; initialization-seed variability only"
+        }
+      }
+    }
+  },
+  "corpora": {
+    "rich_total": 91,
+    "rich_train": 60,
+    "rich_held": 31,
+    "poor_total": 492,
+    "poor_train": 60,
+    "poor_held": 167,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108
+    ],
+    "search_weights": [
+      1.0,
+      0.125
+    ],
+    "epochs": 4,
+    "heldout_fraction": 0.34,
+    "split_seed": 9001
+  },
+  "provenance": {
+    "perceptron_py_sha256": "e7d2590b5281f96259900e63d3317b16d6a6d749357de2c70513e9da67eaeb74",
+    "script_sha256": "95b2efeab7bf5c5e61863902f558bfdc8bf4921af2cafdb2e9d27262cbe8de0b",
+    "runtime_seconds": 83.306
+  }
+}

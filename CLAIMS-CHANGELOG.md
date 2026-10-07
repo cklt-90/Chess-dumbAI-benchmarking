@@ -202,6 +202,204 @@ here; the resulting verdict lands in the ledger.
 - **Knock-on**: Step 0 is a gate; the document should stay unopened until a
   defect exists.
 
+## 2026-10-07 — "A true master supervises better than a weak master"
+
+- **Claim/caveat**: training L3 on a *true* master (Stockfish) labels would beat
+  training on the *weak* master (depth-3 search) labels, at matched budget.
+- **Change**: retired (for this regime)
+- **Was** → **Now**: "a stronger teacher makes a stronger student" → **the whole
+  weak-vs-true difference was an over-sharpening artifact of the step size**
+- **Because**: at `search_weight=1.0` the true-master arm lost best-move mass
+  (−0.0048) but won cross-entropy (−0.336) and entropy (+0.259) — a mixed result
+  whose signature is over-sharpening. Re-running the identical comparison at
+  `search_weight=0.125` (same corpus, same seeds) collapsed the difference to
+  nothing: best-move gap **−0.00010** (48× smaller), CE gap −0.0048 (70×
+  smaller). Teacher choice makes no measurable difference once the step is sane.
+- **Source**: `bench/l25_master_arm.json`; `bench/l25_master_arm_sw0125.json`;
+  `.workbuddy-ai/memory/2026-10-07.md`
+- **Knock-on**: the same lesson as the 2026-10-06 target-rule entry, applied to
+  *teacher choice* instead of *target rule* — an apparent factor effect that is
+  really a step-size/overshoot artifact. Reinforces H20 (capacity/tactics bind
+  at low budget). **H25 itself is not settled**: master-vs-*self-play* remains
+  blocked on the retired self-play signal; this entry covers only the
+  weak-vs-true sub-question.
+
+## 2026-10-07 — "L3 cannot castle (missing feature)"
+
+- **Claim/caveat**: H23's present-tense text states the encoder has **no**
+  castling-rights channel, i.e. castling failure is a feature/capacity gap.
+- **Change**: revised (user-confirmed; text was stale)
+- **Was** → **Now**: "missing feature" → **signal/reward gap** — the ability was
+  always present; there was no incentive to use it
+- **Because**: verified in code — `encode.CHANNELS` has 24 planes including
+  `castle_w`/`castle_b` (22/23) and `COLOUR_PAIRED_CHANNELS` contains `(22, 23)`.
+  The planes landed with the H23-fix; the H23 hypothesis text predates it. User
+  confirms: "always had ability to, but not any incentive to notice it."
+- **Source**: `src/chessrl/encode.py` (verified); `.workbuddy-ai/memory/2026-10-07.md`
+- **Knock-on**: `HYPOTHESES.md` §H23 "Concrete, checkable defect found while
+  testing" is stale and should be reconciled. The behavioural half (does a
+  *trained* L3 castle?) remains open and is now testable with a master-trained
+  checkpoint.
+
+## 2026-10-07 — "A trained L3 castles, so the under-play is a signal/coverage gap"
+
+- **Claim/caveat**: H23's behavioural half would resolve as a pure *signal*
+  gap — the corpus never presents the castling choice, so supplying a teacher
+  that castles should fix it.
+- **Change**: revised (half right, and the useful half is the one that fails)
+- **Was** → **Now**: "under-play is a signal gap; teach it and it castles" →
+  **under-play is a signal-coverage gap, but teaching it yields a *blanket*
+  castling habit, not the teacher's positional judgement**
+- **Because**:
+  1. *The registered test's premise barely exists.* On 583 random-play
+     castling-legal positions, castling is the **best** move for L2-d3 in
+     **8/583** and for Stockfish (d12) in **7/583**; on 273 quiet-play positions,
+     **1/273**. Castling is usually a *good* move, rarely the *single best* move.
+     "Both wings open" is rarer still: 10/583 (random), 4/273 (quiet).
+  2. *No level castles.* Every level sits at ~**2.5%** castling mass on
+     castling-legal positions, which is the uniform no-preference baseline
+     (1–2 castling moves out of ~35 legal ≈ 3–6%).
+  3. *The learner CAN be pushed to castle.* Training on a castling-rich corpus
+     (castling in Stockfish's top-5; 60 positions × 4 epochs) raises held-out
+     castling mass **0.028 → 0.556** at `sw=1.0` and **0.028 → 0.136** at
+     `sw=0.125`. So the *features* are not the binding constraint for
+     **expressing** castling.
+  4. *But it is a blanket habit.* The same model castles at the same rate on
+     held-out positions where Stockfish does **not** want castling:
+     `rich_held` **+0.528** [+0.527, +0.529] vs `poor_held` **+0.521**
+     [+0.520, +0.522] — statistically indistinguishable. In those POOR
+     positions castling is typically the **17th-best** move (median), **~670 cp**
+     worse than best, with 159/167 gaps ≥100 cp. So the learned behaviour is
+     actively harmful where the teacher rejected castling, i.e. it is *not* the
+     teacher's policy. The matched POOR-trained control does the opposite
+     (slight suppression, −0.011).
+  5. *And the mass does not track the teacher's rank at all.* Conditioning test
+     (train on RICH; measure castling mass on 198 held-out positions bucketed by
+     Stockfish's castling rank, MultiPV 20):
+
+     | arm | rank 1 | 2–3 | 4–5 | 6–10 | 11–20 | >20 | Spearman ρ |
+     |---|---|---|---|---|---|---|---|
+     | rich@sw1 | 0.587 | 0.525 | 0.544 | 0.575 | 0.551 | 0.530 | **−0.12** |
+     | rich@sw0.125 | 0.134 | 0.140 | 0.140 | 0.128 | 0.118 | 0.114 | **−0.25** |
+
+     Flat from rank 1 to rank >20. A model that had learned the teacher's
+     *judgement* would show a strongly negative ρ; at most there is a very weak
+     partial conditioning at the smaller step.
+- **Source**: `bench/scripts/h23_behavioural.py` (+ `tests/test_h23_behavioural.py`);
+  `bench/h23_behavioural_stockfish.json`; `bench/h23_behavioural_quiet_stockfish.json`;
+  `bench/h23_behavioural_train_stockfish.json`; `bench/h23_castling_rank_poor.json`;
+  `bench/h23_behavioural_conditioning.json`; `.workbuddy-ai/memory/2026-10-07.md`
+- **Knock-on**:
+  - The binding constraint is the ability to **condition** castling on the
+    position, not the ability to express it. "Add castling to the corpus" is not
+    a sufficient fix at this architecture/scale.
+  - The blanket-bias control is load-bearing: without it, "a trained L3 castles"
+    (0.028 → 0.556) would have been reported as a positive result. Same
+    metric-validity lesson as the set-mass and step-size entries above.
+  - The earlier "master-trained L3 does not castle" reading was a **corpus
+    coverage artifact** (the pilot corpus has castling in the teacher's top-5 in
+    **3/500** positions), not a feature or signal limitation.
+  - `HYPOTHESES.md` §H23 should be reconciled: the falsification criterion
+    ("positions where castling is clearly best") has almost no support in any
+    position distribution tested.
+
+---
+
+## 2026-10-07 — "conditioning is the binding constraint" — PARTLY MY OWN CORPUS DESIGN
+
+- **Claim/caveat**: the preceding entry attributes the flat castling-vs-rank
+  result to the model's inability to *condition* castling on the position.
+- **Was** → **Now**: "the binding constraint is conditioning (capacity)" →
+  **"roughly a fifth of the flatness was a corpus-contrast artifact of my own
+  design; the rest is real, and part of the remainder is architectural — the
+  castling logit cannot see most of the board."**
+- **Why the correction**: three controls were run after the headline.
+  1. *No negative example ever existed.* Every position in the curated set has
+     castling **legal** (that is how the set is built), so a RICH-only training
+     corpus perfectly confounds "castling is legal" with "castling is
+     targeted". The learner literally cannot see a counterexample. Adding a
+     MIXED corpus (RICH + POOR together) raises discrimination
+     (castling mass on `rich_held` minus on `poor_held`) from **+0.009** to
+     **+0.047** (volume-matched) — a ~5× improvement, so part of the flat
+     result was the corpus, not the model. Two MIXED sizes were reported
+     (volume-matched and RICH-dose-matched) so the conclusion does not depend
+     on which nuisance was controlled.
+  2. *But the improvement is far short of conditioning.* +0.047 means the
+     model casts ~0.54 where the teacher wants it and ~0.49 where it does not.
+     A conditioned model would be ~0.55 vs ~0.03. Achieved discrimination is
+     under a tenth of what conditioning requires.
+  3. *An explicit negative gradient does not fix it.* Supplying the missing
+     half of the update (negative credit for castling wherever the teacher
+     rejected it — 124/244 updates confirmed applied) suppresses castling
+     **globally**, not conditionally: `mixed_half+neg@sw1` goes
+     0.539→0.325 on `rich_held` and 0.492→0.301 on `poor_held`, i.e. the same
+     drop on both. Discrimination does not improve (+0.025; −0.002 for
+     `mixed_full+neg`). This is mechanically expected: the factored scorer
+     computes one logit per (from, to) pair, so credit — positive or negative
+     — generalises across every position with a king on e1.
+  4. *The information is largely unreachable, not merely unlearned.* A linear
+     probe on the features the castling logit is actually a function of
+     (the 9 global context scalars, plus the encoder channels at the castling
+     origin and destination squares) separates RICH from POOR at held-out AUC
+     **0.629 [0.53, 0.73]** (context only) and **0.606 [0.50, 0.71]** (with
+     local channels) — CIs that touch chance. The same probe on whole-board
+     channel means reaches **0.743 [0.65, 0.82]**. So there *is* signal on the
+     board that the castling logit structurally cannot see. The CIs overlap,
+     so "architecture blocks it" is **suggestive, not established**.
+- **Structural fact established by reading, not inference**: the production
+  update path (`train_on_targets` / the pilot's `_apply_cached_targets`)
+  applies credit **only to moves in the target list**. A move the teacher did
+  not choose receives no gradient at all, so "do not play this" is learnable
+  only indirectly, by raising alternatives and letting softmax renormalisation
+  act. This bounds what any corpus can teach.
+- **Source**: `bench/scripts/h23_behavioural.py` (added MIXED arms,
+  `apply_negative_castling`, `probe_features` mode with three feature variants,
+  `roc_auc`, `bootstrap_auc_ci`); `tests/test_h23_behavioural.py` (24 tests,
+  incl. a planted-signal positive control proving the probe can fit);
+  `bench/h23_behavioural_mixed.json`; `bench/h23_feature_probe.json`
+- **Knock-on**:
+  - "Add castling to the corpus" is necessary but **not sufficient**, and
+    "add a negative class" is also not sufficient. Both were tested.
+  - The remaining gap is best described as **architectural**: the castling
+    decision has no board-wide input. Any fix that keeps the factored
+    (from, to) scorer will reproduce this.
+  - Do not read the AUC comparison as proof: the two intervals overlap.
+
+---
+
+## 2026-10-07 — tier 2 opened: one entry registered, as a GATE not as a fix
+
+- **What changed**: `DESIGN-tier2-template.md` was an empty pre-registered
+  container ("do not build tier 2 until a defect exists"). A first entry is now
+  open: **`bench/DESIGN-tier2-move-conditioning.md`**.
+- **The framing the user specified, and which the note adopts verbatim**: *do not
+  conclude that the tier-2 upgrade IS this change; conclude that this problem
+  should be fixed before further evaluation.* Accordingly the note:
+  - commits to the **defect** (located, with evidence, and with a
+    demonstrated-vs-suggestive table separating what is established from what is
+    only indicated);
+  - commits to a **gate**: conditional evaluations — "does the learner play X
+    *when X is good*"? — are not interpretable until the move score can see
+    board-wide context. It also lists what is **not** blocked (aggregate
+    strength, aggregate imitation metrics), because a gate that blocks
+    everything is not a gate;
+  - **declines to name the repair.** Four candidates are listed with budget
+    cost; the choice is deferred to Step 3.
+- **Claim/caveat**: the entry clears the template's Step 0 gate for the defect as
+  *constructed and behaviourally demonstrated*. It explicitly does **not** clear
+  the gate for the stronger claim that widening the receptive field will fix it —
+  that stronger claim is what the entry would **test**, which is the correct
+  order. The gate-lift threshold is left deliberately **un-numbered** until the
+  teacher's own rich/poor separation is measured, so the entry cannot be tuned
+  to succeed.
+- **Source**: `bench/DESIGN-tier2-move-conditioning.md`; cross-linked from
+  `DESIGN-tier2-template.md` (§0 banner + new §4.1), `DESIGN-h25-true-master.md`
+  (gate interaction: H25's aggregate endpoint is *not* blocked, but must not be
+  read as conditional play), and `HYPOTHESES.md` §H23 (new item 5).
+- **Open**: Step 1 (authoring the hypothesis in `HYPOTHESES.md`) is drafted in
+  the note but **not yet registered** — the template requires it be authored
+  before implementation, and no implementation is being started.
+
 ---
 
 ## Open question for this file

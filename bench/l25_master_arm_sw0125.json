@@ -1,0 +1,1515 @@
+{
+  "design": {
+    "purpose": "H25 runnable core: true-master vs weak-master supervision at matched budget",
+    "engine": "C:/Users/Trinity/stockfish-windows-x86-64-universal/stockfish/stockfish-windows-x86-64-universal.exe",
+    "engine_depth": 8,
+    "weak_depth": 3,
+    "top_k": 5,
+    "search_weight": 0.125,
+    "training_seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108
+    ],
+    "checkpoints_positions_seen": [
+      0,
+      125,
+      250,
+      500
+    ],
+    "train_positions": 500,
+    "heldout_positions": 128,
+    "label_drop_counts": {
+      "weak_train": 0,
+      "true_train": 0,
+      "weak_heldout": 0,
+      "true_heldout": 0
+    },
+    "update_path": "L3Trainer.train_on_targets (identical for both arms)",
+    "yardsticks": "both arms scored against both teachers' held-out labels",
+    "weak_labels_cache_used": true,
+    "perceptron_py_sha256": "e7d2590b5281f96259900e63d3317b16d6a6d749357de2c70513e9da67eaeb74",
+    "master_py_sha256": "e1d3c089bbdad2b904fbe8a53396fa868693467b9e809794b864ca918ae25b40"
+  },
+  "scope": "exploratory; conditional on one frozen corpus and held-out set; intervals cover init seeds only; measures teacher imitation, not strength",
+  "label_diagnostics": {
+    "positions": 500,
+    "weak_mean_target_entropy_nats": 1.4052365380723457,
+    "true_mean_target_entropy_nats": 1.3742632549795994,
+    "weak_mean_weight_spread": 0.5448308814790874,
+    "true_mean_weight_spread": 0.5968993933895312,
+    "top1_agreement_rate": 0.536,
+    "weak_top1_in_true_top5_rate": 0.868
+  },
+  "comparison": {
+    "primary_endpoint": "held-out best-move mass vs Stockfish labels at final checkpoint",
+    "final_checkpoint": 500,
+    "weak": {
+      "mean_delta": 0.0013288410527633257,
+      "sd": 2.393213129178847e-05,
+      "n_seeds": 8,
+      "ci95": [
+        0.001308830110989403,
+        0.0013488519945372484
+      ]
+    },
+    "true": {
+      "mean_delta": 0.0012255324018775916,
+      "sd": 1.3516103196629902e-05,
+      "n_seeds": 8,
+      "ci95": [
+        0.0012142308612508737,
+        0.0012368339425043095
+      ]
+    },
+    "true_minus_weak_mean_delta": -0.00010330865088573407
+  },
+  "metric_intervals": {
+    "weak": {
+      "stockfish": {
+        "teacher_topk_probability_mass": {
+          "mean_delta": 0.0034690053928858496,
+          "sd": 4.399409455083257e-05,
+          "n_seeds": 8,
+          "ci95": [
+            0.003432219564924291,
+            0.003505791220847408
+          ]
+        },
+        "teacher_best_probability_mass_tie_aware": {
+          "mean_delta": 0.0013288410527633257,
+          "sd": 2.393213129178847e-05,
+          "n_seeds": 8,
+          "ci95": [
+            0.001308830110989403,
+            0.0013488519945372484
+          ]
+        },
+        "teacher_weighted_probability_score": {
+          "mean_delta": 0.0006493941232048059,
+          "sd": 7.997768538266342e-06,
+          "n_seeds": 8,
+          "ci95": [
+            0.0006427067588999196,
+            0.0006560814875096922
+          ]
+        },
+        "teacher_weighted_cross_entropy_nats": {
+          "mean_delta": 0.007540552826606428,
+          "sd": 0.00046288676131462595,
+          "n_seeds": 8,
+          "ci95": [
+            0.007153508316627291,
+            0.007927597336585566
+          ]
+        },
+        "mean_legal_move_entropy_nats": {
+          "mean_delta": -0.009620631853691608,
+          "sd": 0.0005330746043863458,
+          "n_seeds": 8,
+          "ci95": [
+            -0.010066364193175815,
+            -0.0091748995142074
+          ]
+        }
+      },
+      "weak": {
+        "teacher_topk_probability_mass": {
+          "mean_delta": 0.007072945520243942,
+          "sd": 6.118203314332788e-05,
+          "n_seeds": 8,
+          "ci95": [
+            0.007021787932651172,
+            0.007124103107836712
+          ]
+        },
+        "teacher_best_probability_mass_tie_aware": {
+          "mean_delta": 0.0028259715364766843,
+          "sd": 3.637011247217791e-05,
+          "n_seeds": 8,
+          "ci95": [
+            0.002795560529863099,
+            0.0028563825430902696
+          ]
+        },
+        "teacher_weighted_probability_score": {
+          "mean_delta": 0.0013062596004333495,
+          "sd": 1.0170214237786895e-05,
+          "n_seeds": 8,
+          "ci95": [
+            0.0012977557374693977,
+            0.0013147634633973013
+          ]
+        },
+        "teacher_weighted_cross_entropy_nats": {
+          "mean_delta": -0.0036630604498387176,
+          "sd": 0.0004818182385829223,
+          "n_seeds": 8,
+          "ci95": [
+            -0.004065934585883805,
+            -0.0032601863137936304
+          ]
+        },
+        "mean_legal_move_entropy_nats": {
+          "mean_delta": -0.009620631853691608,
+          "sd": 0.0005330746043863458,
+          "n_seeds": 8,
+          "ci95": [
+            -0.010066364193175815,
+            -0.0091748995142074
+          ]
+        }
+      }
+    },
+    "true": {
+      "stockfish": {
+        "teacher_topk_probability_mass": {
+          "mean_delta": 0.002924530009218558,
+          "sd": 3.85871402531963e-05,
+          "n_seeds": 8,
+          "ci95": [
+            0.0028922652264704437,
+            0.0029567947919666724
+          ]
+        },
+        "teacher_best_probability_mass_tie_aware": {
+          "mean_delta": 0.0012255324018775916,
+          "sd": 1.3516103196629902e-05,
+          "n_seeds": 8,
+          "ci95": [
+            0.0012142308612508737,
+            0.0012368339425043095
+          ]
+        },
+        "teacher_weighted_probability_score": {
+          "mean_delta": 0.0006460149285675036,
+          "sd": 8.216359518921683e-06,
+          "n_seeds": 8,
+          "ci95": [
+            0.0006391447885903268,
+            0.0006528850685446803
+          ]
+        },
+        "teacher_weighted_cross_entropy_nats": {
+          "mean_delta": 0.002787950243529458,
+          "sd": 0.0002900600043954644,
+          "n_seeds": 8,
+          "ci95": [
+            0.002545415477689652,
+            0.003030485009369264
+          ]
+        },
+        "mean_legal_move_entropy_nats": {
+          "mean_delta": -0.007049683589378908,
+          "sd": 0.000258930481779632,
+          "n_seeds": 8,
+          "ci95": [
+            -0.007266189287564001,
+            -0.006833177891193814
+          ]
+        }
+      },
+      "weak": {
+        "teacher_topk_probability_mass": {
+          "mean_delta": 0.004420458421828755,
+          "sd": 3.9565331282924695e-05,
+          "n_seeds": 8,
+          "ci95": [
+            0.0043873757209645725,
+            0.004453541122692937
+          ]
+        },
+        "teacher_best_probability_mass_tie_aware": {
+          "mean_delta": 0.0014791122731369864,
+          "sd": 1.613261314304605e-05,
+          "n_seeds": 8,
+          "ci95": [
+            0.0014656229278575928,
+            0.00149260161841638
+          ]
+        },
+        "teacher_weighted_probability_score": {
+          "mean_delta": 0.0009061547071369958,
+          "sd": 7.13756371813583e-06,
+          "n_seeds": 8,
+          "ci95": [
+            0.0009001866063343612,
+            0.0009121228079396305
+          ]
+        },
+        "teacher_weighted_cross_entropy_nats": {
+          "mean_delta": 0.0016752237840751971,
+          "sd": 0.0002737623743426645,
+          "n_seeds": 8,
+          "ci95": [
+            0.0014463163430257834,
+            0.0019041312251246109
+          ]
+        },
+        "mean_legal_move_entropy_nats": {
+          "mean_delta": -0.007049683589378908,
+          "sd": 0.000258930481779632,
+          "n_seeds": 8,
+          "ci95": [
+            -0.007266189287564001,
+            -0.006833177891193814
+          ]
+        }
+      }
+    }
+  },
+  "table": {
+    "0": {
+      "weak": {
+        "stockfish": {
+          "teacher_topk_probability_mass": 0.19214120144695554,
+          "teacher_best_probability_mass_tie_aware": 0.042662583798727435,
+          "teacher_weighted_probability_score": 0.03973664787915719,
+          "teacher_weighted_cross_entropy_nats": 3.632920271840053,
+          "mean_legal_move_entropy_nats": 3.1282206243932675
+        },
+        "weak": {
+          "teacher_topk_probability_mass": 0.1890659344506719,
+          "teacher_best_probability_mass_tie_aware": 0.04287634592382205,
+          "teacher_weighted_probability_score": 0.038546218014541125,
+          "teacher_weighted_cross_entropy_nats": 3.665050032997264,
+          "mean_legal_move_entropy_nats": 3.1282206243932675
+        }
+      },
+      "true": {
+        "stockfish": {
+          "teacher_topk_probability_mass": 0.19214120144695554,
+          "teacher_best_probability_mass_tie_aware": 0.042662583798727435,
+          "teacher_weighted_probability_score": 0.03973664787915719,
+          "teacher_weighted_cross_entropy_nats": 3.632920271840053,
+          "mean_legal_move_entropy_nats": 3.1282206243932675
+        },
+        "weak": {
+          "teacher_topk_probability_mass": 0.1890659344506719,
+          "teacher_best_probability_mass_tie_aware": 0.04287634592382205,
+          "teacher_weighted_probability_score": 0.038546218014541125,
+          "teacher_weighted_cross_entropy_nats": 3.665050032997264,
+          "mean_legal_move_entropy_nats": 3.1282206243932675
+        }
+      }
+    },
+    "125": {
+      "weak": {
+        "stockfish": {
+          "teacher_topk_probability_mass": 0.1934951340019334,
+          "teacher_best_probability_mass_tie_aware": 0.04316796564431283,
+          "teacher_weighted_probability_score": 0.04002715074867609,
+          "teacher_weighted_cross_entropy_nats": 3.6289060004637754,
+          "mean_legal_move_entropy_nats": 3.128280881454223
+        },
+        "weak": {
+          "teacher_topk_probability_mass": 0.19155041493191843,
+          "teacher_best_probability_mass_tie_aware": 0.043788954366553834,
+          "teacher_weighted_probability_score": 0.039005362310686534,
+          "teacher_weighted_cross_entropy_nats": 3.6575891065518578,
+          "mean_legal_move_entropy_nats": 3.128280881454223
+        }
+      },
+      "true": {
+        "stockfish": {
+          "teacher_topk_probability_mass": 0.19310245245592225,
+          "teacher_best_probability_mass_tie_aware": 0.04309656702196068,
+          "teacher_weighted_probability_score": 0.03997537154103582,
+          "teacher_weighted_cross_entropy_nats": 3.6298925703714207,
+          "mean_legal_move_entropy_nats": 3.1279840461274637
+        },
+        "weak": {
+          "teacher_topk_probability_mass": 0.19037543139279445,
+          "teacher_best_probability_mass_tie_aware": 0.043309814740495375,
+          "teacher_weighted_probability_score": 0.03880816365099661,
+          "teacher_weighted_cross_entropy_nats": 3.6620904419764986,
+          "mean_legal_move_entropy_nats": 3.1279840461274637
+        }
+      }
+    },
+    "250": {
+      "weak": {
+        "stockfish": {
+          "teacher_topk_probability_mass": 0.19427260268638297,
+          "teacher_best_probability_mass_tie_aware": 0.04364336043481283,
+          "teacher_weighted_probability_score": 0.040234806992721514,
+          "teacher_weighted_cross_entropy_nats": 3.629747491390966,
+          "mean_legal_move_entropy_nats": 3.126343986900058
+        },
+        "weak": {
+          "teacher_topk_probability_mass": 0.19305155262280363,
+          "teacher_best_probability_mass_tie_aware": 0.04442909864716754,
+          "teacher_weighted_probability_score": 0.03934219417351949,
+          "teacher_weighted_cross_entropy_nats": 3.6560685611109305,
+          "mean_legal_move_entropy_nats": 3.126343986900058
+        }
+      },
+      "true": {
+        "stockfish": {
+          "teacher_topk_probability_mass": 0.19354499689134308,
+          "teacher_best_probability_mass_tie_aware": 0.04350594719608103,
+          "teacher_weighted_probability_score": 0.040140747903314705,
+          "teacher_weighted_cross_entropy_nats": 3.630551829416011,
+          "mean_legal_move_entropy_nats": 3.12609413877123
+        },
+        "weak": {
+          "teacher_topk_probability_mass": 0.19115589517603204,
+          "teacher_best_probability_mass_tie_aware": 0.04365991488609579,
+          "teacher_weighted_probability_score": 0.03901111277640935,
+          "teacher_weighted_cross_entropy_nats": 3.6630204200797754,
+          "mean_legal_move_entropy_nats": 3.12609413877123
+        }
+      }
+    },
+    "500": {
+      "weak": {
+        "stockfish": {
+          "teacher_topk_probability_mass": 0.19561020683984137,
+          "teacher_best_probability_mass_tie_aware": 0.04399142485149076,
+          "teacher_weighted_probability_score": 0.040386042002361996,
+          "teacher_weighted_cross_entropy_nats": 3.6404608246666594,
+          "mean_legal_move_entropy_nats": 3.1185999925395764
+        },
+        "weak": {
+          "teacher_topk_probability_mass": 0.19613887997091584,
+          "teacher_best_probability_mass_tie_aware": 0.045702317460298736,
+          "teacher_weighted_probability_score": 0.039852477614974485,
+          "teacher_weighted_cross_entropy_nats": 3.661386972547425,
+          "mean_legal_move_entropy_nats": 3.1185999925395764
+        }
+      },
+      "true": {
+        "stockfish": {
+          "teacher_topk_probability_mass": 0.1950657314561741,
+          "teacher_best_probability_mass_tie_aware": 0.043888116200605023,
+          "teacher_weighted_probability_score": 0.04038266280772469,
+          "teacher_weighted_cross_entropy_nats": 3.635708222083583,
+          "mean_legal_move_entropy_nats": 3.121170940803889
+        },
+        "weak": {
+          "teacher_topk_probability_mass": 0.19348639287250066,
+          "teacher_best_probability_mass_tie_aware": 0.04435545819695904,
+          "teacher_weighted_probability_score": 0.03945237272167812,
+          "teacher_weighted_cross_entropy_nats": 3.666725256781339,
+          "mean_legal_move_entropy_nats": 3.121170940803889
+        }
+      }
+    }
+  },
+  "per_seed": {
+    "weak": [
+      {
+        "training_seed": 101,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19225828473156403,
+              "teacher_best_probability_mass_tie_aware": 0.042776123444216975,
+              "teacher_weighted_probability_score": 0.039805747067912456,
+              "teacher_weighted_cross_entropy_nats": 3.6303071654397554,
+              "mean_legal_move_entropy_nats": 3.1281268619042555
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.18939315880784888,
+              "teacher_best_probability_mass_tie_aware": 0.0427730115612841,
+              "teacher_weighted_probability_score": 0.03858767473018627,
+              "teacher_weighted_cross_entropy_nats": 3.663200817871743,
+              "mean_legal_move_entropy_nats": 3.1281268619042555
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19360121682462722,
+              "teacher_best_probability_mass_tie_aware": 0.04328228855340954,
+              "teacher_weighted_probability_score": 0.04009639877863986,
+              "teacher_weighted_cross_entropy_nats": 3.6263074359125613,
+              "mean_legal_move_entropy_nats": 3.128192280265643
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19186581867700317,
+              "teacher_best_probability_mass_tie_aware": 0.04367611607511475,
+              "teacher_weighted_probability_score": 0.03904555036544896,
+              "teacher_weighted_cross_entropy_nats": 3.6557381716316426,
+              "mean_legal_move_entropy_nats": 3.128192280265643
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1943734073044336,
+              "teacher_best_probability_mass_tie_aware": 0.043758250714715535,
+              "teacher_weighted_probability_score": 0.040304213132356895,
+              "teacher_weighted_cross_entropy_nats": 3.627173384028102,
+              "mean_legal_move_entropy_nats": 3.1262900103373736
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.193364319315939,
+              "teacher_best_probability_mass_tie_aware": 0.044310368912223744,
+              "teacher_weighted_probability_score": 0.039382599214887334,
+              "teacher_weighted_cross_entropy_nats": 3.6542380298783996,
+              "mean_legal_move_entropy_nats": 3.1262900103373736
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19566302467350494,
+              "teacher_best_probability_mass_tie_aware": 0.04409973964132747,
+              "teacher_weighted_probability_score": 0.04044648223270998,
+              "teacher_weighted_cross_entropy_nats": 3.637655009374531,
+              "mean_legal_move_entropy_nats": 3.118937282193259
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19639836639713082,
+              "teacher_best_probability_mass_tie_aware": 0.04556522820512804,
+              "teacher_weighted_probability_score": 0.0398838823282527,
+              "teacher_weighted_cross_entropy_nats": 3.659318632722126,
+              "mean_legal_move_entropy_nats": 3.118937282193259
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 102,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19235732761345978,
+              "teacher_best_probability_mass_tie_aware": 0.04267320557717369,
+              "teacher_weighted_probability_score": 0.03977766410177427,
+              "teacher_weighted_cross_entropy_nats": 3.6330701258550544,
+              "mean_legal_move_entropy_nats": 3.1280741238504097
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.18915383269065517,
+              "teacher_best_probability_mass_tie_aware": 0.04291528693355485,
+              "teacher_weighted_probability_score": 0.038602518557811424,
+              "teacher_weighted_cross_entropy_nats": 3.6644428256785178,
+              "mean_legal_move_entropy_nats": 3.1280741238504097
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19369958045873906,
+              "teacher_best_probability_mass_tie_aware": 0.043176830080445955,
+              "teacher_weighted_probability_score": 0.040063166792114434,
+              "teacher_weighted_cross_entropy_nats": 3.6291507691885068,
+              "mean_legal_move_entropy_nats": 3.12808931620929
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19163112624030515,
+              "teacher_best_probability_mass_tie_aware": 0.04382362978970604,
+              "teacher_weighted_probability_score": 0.039059035602005104,
+              "teacher_weighted_cross_entropy_nats": 3.6570707596018632,
+              "mean_legal_move_entropy_nats": 3.12808931620929
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19447037161756023,
+              "teacher_best_probability_mass_tie_aware": 0.043655733258014404,
+              "teacher_weighted_probability_score": 0.04026915814333813,
+              "teacher_weighted_cross_entropy_nats": 3.630117556660717,
+              "mean_legal_move_entropy_nats": 3.125976204492141
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19313526416590066,
+              "teacher_best_probability_mass_tie_aware": 0.04446784828153567,
+              "teacher_weighted_probability_score": 0.03939638717376412,
+              "teacher_weighted_cross_entropy_nats": 3.655672829014181,
+              "mean_legal_move_entropy_nats": 3.125976204492141
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19579585892065351,
+              "teacher_best_probability_mass_tie_aware": 0.04399565666694526,
+              "teacher_weighted_probability_score": 0.04041723414253525,
+              "teacher_weighted_cross_entropy_nats": 3.6408872156298058,
+              "mean_legal_move_entropy_nats": 3.1181582407280084
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1962100478759659,
+              "teacher_best_probability_mass_tie_aware": 0.045726043413738114,
+              "teacher_weighted_probability_score": 0.03990464515688751,
+              "teacher_weighted_cross_entropy_nats": 3.661068947870022,
+              "mean_legal_move_entropy_nats": 3.1181582407280084
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 103,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19233883819406158,
+              "teacher_best_probability_mass_tie_aware": 0.04278010897927626,
+              "teacher_weighted_probability_score": 0.03982360795273611,
+              "teacher_weighted_cross_entropy_nats": 3.629293970880748,
+              "mean_legal_move_entropy_nats": 3.1287680555616895
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.18940897898299353,
+              "teacher_best_probability_mass_tie_aware": 0.04289707958851015,
+              "teacher_weighted_probability_score": 0.03862011881945313,
+              "teacher_weighted_cross_entropy_nats": 3.6607963107303743,
+              "mean_legal_move_entropy_nats": 3.1287680555616895
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19370095958701666,
+              "teacher_best_probability_mass_tie_aware": 0.04328207517044024,
+              "teacher_weighted_probability_score": 0.040117113568988415,
+              "teacher_weighted_cross_entropy_nats": 3.6252305756287715,
+              "mean_legal_move_entropy_nats": 3.1288730123276913
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19190057515086656,
+              "teacher_best_probability_mass_tie_aware": 0.04381228646916713,
+              "teacher_weighted_probability_score": 0.039082520514702554,
+              "teacher_weighted_cross_entropy_nats": 3.6533001777911953,
+              "mean_legal_move_entropy_nats": 3.1288730123276913
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1944853865862077,
+              "teacher_best_probability_mass_tie_aware": 0.04375307991569691,
+              "teacher_weighted_probability_score": 0.04032611505781966,
+              "teacher_weighted_cross_entropy_nats": 3.6260709018019535,
+              "mean_legal_move_entropy_nats": 3.1270216817099104
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19339352404362736,
+              "teacher_best_probability_mass_tie_aware": 0.044452794597669244,
+              "teacher_weighted_probability_score": 0.039419018130004424,
+              "teacher_weighted_cross_entropy_nats": 3.651770449401192,
+              "mean_legal_move_entropy_nats": 3.1270216817099104
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19584357517379475,
+              "teacher_best_probability_mass_tie_aware": 0.0441025772587383,
+              "teacher_weighted_probability_score": 0.04048075099701569,
+              "teacher_weighted_cross_entropy_nats": 3.636906763858118,
+              "mean_legal_move_entropy_nats": 3.1193009889419345
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19649522551006454,
+              "teacher_best_probability_mass_tie_aware": 0.045740040938124726,
+              "teacher_weighted_probability_score": 0.039933071411283785,
+              "teacher_weighted_cross_entropy_nats": 3.6571747955046527,
+              "mean_legal_move_entropy_nats": 3.1193009889419345
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 104,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19202064844728167,
+              "teacher_best_probability_mass_tie_aware": 0.04245623841414161,
+              "teacher_weighted_probability_score": 0.03958418976468152,
+              "teacher_weighted_cross_entropy_nats": 3.6344765555567227,
+              "mean_legal_move_entropy_nats": 3.1288347606894957
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.18893716979023673,
+              "teacher_best_probability_mass_tie_aware": 0.042615767056113585,
+              "teacher_weighted_probability_score": 0.038457398078634464,
+              "teacher_weighted_cross_entropy_nats": 3.6660447422996487,
+              "mean_legal_move_entropy_nats": 3.1288347606894957
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19337334318669197,
+              "teacher_best_probability_mass_tie_aware": 0.04297489671475388,
+              "teacher_weighted_probability_score": 0.03987320065436087,
+              "teacher_weighted_cross_entropy_nats": 3.630437212459662,
+              "mean_legal_move_entropy_nats": 3.1288508831352617
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19141995844648496,
+              "teacher_best_probability_mass_tie_aware": 0.043535691167462295,
+              "teacher_weighted_probability_score": 0.03891521442338175,
+              "teacher_weighted_cross_entropy_nats": 3.6585577047873477,
+              "mean_legal_move_entropy_nats": 3.1288508831352617
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19415469900770724,
+              "teacher_best_probability_mass_tie_aware": 0.04345559107859598,
+              "teacher_weighted_probability_score": 0.04007954735241917,
+              "teacher_weighted_cross_entropy_nats": 3.63138081021965,
+              "mean_legal_move_entropy_nats": 3.1267797698729582
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1929257374401755,
+              "teacher_best_probability_mass_tie_aware": 0.04417800684392347,
+              "teacher_weighted_probability_score": 0.0392507327595772,
+              "teacher_weighted_cross_entropy_nats": 3.657137653122171,
+              "mean_legal_move_entropy_nats": 3.1267797698729582
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19548311583624736,
+              "teacher_best_probability_mass_tie_aware": 0.043823019460241294,
+              "teacher_weighted_probability_score": 0.04022908202341893,
+              "teacher_weighted_cross_entropy_nats": 3.6423974045416196,
+              "mean_legal_move_entropy_nats": 3.1186524728997504
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19602584571863396,
+              "teacher_best_probability_mass_tie_aware": 0.04547038868552727,
+              "teacher_weighted_probability_score": 0.039760640678815365,
+              "teacher_weighted_cross_entropy_nats": 3.66272750429029,
+              "mean_legal_move_entropy_nats": 3.1186524728997504
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 105,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19220983993841273,
+              "teacher_best_probability_mass_tie_aware": 0.04249455508423966,
+              "teacher_weighted_probability_score": 0.03967053112382306,
+              "teacher_weighted_cross_entropy_nats": 3.6349457110141916,
+              "mean_legal_move_entropy_nats": 3.127347328454343
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1889206484723252,
+              "teacher_best_probability_mass_tie_aware": 0.04298679827624517,
+              "teacher_weighted_probability_score": 0.0384694496422017,
+              "teacher_weighted_cross_entropy_nats": 3.6675488170082957,
+              "mean_legal_move_entropy_nats": 3.127347328454343
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19358215063260087,
+              "teacher_best_probability_mass_tie_aware": 0.04300845388407834,
+              "teacher_weighted_probability_score": 0.039963139688308454,
+              "teacher_weighted_cross_entropy_nats": 3.6312412546319957,
+              "mean_legal_move_entropy_nats": 3.1271250546686673
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19143357606657832,
+              "teacher_best_probability_mass_tie_aware": 0.04391440788182967,
+              "teacher_weighted_probability_score": 0.03893232760392223,
+              "teacher_weighted_cross_entropy_nats": 3.660385659238198,
+              "mean_legal_move_entropy_nats": 3.1271250546686673
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19436983929203702,
+              "teacher_best_probability_mass_tie_aware": 0.04349363170025639,
+              "teacher_weighted_probability_score": 0.04017448533760119,
+              "teacher_weighted_cross_entropy_nats": 3.6321423953401037,
+              "mean_legal_move_entropy_nats": 3.1250406015098857
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19295928914323215,
+              "teacher_best_probability_mass_tie_aware": 0.044568157615110876,
+              "teacher_weighted_probability_score": 0.03927355794500461,
+              "teacher_weighted_cross_entropy_nats": 3.658956953827929,
+              "mean_legal_move_entropy_nats": 3.1250406015098857
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1957410713735358,
+              "teacher_best_probability_mass_tie_aware": 0.043849954921490575,
+              "teacher_weighted_probability_score": 0.04033108865430821,
+              "teacher_weighted_cross_entropy_nats": 3.643147768333791,
+              "mean_legal_move_entropy_nats": 3.116869792055395
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19608925232249946,
+              "teacher_best_probability_mass_tie_aware": 0.045850768480617796,
+              "teacher_weighted_probability_score": 0.03979029028608351,
+              "teacher_weighted_cross_entropy_nats": 3.664577794283429,
+              "mean_legal_move_entropy_nats": 3.116869792055395
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 106,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19165543973689195,
+              "teacher_best_probability_mass_tie_aware": 0.04243612375977588,
+              "teacher_weighted_probability_score": 0.03959200328341066,
+              "teacher_weighted_cross_entropy_nats": 3.6361102200492286,
+              "mean_legal_move_entropy_nats": 3.128457332582776
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.18871776555698064,
+              "teacher_best_probability_mass_tie_aware": 0.04260711816945867,
+              "teacher_weighted_probability_score": 0.03842256657573981,
+              "teacher_weighted_cross_entropy_nats": 3.668362454009695,
+              "mean_legal_move_entropy_nats": 3.128457332582776
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19299616793741364,
+              "teacher_best_probability_mass_tie_aware": 0.0429273140498376,
+              "teacher_weighted_probability_score": 0.039880636222499516,
+              "teacher_weighted_cross_entropy_nats": 3.631827178559523,
+              "mean_legal_move_entropy_nats": 3.128792063347558
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19117639766369515,
+              "teacher_best_probability_mass_tie_aware": 0.043499012130330604,
+              "teacher_weighted_probability_score": 0.038877401729890945,
+              "teacher_weighted_cross_entropy_nats": 3.660601969267943,
+              "mean_legal_move_entropy_nats": 3.128792063347558
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19376627850815406,
+              "teacher_best_probability_mass_tie_aware": 0.04339239272590906,
+              "teacher_weighted_probability_score": 0.04008597498277134,
+              "teacher_weighted_cross_entropy_nats": 3.632551373127847,
+              "mean_legal_move_entropy_nats": 3.1269752291009185
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19265709382761304,
+              "teacher_best_probability_mass_tie_aware": 0.044124323465527956,
+              "teacher_weighted_probability_score": 0.03921026735649687,
+              "teacher_weighted_cross_entropy_nats": 3.6589223404686892,
+              "mean_legal_move_entropy_nats": 3.1269752291009185
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1950871346444401,
+              "teacher_best_probability_mass_tie_aware": 0.04372384439251601,
+              "teacher_weighted_probability_score": 0.04023644977958348,
+              "teacher_weighted_cross_entropy_nats": 3.642955397760832,
+              "mean_legal_move_entropy_nats": 3.1195229338147916
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19569229048398878,
+              "teacher_best_probability_mass_tie_aware": 0.04536452825650746,
+              "teacher_weighted_probability_score": 0.039712681863847604,
+              "teacher_weighted_cross_entropy_nats": 3.663913991515831,
+              "mean_legal_move_entropy_nats": 3.1195229338147916
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 107,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19219903871652066,
+              "teacher_best_probability_mass_tie_aware": 0.04272039241268121,
+              "teacher_weighted_probability_score": 0.03977605004081166,
+              "teacher_weighted_cross_entropy_nats": 3.632307686627261,
+              "mean_legal_move_entropy_nats": 3.1285256666371186
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1891407102235795,
+              "teacher_best_probability_mass_tie_aware": 0.04297575321151962,
+              "teacher_weighted_probability_score": 0.038578154014237045,
+              "teacher_weighted_cross_entropy_nats": 3.6647298440160903,
+              "mean_legal_move_entropy_nats": 3.1285256666371186
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19357108070561507,
+              "teacher_best_probability_mass_tie_aware": 0.043226256217470775,
+              "teacher_weighted_probability_score": 0.04006868772559981,
+              "teacher_weighted_cross_entropy_nats": 3.628373422208397,
+              "mean_legal_move_entropy_nats": 3.1285437077002913
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19164301047636617,
+              "teacher_best_probability_mass_tie_aware": 0.04389805328055116,
+              "teacher_weighted_probability_score": 0.03903957235343791,
+              "teacher_weighted_cross_entropy_nats": 3.6573572582614124,
+              "mean_legal_move_entropy_nats": 3.1285437077002913
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19435454275148883,
+              "teacher_best_probability_mass_tie_aware": 0.043699946756423635,
+              "teacher_weighted_probability_score": 0.04027625738643521,
+              "teacher_weighted_cross_entropy_nats": 3.6291842205454627,
+              "mean_legal_move_entropy_nats": 3.126706814919818
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1931507350421065,
+              "teacher_best_probability_mass_tie_aware": 0.044539490203869964,
+              "teacher_weighted_probability_score": 0.03937711885353343,
+              "teacher_weighted_cross_entropy_nats": 3.6558155217142243,
+              "mean_legal_move_entropy_nats": 3.126706814919818
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19571160350481323,
+              "teacher_best_probability_mass_tie_aware": 0.04405155077266497,
+              "teacher_weighted_probability_score": 0.040431709925101283,
+              "teacher_weighted_cross_entropy_nats": 3.6399044101667997,
+              "mean_legal_move_entropy_nats": 3.118934353769901
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19625652658681453,
+              "teacher_best_probability_mass_tie_aware": 0.045824157069246474,
+              "teacher_weighted_probability_score": 0.03989216648033778,
+              "teacher_weighted_cross_entropy_nats": 3.661208818819697,
+              "mean_legal_move_entropy_nats": 3.118934353769901
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 108,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19209019419745182,
+              "teacher_best_probability_mass_tie_aware": 0.04296392271831421,
+              "teacher_weighted_probability_score": 0.03986338969810778,
+              "teacher_weighted_cross_entropy_nats": 3.6328507392974636,
+              "mean_legal_move_entropy_nats": 3.1276308654660534
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1888552110807556,
+              "teacher_best_probability_mass_tie_aware": 0.043239952593890296,
+              "teacher_weighted_probability_score": 0.038631863698065205,
+              "teacher_weighted_cross_entropy_nats": 3.665274452363747,
+              "mean_legal_move_entropy_nats": 3.1276308654660534
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1934365726827629,
+              "teacher_best_probability_mass_tie_aware": 0.043465610484066275,
+              "teacher_weighted_probability_score": 0.04015486255889738,
+              "teacher_weighted_cross_entropy_nats": 3.6286801551207866,
+              "mean_legal_move_entropy_nats": 3.1277807339793826
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19133285673404782,
+              "teacher_best_probability_mass_tie_aware": 0.04415243813826901,
+              "teacher_weighted_probability_score": 0.03909127589270283,
+              "teacher_weighted_cross_entropy_nats": 3.657701151835261,
+              "mean_legal_move_entropy_nats": 3.1277807339793826
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19420629642347514,
+              "teacher_best_probability_mass_tie_aware": 0.04393825732889074,
+              "teacher_weighted_probability_score": 0.04036270454903053,
+              "teacher_weighted_cross_entropy_nats": 3.6293592894038933,
+              "mean_legal_move_entropy_nats": 3.125961583257462
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19282645800383474,
+              "teacher_best_probability_mass_tie_aware": 0.04479179925747942,
+              "teacher_weighted_probability_score": 0.039427871954887915,
+              "teacher_weighted_cross_entropy_nats": 3.6560347114606557,
+              "mean_legal_move_entropy_nats": 3.125961583257462
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19555627059174133,
+              "teacher_best_probability_mass_tie_aware": 0.04428505569800223,
+              "teacher_weighted_probability_score": 0.04051553826422312,
+              "teacher_weighted_cross_entropy_nats": 3.6398326276677793,
+              "mean_legal_move_entropy_nats": 3.118423875913569
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19594348487222876,
+              "teacher_best_probability_mass_tie_aware": 0.046077384633500036,
+              "teacher_weighted_probability_score": 0.03994244271428758,
+              "teacher_weighted_cross_entropy_nats": 3.6611052953733543,
+              "mean_legal_move_entropy_nats": 3.118423875913569
+            }
+          }
+        }
+      }
+    ],
+    "true": [
+      {
+        "training_seed": 101,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19225828473156403,
+              "teacher_best_probability_mass_tie_aware": 0.042776123444216975,
+              "teacher_weighted_probability_score": 0.039805747067912456,
+              "teacher_weighted_cross_entropy_nats": 3.6303071654397554,
+              "mean_legal_move_entropy_nats": 3.1281268619042555
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.18939315880784888,
+              "teacher_best_probability_mass_tie_aware": 0.0427730115612841,
+              "teacher_weighted_probability_score": 0.03858767473018627,
+              "teacher_weighted_cross_entropy_nats": 3.663200817871743,
+              "mean_legal_move_entropy_nats": 3.1281268619042555
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19320922020052755,
+              "teacher_best_probability_mass_tie_aware": 0.04321310756303402,
+              "teacher_weighted_probability_score": 0.040043953219889,
+              "teacher_weighted_cross_entropy_nats": 3.6272793413901008,
+              "mean_legal_move_entropy_nats": 3.127927093795635
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1907023324184432,
+              "teacher_best_probability_mass_tie_aware": 0.0432054896712364,
+              "teacher_weighted_probability_score": 0.03885124251518528,
+              "teacher_weighted_cross_entropy_nats": 3.660224603902314,
+              "mean_legal_move_entropy_nats": 3.127927093795635
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19364305843536483,
+              "teacher_best_probability_mass_tie_aware": 0.04362242392921696,
+              "teacher_weighted_probability_score": 0.040208795514398064,
+              "teacher_weighted_cross_entropy_nats": 3.6279674845598007,
+              "mean_legal_move_entropy_nats": 3.1259964061709296
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19148270624352806,
+              "teacher_best_probability_mass_tie_aware": 0.04355019254889006,
+              "teacher_weighted_probability_score": 0.039055027684914645,
+              "teacher_weighted_cross_entropy_nats": 3.6611978062475004,
+              "mean_legal_move_entropy_nats": 3.1259964061709296
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1951336013181896,
+              "teacher_best_probability_mass_tie_aware": 0.0439958770255475,
+              "teacher_weighted_probability_score": 0.04044310363028046,
+              "teacher_weighted_cross_entropy_nats": 3.6329499925025215,
+              "mean_legal_move_entropy_nats": 3.121323131661864
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19378503868279345,
+              "teacher_best_probability_mass_tie_aware": 0.044229772577941195,
+              "teacher_weighted_probability_score": 0.039489431205999084,
+              "teacher_weighted_cross_entropy_nats": 3.664749395977618,
+              "mean_legal_move_entropy_nats": 3.121323131661864
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 102,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19235732761345978,
+              "teacher_best_probability_mass_tie_aware": 0.04267320557717369,
+              "teacher_weighted_probability_score": 0.03977766410177427,
+              "teacher_weighted_cross_entropy_nats": 3.6330701258550544,
+              "mean_legal_move_entropy_nats": 3.1280741238504097
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.18915383269065517,
+              "teacher_best_probability_mass_tie_aware": 0.04291528693355485,
+              "teacher_weighted_probability_score": 0.038602518557811424,
+              "teacher_weighted_cross_entropy_nats": 3.6644428256785178,
+              "mean_legal_move_entropy_nats": 3.1280741238504097
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19330464093036123,
+              "teacher_best_probability_mass_tie_aware": 0.04310497278178702,
+              "teacher_weighted_probability_score": 0.04001187419684431,
+              "teacher_weighted_cross_entropy_nats": 3.6301532420883755,
+              "mean_legal_move_entropy_nats": 3.1277378608440487
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19045344282473792,
+              "teacher_best_probability_mass_tie_aware": 0.0433455083281834,
+              "teacher_weighted_probability_score": 0.03886120132325468,
+              "teacher_weighted_cross_entropy_nats": 3.661576495761112,
+              "mean_legal_move_entropy_nats": 3.1277378608440487
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1937369991184288,
+              "teacher_best_probability_mass_tie_aware": 0.043510352983673506,
+              "teacher_weighted_probability_score": 0.04017249381496636,
+              "teacher_weighted_cross_entropy_nats": 3.6309483640505134,
+              "mean_legal_move_entropy_nats": 3.125724330748591
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1912224640927402,
+              "teacher_best_probability_mass_tie_aware": 0.043691405651209256,
+              "teacher_weighted_probability_score": 0.03906035627041437,
+              "teacher_weighted_cross_entropy_nats": 3.662631459229094,
+              "mean_legal_move_entropy_nats": 3.125724330748591
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1952587431526136,
+              "teacher_best_probability_mass_tie_aware": 0.04389640167286245,
+              "teacher_weighted_probability_score": 0.040414465792310686,
+              "teacher_weighted_cross_entropy_nats": 3.6362908891962937,
+              "mean_legal_move_entropy_nats": 3.1205958439324037
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19354873511817566,
+              "teacher_best_probability_mass_tie_aware": 0.0443949092971227,
+              "teacher_weighted_probability_score": 0.03950167504515564,
+              "teacher_weighted_cross_entropy_nats": 3.666519018139929,
+              "mean_legal_move_entropy_nats": 3.1205958439324037
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 103,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19233883819406158,
+              "teacher_best_probability_mass_tie_aware": 0.04278010897927626,
+              "teacher_weighted_probability_score": 0.03982360795273611,
+              "teacher_weighted_cross_entropy_nats": 3.629293970880748,
+              "mean_legal_move_entropy_nats": 3.1287680555616895
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.18940897898299353,
+              "teacher_best_probability_mass_tie_aware": 0.04289707958851015,
+              "teacher_weighted_probability_score": 0.03862011881945313,
+              "teacher_weighted_cross_entropy_nats": 3.6607963107303743,
+              "mean_legal_move_entropy_nats": 3.1287680555616895
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19331415602967858,
+              "teacher_best_probability_mass_tie_aware": 0.043213618565791076,
+              "teacher_weighted_probability_score": 0.04006510198718252,
+              "teacher_weighted_cross_entropy_nats": 3.6262469425122097,
+              "mean_legal_move_entropy_nats": 3.1285573275526124
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19072654681836498,
+              "teacher_best_probability_mass_tie_aware": 0.04333357880671737,
+              "teacher_weighted_probability_score": 0.0388844349738669,
+              "teacher_weighted_cross_entropy_nats": 3.6578235578923666,
+              "mean_legal_move_entropy_nats": 3.1285573275526124
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19376742362742888,
+              "teacher_best_probability_mass_tie_aware": 0.04362322880007631,
+              "teacher_weighted_probability_score": 0.0402331116084483,
+              "teacher_weighted_cross_entropy_nats": 3.6269641004707527,
+              "mean_legal_move_entropy_nats": 3.1266676427752182
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19151280918849004,
+              "teacher_best_probability_mass_tie_aware": 0.04369043774485934,
+              "teacher_weighted_probability_score": 0.0390894256070783,
+              "teacher_weighted_cross_entropy_nats": 3.6588003368372615,
+              "mean_legal_move_entropy_nats": 3.1266676427752182
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19530958588835912,
+              "teacher_best_probability_mass_tie_aware": 0.04400426277689302,
+              "teacher_weighted_probability_score": 0.04048127104279315,
+              "teacher_weighted_cross_entropy_nats": 3.6322542333582826,
+              "mean_legal_move_entropy_nats": 3.1216118284546255
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1938599760343119,
+              "teacher_best_probability_mass_tie_aware": 0.04439689211491428,
+              "teacher_weighted_probability_score": 0.039536378397124525,
+              "teacher_weighted_cross_entropy_nats": 3.6626187169273807,
+              "mean_legal_move_entropy_nats": 3.1216118284546255
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 104,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19202064844728167,
+              "teacher_best_probability_mass_tie_aware": 0.04245623841414161,
+              "teacher_weighted_probability_score": 0.03958418976468152,
+              "teacher_weighted_cross_entropy_nats": 3.6344765555567227,
+              "mean_legal_move_entropy_nats": 3.1288347606894957
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.18893716979023673,
+              "teacher_best_probability_mass_tie_aware": 0.042615767056113585,
+              "teacher_weighted_probability_score": 0.038457398078634464,
+              "teacher_weighted_cross_entropy_nats": 3.6660447422996487,
+              "mean_legal_move_entropy_nats": 3.1288347606894957
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.192987399979103,
+              "teacher_best_probability_mass_tie_aware": 0.04289983510326645,
+              "teacher_weighted_probability_score": 0.039822094051902554,
+              "teacher_weighted_cross_entropy_nats": 3.6313473064296966,
+              "mean_legal_move_entropy_nats": 3.128586763908349
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19024551966667386,
+              "teacher_best_probability_mass_tie_aware": 0.04305664087205653,
+              "teacher_weighted_probability_score": 0.038718133032903404,
+              "teacher_weighted_cross_entropy_nats": 3.6630220988506084,
+              "mean_legal_move_entropy_nats": 3.128586763908349
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19342622622770916,
+              "teacher_best_probability_mass_tie_aware": 0.04331357633034806,
+              "teacher_weighted_probability_score": 0.03998486772722957,
+              "teacher_weighted_cross_entropy_nats": 3.6318490416192235,
+              "mean_legal_move_entropy_nats": 3.1267763713976144
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19102516763800842,
+              "teacher_best_probability_mass_tie_aware": 0.04340462181654296,
+              "teacher_weighted_probability_score": 0.038919257275229824,
+              "teacher_weighted_cross_entropy_nats": 3.663800172104688,
+              "mean_legal_move_entropy_nats": 3.1267763713976144
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19492152938160986,
+              "teacher_best_probability_mass_tie_aware": 0.04370862642126732,
+              "teacher_weighted_probability_score": 0.04022101978512038,
+              "teacher_weighted_cross_entropy_nats": 3.637135803993665,
+              "mean_legal_move_entropy_nats": 3.121701434668244
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19333621281429414,
+              "teacher_best_probability_mass_tie_aware": 0.044105252978842754,
+              "teacher_weighted_probability_score": 0.0393553485187405,
+              "teacher_weighted_cross_entropy_nats": 3.66759308529444,
+              "mean_legal_move_entropy_nats": 3.121701434668244
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 105,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19220983993841273,
+              "teacher_best_probability_mass_tie_aware": 0.04249455508423966,
+              "teacher_weighted_probability_score": 0.03967053112382306,
+              "teacher_weighted_cross_entropy_nats": 3.6349457110141916,
+              "mean_legal_move_entropy_nats": 3.127347328454343
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1889206484723252,
+              "teacher_best_probability_mass_tie_aware": 0.04298679827624517,
+              "teacher_weighted_probability_score": 0.0384694496422017,
+              "teacher_weighted_cross_entropy_nats": 3.6675488170082957,
+              "mean_legal_move_entropy_nats": 3.127347328454343
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19317904753880372,
+              "teacher_best_probability_mass_tie_aware": 0.04293435129775565,
+              "teacher_weighted_probability_score": 0.03990982335289877,
+              "teacher_weighted_cross_entropy_nats": 3.6320777276394596,
+              "mean_legal_move_entropy_nats": 3.1270035586113263
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19025119644000027,
+              "teacher_best_probability_mass_tie_aware": 0.04342386403314482,
+              "teacher_weighted_probability_score": 0.03873412553366875,
+              "teacher_weighted_cross_entropy_nats": 3.6646987090220744,
+              "mean_legal_move_entropy_nats": 3.1270035586113263
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1936213233962923,
+              "teacher_best_probability_mass_tie_aware": 0.04334134618375618,
+              "teacher_weighted_probability_score": 0.040074779667805906,
+              "teacher_weighted_cross_entropy_nats": 3.6327409825104384,
+              "mean_legal_move_entropy_nats": 3.125114967959696
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19103422867285233,
+              "teacher_best_probability_mass_tie_aware": 0.043772859708667566,
+              "teacher_weighted_probability_score": 0.03893651132555784,
+              "teacher_weighted_cross_entropy_nats": 3.665641432954188,
+              "mean_legal_move_entropy_nats": 3.125114967959696
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19516562664384496,
+              "teacher_best_probability_mass_tie_aware": 0.043730992310191306,
+              "teacher_weighted_probability_score": 0.04032135417325107,
+              "teacher_weighted_cross_entropy_nats": 3.6380082186315104,
+              "mean_legal_move_entropy_nats": 3.1200699874773794
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1934054817295972,
+              "teacher_best_probability_mass_tie_aware": 0.0444759339052711,
+              "teacher_weighted_probability_score": 0.03938367738838343,
+              "teacher_weighted_cross_entropy_nats": 3.6694486710414442,
+              "mean_legal_move_entropy_nats": 3.1200699874773794
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 106,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19165543973689195,
+              "teacher_best_probability_mass_tie_aware": 0.04243612375977588,
+              "teacher_weighted_probability_score": 0.03959200328341066,
+              "teacher_weighted_cross_entropy_nats": 3.6361102200492286,
+              "mean_legal_move_entropy_nats": 3.128457332582776
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.18871776555698064,
+              "teacher_best_probability_mass_tie_aware": 0.04260711816945867,
+              "teacher_weighted_probability_score": 0.03842256657573981,
+              "teacher_weighted_cross_entropy_nats": 3.668362454009695,
+              "mean_legal_move_entropy_nats": 3.128457332582776
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19261968310511413,
+              "teacher_best_probability_mass_tie_aware": 0.04286119783066827,
+              "teacher_weighted_probability_score": 0.039831446259605184,
+              "teacher_weighted_cross_entropy_nats": 3.6329037029887674,
+              "mean_legal_move_entropy_nats": 3.1283648421251007
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19002099855620508,
+              "teacher_best_probability_mass_tie_aware": 0.043036082019290156,
+              "teacher_weighted_probability_score": 0.03868373005538789,
+              "teacher_weighted_cross_entropy_nats": 3.665215823052127,
+              "mean_legal_move_entropy_nats": 3.1283648421251007
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19307297548522317,
+              "teacher_best_probability_mass_tie_aware": 0.04327172994399492,
+              "teacher_weighted_probability_score": 0.03999854422679616,
+              "teacher_weighted_cross_entropy_nats": 3.6334837053581808,
+              "mean_legal_move_entropy_nats": 3.126532627522667
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19080931040339888,
+              "teacher_best_probability_mass_tie_aware": 0.04338610822514091,
+              "teacher_weighted_probability_score": 0.03888846888871804,
+              "teacher_weighted_cross_entropy_nats": 3.666042981232166,
+              "mean_legal_move_entropy_nats": 3.126532627522667
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1945814455494486,
+              "teacher_best_probability_mass_tie_aware": 0.043643874837777874,
+              "teacher_weighted_probability_score": 0.040238336308747166,
+              "teacher_weighted_cross_entropy_nats": 3.638538185838195,
+              "mean_legal_move_entropy_nats": 3.121721225978625
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19312382997458083,
+              "teacher_best_probability_mass_tie_aware": 0.04406981228214758,
+              "teacher_weighted_probability_score": 0.03932717834810986,
+              "teacher_weighted_cross_entropy_nats": 3.669628068460823,
+              "mean_legal_move_entropy_nats": 3.121721225978625
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 107,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19219903871652066,
+              "teacher_best_probability_mass_tie_aware": 0.04272039241268121,
+              "teacher_weighted_probability_score": 0.03977605004081166,
+              "teacher_weighted_cross_entropy_nats": 3.632307686627261,
+              "mean_legal_move_entropy_nats": 3.1285256666371186
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1891407102235795,
+              "teacher_best_probability_mass_tie_aware": 0.04297575321151962,
+              "teacher_weighted_probability_score": 0.038578154014237045,
+              "teacher_weighted_cross_entropy_nats": 3.6647298440160903,
+              "mean_legal_move_entropy_nats": 3.1285256666371186
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19318121500701055,
+              "teacher_best_probability_mass_tie_aware": 0.04315384176645441,
+              "teacher_weighted_probability_score": 0.04001777669163081,
+              "teacher_weighted_cross_entropy_nats": 3.6293493382585895,
+              "mean_legal_move_entropy_nats": 3.1282525649266066
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19046071478943846,
+              "teacher_best_probability_mass_tie_aware": 0.043411822336276634,
+              "teacher_weighted_probability_score": 0.03884114859729757,
+              "teacher_weighted_cross_entropy_nats": 3.6618674108899745,
+              "mean_legal_move_entropy_nats": 3.1282525649266066
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19363197369603913,
+              "teacher_best_probability_mass_tie_aware": 0.04356366709511354,
+              "teacher_weighted_probability_score": 0.04018451744598593,
+              "teacher_weighted_cross_entropy_nats": 3.630022477564167,
+              "mean_legal_move_entropy_nats": 3.1264028272037834
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19125096013901458,
+              "teacher_best_probability_mass_tie_aware": 0.04376849243745823,
+              "teacher_weighted_probability_score": 0.03904573506347755,
+              "teacher_weighted_cross_entropy_nats": 3.6628181299437452,
+              "mean_legal_move_entropy_nats": 3.1264028272037834
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19517478495189056,
+              "teacher_best_probability_mass_tie_aware": 0.043944339717889705,
+              "teacher_weighted_probability_score": 0.040430085822343864,
+              "teacher_weighted_cross_entropy_nats": 3.6351953015384013,
+              "mean_legal_move_entropy_nats": 3.121531509827137
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19360188795765354,
+              "teacher_best_probability_mass_tie_aware": 0.044467796185993946,
+              "teacher_weighted_probability_score": 0.03949063531897616,
+              "teacher_weighted_cross_entropy_nats": 3.66655736194374,
+              "mean_legal_move_entropy_nats": 3.121531509827137
+            }
+          }
+        }
+      },
+      {
+        "training_seed": 108,
+        "views": {
+          "0": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19209019419745182,
+              "teacher_best_probability_mass_tie_aware": 0.04296392271831421,
+              "teacher_weighted_probability_score": 0.03986338969810778,
+              "teacher_weighted_cross_entropy_nats": 3.6328507392974636,
+              "mean_legal_move_entropy_nats": 3.1276308654660534
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.1888552110807556,
+              "teacher_best_probability_mass_tie_aware": 0.043239952593890296,
+              "teacher_weighted_probability_score": 0.038631863698065205,
+              "teacher_weighted_cross_entropy_nats": 3.665274452363747,
+              "mean_legal_move_entropy_nats": 3.1276308654660534
+            }
+          },
+          "125": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19302425685677926,
+              "teacher_best_probability_mass_tie_aware": 0.043391611266928545,
+              "teacher_weighted_probability_score": 0.04010090256833343,
+              "teacher_weighted_cross_entropy_nats": 3.6297829616641675,
+              "mean_legal_move_entropy_nats": 3.1274423572560317
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19014269962849173,
+              "teacher_best_probability_mass_tie_aware": 0.04366553185705768,
+              "teacher_weighted_probability_score": 0.03889129317640842,
+              "teacher_weighted_cross_entropy_nats": 3.6622948364414123,
+              "mean_legal_move_entropy_nats": 3.1274423572560317
+            }
+          },
+          "250": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.19345999514425855,
+              "teacher_best_probability_mass_tie_aware": 0.04380125230246874,
+              "teacher_weighted_probability_score": 0.04026887322088733,
+              "teacher_weighted_cross_entropy_nats": 3.6304384791950093,
+              "mean_legal_move_entropy_nats": 3.1255379363913436
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19090951503022371,
+              "teacher_best_probability_mass_tie_aware": 0.044015200955997986,
+              "teacher_weighted_probability_score": 0.039094120095884234,
+              "teacher_weighted_cross_entropy_nats": 3.6632310420895617,
+              "mean_legal_move_entropy_nats": 3.1255379363913436
+            }
+          },
+          "500": {
+            "stockfish": {
+              "teacher_topk_probability_mass": 0.1949805347634364,
+              "teacher_best_probability_mass_tie_aware": 0.04418055484241106,
+              "teacher_weighted_probability_score": 0.04051166590695075,
+              "teacher_weighted_cross_entropy_nats": 3.635293151609791,
+              "mean_legal_move_entropy_nats": 3.1208125644308318
+            },
+            "weak": {
+              "teacher_topk_probability_mass": 0.19322998066859853,
+              "teacher_best_probability_mass_tie_aware": 0.04470329623343877,
+              "teacher_weighted_probability_score": 0.03953465755093581,
+              "teacher_weighted_cross_entropy_nats": 3.666687736465338,
+              "mean_legal_move_entropy_nats": 3.1208125644308318
+            }
+          }
+        }
+      }
+    ]
+  },
+  "runtime_seconds": 71.176
+}

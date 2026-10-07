@@ -6,7 +6,14 @@ step, and it is deliberately left to the user.*
 
 > **See also:** `HYPOTHESES.md` §H25 (the claim), §H11 (graded by a master),
 > §H23 (castling — this arm answers its behavioural half), `DESIGN-tier2-template.md`
-> (this is a tier-1 arm, not a tier-2 repair).
+> (this is a tier-1 arm, not a tier-2 repair),
+> `DESIGN-tier2-move-conditioning.md` (the tier-2 gate opened by H23's
+> behavioural half).
+>
+> **Gate interaction (2026-10-07):** H25's primary endpoint — held-out best-move
+> mass vs Stockfish — is an *aggregate* metric, so this arm is **not** blocked by
+> the move-conditioning gate. But its result must not be read as evidence of
+> *conditional* play: see that note's §The gate for which claims are blocked.
 
 ## Why this note exists
 

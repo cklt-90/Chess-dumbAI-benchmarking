@@ -45,9 +45,11 @@ and learning itself** (is a common belief true?) · G the training-signal axis
 **Runnable today**: H17, H18, H19, H21 need no new levels — see Group F. If you  
 want a result on the board this week, start there rather than with L3.5.
 
-**Recently tested**: H23 (special moves) — mechanical half supported, behavioural  
-half has a concrete gap (no castling-rights channel in the encoder; no  
-castling/en-passant term in `evaluate()`). See Group F.
+**Recently tested**: H23 (special moves) — mechanical half supported; behavioural
+half tested 2026-10-07: under-play is a signal-*coverage* gap (the corpus never
+presents the choice), but a trained L3 acquires only a **blanket** castling
+habit, un-conditioned on the teacher's rank. The old "no castling-rights
+channel" defect is fixed. See Group F.
 
 ---
 
@@ -449,7 +451,7 @@ dataset**, or **needs the level** (a new arm such as `L3-flat` or L3.5).
   re-proposed.**
 
 ### H23 — Special moves are legal but rare, and one of them is unevaluated
-- **Evidence status**: `CONTESTED` → **half tested below**
+- **Evidence status**: `CONTESTED` → **both halves tested 2026-10-07** (see below)
 - **Claim (mechanical half)**: every special move (castling, en passant,
   under-promotion) is *admitted* by the move mask and playable by every level.
 - **Claim (behavioural half)**: they are **played far less often than real chess
@@ -473,9 +475,14 @@ dataset**, or **needs the level** (a new arm such as `L3-flat` or L3.5).
   levels have one.
 
 - **The gap, isolated — the evaluator has no special-move term.**
-  `value.evaluate()` is `material_value + piece_square_score` and nothing else.
-  It has **no castling term, no en-passant term, no mobility term.** Two
-  consequences worth stating plainly:
+  *As of 2026-10-02.* `value.evaluate()` was `material_value +
+  piece_square_score` and nothing else — **no castling term, no en-passant term,
+  no mobility term.** (Superseded 2026-10-07: `evaluate()` now also includes
+  `king_shelter_score`, a small phase-scaled potential term rewarding the pawn
+  shield and penalising open king files. The two consequences below are kept as
+  the reasoning that motivated the fix; the first is now partly addressed.)
+
+  Two consequences worth stating plainly (as of 2026-10-02):
   1. **Castling is valued only incidentally**, via the king PST (king is safer on
      g1 than e1). The *connectivity* of the rooks, the pawn shield, and the
      tempo cost are all invisible. A castling move is therefore chosen only when
@@ -486,28 +493,71 @@ dataset**, or **needs the level** (a new arm such as `L3-flat` or L3.5).
      times for material/random/L2 in this sample — consistent with "never
      rewarded beyond the immediate pawn".
 
-- **Concrete, checkable defect found while testing**: the encoder has **no
-  castling-rights channel.** `CHANNELS` (24 binary) contains no `castling_*`
-  entry; `en_passant` is channel 21 and `promotion_rank_w/b` are 19/20. So a
-  learner sees `has_castling_rights(me)` only as a single scalar in
-  `board_context_features` (`encode.py:424`), **not as a spatial fact about which
-  squares the rights attach to.** A network cannot express "my king can still
-  castle kingside" as a board pattern, which is exactly the information needed
-  to decide *whether* to castle. This is a plausible partial explanation of the
-  behavioural result above.
+- **Corrected 2026-10-07 — the "no castling-rights channel" defect below is
+  STALE, kept as history.** `encode.CHANNELS` now has 24 planes including
+  `castle_w`/`castle_b` (22/23), registered in `COLOUR_PAIRED_CHANNELS`, and
+  `value.evaluate()` now includes `king_shelter_score`. Both landed with the
+  H23-fix; the paragraph below predates it and describes a gap that no longer
+  exists in code.
+- **Superseded (2026-10-07)**: *"the encoder has **no castling-rights channel.**
+  `CHANNELS` (24 binary) contains no `castling_*` entry; `en_passant` is channel
+  21 and `promotion_rank_w/b` are 19/20. So a learner sees
+  `has_castling_rights(me)` only as a single scalar in `board_context_features`
+  (`encode.py:424`), **not as a spatial fact about which squares the rights
+  attach to.**"* — false as of the H23-fix. The user's own framing supersedes it:
+  the ability was always present, there was no *incentive*.
 - **Verified incidentally (no bug)**: the `en_passant` plane survives
   canonicalisation correctly — black-to-move `f6` becomes plane `f3` after rank
   reflection, matching `colour_mirror`, with `encode(pos) == encode(mirror(pos))`
   to **exactly 0.0**. Promotion slots have **no built-in queen bias**: uniform
   promo logits give `[0.25, 0.25, 0.25, 0.25]` over N/B/R/Q.
+- **Tested 2026-10-07 — behavioural half, on the registered filtered set
+  (`bench/scripts/h23_behavioural.py`): the under-play is a signal-*coverage*
+  gap, not a feature gap, and the learned behaviour is un-conditioned.**
+  1. *The falsification criterion has almost no support.* On 583 random-play
+     castling-legal positions, castling is the **best** move for L2-d3 in
+     **8/583** and for Stockfish (d12) in **7/583**; on 273 quiet-play
+     positions, **1/273**. "Both wings open": 10/583 and 4/273. Castling is
+     usually a *good* move, rarely the *single best* one.
+  2. *No level castles.* Every level sits at ~**2.5%** castling mass on
+     castling-legal positions — the uniform no-preference baseline (1–2 castling
+     moves of ~35 legal).
+  3. *A trained L3 can be pushed to castle — but only as a blanket habit.*
+     Training on a castling-rich corpus (castling in Stockfish's top-5; 60
+     positions × 4 epochs) raises held-out castling mass **0.028 → 0.556**
+     (`sw=1.0`) / **0.136** (`sw=0.125`), yet **equally** on held-out positions
+     where Stockfish *rejects* castling (+0.521 vs +0.528; CIs overlap), where
+     castling is typically the 17th-best move and ~670 cp worse than best.
+     Castling mass is **flat across the teacher's castling rank 1 → >20**
+     (Spearman ρ = −0.12 at `sw=1.0`, −0.25 at `sw=0.125`). The matched
+     POOR-trained control instead slightly *suppresses* castling (−0.011).
+  4. *So the binding constraint is the ability to **condition** castling on the
+     position, not to express it.* "Put castling in the corpus" is not a
+     sufficient fix at this architecture (~7.6k params; `can_castle` is a single
+     global scalar) and this corpus size (60 positions).
+  5. *Located, and now the subject of a tier-2 gate.* The move score's complete
+     input is `chan[:, from]`, `chan[:, to]`, `geom` and the nine global scalars
+     — a **two-square receptive field**. A mixed corpus (supplying the negative
+     examples the corpus lacked) raises discrimination +0.009 → +0.047, and an
+     explicit negative gradient suppresses castling **globally** rather than
+     conditionally, so neither is sufficient. A linear probe separates
+     teacher-wants-castling from teacher-rejects at AUC 0.606 [0.50, 0.71] from
+     the visible features vs 0.743 [0.65, 0.82] from whole-board features the
+     logit cannot see (intervals overlap — suggestive, not established).
+     **Registered as `bench/DESIGN-tier2-move-conditioning.md`: this must be
+     repaired before further *conditional* evaluation is interpretable.** The
+     repair itself is deliberately not chosen there.
 - **Falsified by**: a learner demonstrating castling/ep in proportion to a
   depth-3 search on a filtered set of positions where castling is clearly best.
-- **Command**: filtered position set (rights intact, both wings open, ≥4 plies
-  from any capture), then compare each level's castle rate against L2-d3 as
-  oracle. Also: `python -m bench --games 20` and count `O-O` in recorded SAN.
+  **Restated 2026-10-07**: that set is nearly empty under every distribution
+  tested (≤8/583), so the criterion needs re-specifying (e.g. "castling in the
+  teacher's top-k") before it can be used.
+- **Command**: `python bench/scripts/h23_behavioural.py --mode probe|static|train|conditioning`
+  (also: `python -m bench --games 20` and count `O-O` in recorded SAN).
 - **Runnable today**: **yes**
-- **Status**: `[~]` mechanical half `[x]` supported; behavioural half tested, gap
-  identified, no fix attempted
+- **Status**: `[~]` mechanical half `[x]` supported; behavioural half tested
+  2026-10-07 — under-play is a signal-coverage gap, but the learned behaviour is
+  un-conditioned; no fix attempted
 
 ---
 
@@ -581,11 +631,15 @@ dataset**, or **needs the level** (a new arm such as `L3-flat` or L3.5).
   games) plus a shim turning master moves into the `(move, weight)` feedback
   format the hook expects.
 - **Castling cross-ref (H23)**: this is the paradigm that would teach castling —
-  a master that castles supplies the reward self-play lacks. A master-trained L3
-  that *still* does not castle indicts the features (no castling plane); one that
-  *does* indicts the self-play reward. The arm doubles as the feature-vs-signal
-  diagnostic left open in H23.
-- **Status**: `[-]` weak-master (depth-5) runnable today; true master blocked on data
+  a master that castles supplies the reward self-play lacks. **Tested 2026-10-07**
+  (`bench/scripts/h23_behavioural.py`): a master-trained L3 *does* castle, so the
+  earlier feature-vs-signal fork resolves toward **signal**, not features — but
+  the learned behaviour is a blanket "castle whenever legal" habit, flat across
+  the teacher's castling rank, not the teacher's positional judgement. The
+  binding constraint is *conditioning*, not expression. See H23 for numbers.
+- **Status**: `[~]` weak-master (depth-5) runnable today; true master supplied
+  2026-10-07 (Stockfish); master-vs-*self-play* still blocked on the retired
+  self-play signal
 
 
 ### H26 — The random-walk control: noise carries no exploitable signal

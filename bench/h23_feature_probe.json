@@ -1,0 +1,67 @@
+{
+  "mode": "probe_features",
+  "oracle": "d3",
+  "source": "random",
+  "games_scanned": 200,
+  "candidates": 0,
+  "both_wings": 0,
+  "one_wing": 0,
+  "oracle_best_is_castle": 7,
+  "oracle_topk_has_castle": 91,
+  "depth": 3,
+  "oracle_depth": 3,
+  "top_k": 5,
+  "min_since_capture": 4,
+  "feature_probe": {
+    "context": {
+      "features": 9,
+      "n": 583,
+      "train_accuracy": 0.8519480519480519,
+      "heldout_accuracy": 0.8282828282828283,
+      "majority_baseline": 0.8282828282828283,
+      "heldout_auc": 0.6290351506456241,
+      "heldout_auc_95pct_bootstrap_interval": [
+        0.5339311334289814,
+        0.72544162482066
+      ],
+      "heldout_predicted_positive_rate": 0.0,
+      "heldout_positive_base_rate": 0.1717171717171717,
+      "heldout_n_positive": 34
+    },
+    "context_local": {
+      "features": 57,
+      "n": 583,
+      "train_accuracy": 0.8519480519480519,
+      "heldout_accuracy": 0.8282828282828283,
+      "majority_baseline": 0.8282828282828283,
+      "heldout_auc": 0.6057209469153515,
+      "heldout_auc_95pct_bootstrap_interval": [
+        0.5034567790530847,
+        0.7057366391678621
+      ],
+      "heldout_predicted_positive_rate": 0.0,
+      "heldout_positive_base_rate": 0.1717171717171717,
+      "heldout_n_positive": 34
+    },
+    "full_board_pooled": {
+      "features": 24,
+      "n": 583,
+      "train_accuracy": 0.8597402597402597,
+      "heldout_accuracy": 0.8333333333333334,
+      "majority_baseline": 0.8282828282828283,
+      "heldout_auc": 0.7431850789096126,
+      "heldout_auc_95pct_bootstrap_interval": [
+        0.6533222740315638,
+        0.8210231348637016
+      ],
+      "heldout_predicted_positive_rate": 0.045454545454545456,
+      "heldout_positive_base_rate": 0.1717171717171717,
+      "heldout_n_positive": 34
+    }
+  },
+  "provenance": {
+    "perceptron_py_sha256": "e7d2590b5281f96259900e63d3317b16d6a6d749357de2c70513e9da67eaeb74",
+    "script_sha256": "456d506c7f9557c2cb9176334bbe9ff6ac628a4115fdb6de12156c860ec45ab1",
+    "runtime_seconds": 1.307
+  }
+}

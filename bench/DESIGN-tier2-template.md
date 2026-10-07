@@ -31,8 +31,16 @@ is needed. **Tier-2 work is gated on tier 1 being complete enough to point at
 something.** If tier 1 has not located a defect with evidence, tier 2 has nothing
 to do and this document should stay unopened.
 
-The correct posture toward it right now is: *written down so it is not
-re-invented later, and otherwise inert.*
+The correct posture toward it is: *written down so it is not re-invented later,
+and otherwise inert until a defect warrants opening it.*
+
+**One entry is now open (2026-10-07):**
+`DESIGN-tier2-move-conditioning.md` — a flavour (a) repair entry, triggered by
+the H23 behavioural result (L3's move score has a two-square receptive field and
+cannot condition castling on the position). Note its framing: it registers the
+**problem as a gate on further conditional evaluation** and explicitly leaves the
+**choice of repair open**. Registering an entry does not mean the container has
+become a to-do list; the Step 0 gate still applies to every future entry.
 
 ### 0.1 Two kinds of tier-1 output that justify a tier-2 entry
 
@@ -230,6 +238,14 @@ Step 5 — register as an **ablation**-tier entrant, not a ladder rung.
 Step 6 — report with SE, decided-game counts, and the residuals. A result
          inside one SE is "not established", never the preferred direction.
 ```
+
+## 4.1 The one open entry, for reference
+
+`DESIGN-tier2-move-conditioning.md` is the first entry to clear Step 0. It is
+worth reading as a *worked instance of the gate*, not just of the shape — in
+particular its §"Demonstrated vs suggestive" table, which separates the part of
+the defect established by construction from the part that is only suggestive,
+and its refusal to name the repair. Both are habits a future entry should copy.
 
 ## 5. Worked example (illustrative only): `DESIGN-l1-mixing-layer.md`
 
