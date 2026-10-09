@@ -370,6 +370,31 @@ Neither is a correctness regression; both should be made deterministic
 4. **Record existing test evidence for H1/H2** — free `[ ]`→`[x]` (S-6).
 5. **Propagate the behaviour digest** to the other three byte-sha guards (S-7).
 6. **Resolve DQ-3** on the next run that plays games: record per-game colours.
+
+---
+
+## Follow-up (appended 2026-10-09 — this section is not retro-edited into the list above)
+
+**H15 is now run (item 2 above).** It is **supported in outcome, corrected in
+mechanism**: the 2026-10-02 baseline does **not** reproduce (**9 of 21 rows
+differ**), but the cause is **not** the opening book — it is the
+`king_shelter_score` term added to `value.evaluate()` after the baseline by the
+H23 fix. Zeroing that term restores **7 of the 9** drifting rows exactly; the
+remaining 2 both involve `L3`, whose input width changed
+(`TOTAL_CHANNELS`(28) → `BINARY_CHANNELS`(24)) after the baseline too.
+
+Two consequences for the recommendations above:
+
+- **Item 2 is done.** The re-baseline boundary is the **evaluator change**, not
+  the book change — so a future re-baseline must state which side of
+  `king_shelter_score` it sits on.
+- **X1 is now concrete.** The 2026-10-03 review's "every tested verdict inherits
+  H15's caveat, all ratings are conditional on one unverified file" was right;
+  what was unverified was *why*. That is now located, and every rating in
+  `bench/results-2026-10-02.json` is confirmed incomparable to today's harness.
+
+Evidence: `bench/h15_baseline.json`; re-runnable via
+`bench/scripts/h15_baseline.py`.
 7. Then the runnable-today Group F rows (H17 first — strongest circumstantial
    support).
 

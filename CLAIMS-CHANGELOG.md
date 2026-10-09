@@ -496,6 +496,34 @@ here; the resulting verdict lands in the ledger.
 
 ---
 
+## 2026-10-09 — H15: the baseline is non-comparable, but the cause is the evaluator, not the book
+
+- **Claim/caveat**: H15 states the 2026-10-02 baseline is not comparable to
+  later results **because of the opening-book fix** (`book[i // 2]` → `book[i]`,
+  and a book with Black-to-move entries).
+- **Change**: revised (supported in outcome, corrected in mechanism)
+- **Was** → **Now**: "incomparable because of the book fix" → **"incomparable
+  because of the `king_shelter_score` term added to `value.evaluate()`"** — the
+  book fix is *not* the cause
+- **Because**: a 6-game-per-pair replay of all 21 stored pairs leaves **9 rows
+  differing**; zeroing `king_shelter_score` in-process restores **7 of the 9**
+  exactly. The book is ruled out twice: `bench/runner.py` was committed
+  **already fixed**, in the **same commit** as the baseline (`efcc242`), and
+  replaying with the pre-fix `book[i // 2]` does not reproduce either
+  (`0-2-4` → `0-0-6`). The 2 rows that do not restore both involve `L3`, whose
+  input width changed after the baseline (`TOTAL_CHANNELS`(28) →
+  `BINARY_CHANNELS`(24)) alongside the `grad_ctx` chain-rule fix.
+- **Source**: `bench/h15_baseline.json`; `bench/scripts/h15_baseline.py`;
+  `.workbuddy-ai/memory/2026-10-09.md`
+- **Knock-on**: the re-baseline boundary is the **evaluator** change, not the
+  book change. Every rating in `bench/results-2026-10-02.json` is confirmed
+  incomparable to today's harness; a future re-baseline must state which side of
+  `king_shelter_score` it sits on. This makes the 2026-10-03 review's X1 ("all
+  ratings are conditional on one unverified file") concrete: the file is now
+  verified, and the reason is located.
+
+---
+
 ## Open question for this file
 
 **Is a changelog the right form, or should it be a stateful ledger?** This file

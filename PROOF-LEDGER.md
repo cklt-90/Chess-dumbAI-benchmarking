@@ -56,7 +56,7 @@ State vocabulary (matching the register's status key, plus one):
 | **H12** | open | runnable: node counters on a fixed position set | cleanest mechanistic claim; never measured at scale |
 | **H13** | supported | baseline: every ablation SE > every delta | general threshold untested |
 | **H14** | partial | baseline: correlational (`unf` tracks untrained/blind) | causal arm (falls with training) untested |
-| **H15** | open | runnable: re-run one pre-fix configuration | **highest priority — every baseline-derived row is conditional on it** |
+| **H15** | supported (cause corrected) | 2026-10-09: 9/21 stored rows differ on replay; zeroing `king_shelter_score` restores 7/9 exactly | **the baseline is non-comparable, but because of the evaluator, not the book**; the 2 residual rows involve `L3` (perceptron width change). Re-baseline before quoting any rating |
 | **H16** | blocked | needs `L3-flat` at matched budget **and** trained weights | blocker text in the register is **stale** (S-4): the level exists |
 | **H17** | open | runnable: transition-proximity stratifier, no new model | strongest circumstantial support; **best bet** |
 | **H18** | open | runnable: classify L2-vs-depth-5 disagreements | general principle settled; local magnitude open |
@@ -118,7 +118,7 @@ and every row's basis inherits them.
 | **DQ-3** L3's 3-3 splits vs every L2 depth | H7, L3's rating | **open, load-bearing** — needs per-game colours |
 | **DQ-4** H16 blocker stale | H16 | open (S-4) |
 | **DQ-5** H5 "12 decided" wording | H5 | open |
-| **H15** baseline comparability | **every baseline-derived row** | open — highest priority |
+| **H15** baseline comparability | **every baseline-derived row** | **resolved 2026-10-09** — baseline is non-comparable; the re-baseline boundary is the `king_shelter_score` change, not the book |
 
 ---
 

@@ -309,13 +309,39 @@ marginally. See Group F.
   comparable** to results after it.
 - **Falsified by**: re-running a pre-fix configuration and reproducing the
   pre-fix numbers.
-- **Command**: `python -m bench --only L2-d1 material --games 20` and compare to
-  the stored `results-2026-10-02.json` row for that pair.
+- **Command**: `PYTHONPATH="src;." ./.venv/Scripts/python.exe bench/scripts/h15_baseline.py`
+  (replays all 21 stored pairs; writes `bench/h15_baseline.json`).
 - **Why it is here**: `bench/results-2026-10-02.json` is the baseline for
   future comparisons and it may straddle the fix. **Verify before quoting it as
   a baseline.** This is exactly the kind of silent incomparability that makes a
   register worth keeping.
-- **Status**: `[ ]` — **do this one before trusting any stored baseline**
+- **Tested 2026-10-09 — SUPPORTED IN OUTCOME, CORRECTED IN MECHANISM.** The
+  stored baseline does **not** reproduce: on a 6-game-per-pair replay of all 21
+  pairs, **9 rows differ**. Every differing row involves a level that consults
+  `value.evaluate()` (`material`, `L2-*`) or `L3`. But the **named cause is
+  wrong**:
+  1. *The opening book is not the cause.* `bench/runner.py` was committed
+     **already fixed** (`book[i % len(book)]`) in the **same commit** as the
+     baseline (`efcc242`); the memory log records the book fixes landing before
+     the 424s baseline run; and replaying with the *pre-fix* `book[i // 2]`
+     does **not** reproduce the stored row either (`0-2-4` → `0-0-6`).
+  2. *The dominant cause is `king_shelter_score`.* Added to `evaluate()` after
+     the baseline by the H23 fix, it is the **only** addition to `evaluate()`
+     since `efcc242`. Zeroing it in-process restores **7 of the 9** drifting
+     rows **exactly** (`material vs L2-d1` 0-2-4, `material vs L2-d2` 0-0-6,
+     `L2-d1 vs L2-d2` 0-5-1, `L2-d2 vs L2-d3` 0-4-1, `material vs L3` 3-0-3, …).
+     This is a **disproof-style attribution**: an active revert, not a
+     passive "it probably changed".
+  3. *The residual is the perceptron change.* The **2** rows that do not restore
+     (`random vs L3`, `L2-d1 vs L3`) **both involve `L3`**, whose input width
+     changed after the baseline (`n_ch` default `TOTAL_CHANNELS`(28) →
+     `BINARY_CHANNELS`(24)) along with the `grad_ctx` chain-rule fix.
+  **Consequence:** the re-baseline boundary is the **evaluator change**, not the
+  book change. Every pre-`king_shelter` result is incomparable to every
+  post-`king_shelter` one. Source: `bench/h15_baseline.json`;
+  `bench/scripts/h15_baseline.py`.
+- **Status**: `[x]` supported (non-comparable) — **cause corrected**: evaluator,
+  not book. Baseline must be re-run before any rating is quoted.
 
 ---
 

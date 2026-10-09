@@ -1,0 +1,543 @@
+{
+  "design": {
+    "purpose": "verify whether the 2026-10-02 baseline is comparable",
+    "hypothesis": "H15",
+    "stored_baseline": "bench\\results-2026-10-02.json",
+    "games_per_pair": 6,
+    "levels_consulting_evaluate": [
+      "material",
+      "L2-d1",
+      "L2-d2",
+      "L2-d3"
+    ],
+    "attribution_variable": "chessrl.value.king_shelter_score (added after the baseline, by the H23 fix)"
+  },
+  "census": {
+    "pairs": 21,
+    "agree": 12,
+    "disagree": 9,
+    "rows": [
+      {
+        "a": "random",
+        "b": "material",
+        "stored": [
+          0,
+          0,
+          5,
+          1
+        ],
+        "current": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "matches": false
+      },
+      {
+        "a": "random",
+        "b": "L1",
+        "stored": [
+          0,
+          0,
+          1,
+          5
+        ],
+        "current": [
+          0,
+          0,
+          1,
+          5
+        ],
+        "matches": true
+      },
+      {
+        "a": "random",
+        "b": "L2-d1",
+        "stored": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "current": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "matches": true
+      },
+      {
+        "a": "random",
+        "b": "L2-d2",
+        "stored": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "current": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "matches": true
+      },
+      {
+        "a": "random",
+        "b": "L2-d3",
+        "stored": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "current": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "matches": true
+      },
+      {
+        "a": "random",
+        "b": "L3",
+        "stored": [
+          0,
+          0,
+          0,
+          6
+        ],
+        "current": [
+          0,
+          0,
+          1,
+          5
+        ],
+        "matches": false
+      },
+      {
+        "a": "material",
+        "b": "L1",
+        "stored": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "current": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "matches": true
+      },
+      {
+        "a": "material",
+        "b": "L2-d1",
+        "stored": [
+          0,
+          2,
+          4,
+          0
+        ],
+        "current": [
+          0,
+          1,
+          5,
+          0
+        ],
+        "matches": false
+      },
+      {
+        "a": "material",
+        "b": "L2-d2",
+        "stored": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "current": [
+          0,
+          0,
+          5,
+          1
+        ],
+        "matches": false
+      },
+      {
+        "a": "material",
+        "b": "L2-d3",
+        "stored": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "current": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "matches": true
+      },
+      {
+        "a": "material",
+        "b": "L3",
+        "stored": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "current": [
+          2,
+          0,
+          3,
+          1
+        ],
+        "matches": false
+      },
+      {
+        "a": "L1",
+        "b": "L2-d1",
+        "stored": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "current": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "matches": true
+      },
+      {
+        "a": "L1",
+        "b": "L2-d2",
+        "stored": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "current": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "matches": true
+      },
+      {
+        "a": "L1",
+        "b": "L2-d3",
+        "stored": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "current": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "matches": true
+      },
+      {
+        "a": "L1",
+        "b": "L3",
+        "stored": [
+          0,
+          0,
+          1,
+          5
+        ],
+        "current": [
+          0,
+          0,
+          1,
+          5
+        ],
+        "matches": true
+      },
+      {
+        "a": "L2-d1",
+        "b": "L2-d2",
+        "stored": [
+          0,
+          5,
+          1,
+          0
+        ],
+        "current": [
+          0,
+          2,
+          4,
+          0
+        ],
+        "matches": false
+      },
+      {
+        "a": "L2-d1",
+        "b": "L2-d3",
+        "stored": [
+          0,
+          3,
+          3,
+          0
+        ],
+        "current": [
+          0,
+          1,
+          4,
+          1
+        ],
+        "matches": false
+      },
+      {
+        "a": "L2-d1",
+        "b": "L3",
+        "stored": [
+          3,
+          1,
+          2,
+          0
+        ],
+        "current": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "matches": false
+      },
+      {
+        "a": "L2-d2",
+        "b": "L2-d3",
+        "stored": [
+          0,
+          4,
+          1,
+          1
+        ],
+        "current": [
+          0,
+          1,
+          4,
+          1
+        ],
+        "matches": false
+      },
+      {
+        "a": "L2-d2",
+        "b": "L3",
+        "stored": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "current": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "matches": true
+      },
+      {
+        "a": "L2-d3",
+        "b": "L3",
+        "stored": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "current": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "matches": true
+      }
+    ]
+  },
+  "attribution": {
+    "drifting_pairs": 9,
+    "all_restored_without_king_shelter": false,
+    "rows": [
+      {
+        "a": "random",
+        "b": "material",
+        "stored": [
+          0,
+          0,
+          5,
+          1
+        ],
+        "without_king_shelter": [
+          0,
+          0,
+          5,
+          1
+        ],
+        "restored": true
+      },
+      {
+        "a": "random",
+        "b": "L3",
+        "stored": [
+          0,
+          0,
+          0,
+          6
+        ],
+        "without_king_shelter": [
+          0,
+          0,
+          1,
+          5
+        ],
+        "restored": false
+      },
+      {
+        "a": "material",
+        "b": "L2-d1",
+        "stored": [
+          0,
+          2,
+          4,
+          0
+        ],
+        "without_king_shelter": [
+          0,
+          2,
+          4,
+          0
+        ],
+        "restored": true
+      },
+      {
+        "a": "material",
+        "b": "L2-d2",
+        "stored": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "without_king_shelter": [
+          0,
+          0,
+          6,
+          0
+        ],
+        "restored": true
+      },
+      {
+        "a": "material",
+        "b": "L3",
+        "stored": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "without_king_shelter": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "restored": true
+      },
+      {
+        "a": "L2-d1",
+        "b": "L2-d2",
+        "stored": [
+          0,
+          5,
+          1,
+          0
+        ],
+        "without_king_shelter": [
+          0,
+          5,
+          1,
+          0
+        ],
+        "restored": true
+      },
+      {
+        "a": "L2-d1",
+        "b": "L2-d3",
+        "stored": [
+          0,
+          3,
+          3,
+          0
+        ],
+        "without_king_shelter": [
+          0,
+          3,
+          3,
+          0
+        ],
+        "restored": true
+      },
+      {
+        "a": "L2-d1",
+        "b": "L3",
+        "stored": [
+          3,
+          1,
+          2,
+          0
+        ],
+        "without_king_shelter": [
+          3,
+          0,
+          3,
+          0
+        ],
+        "restored": false
+      },
+      {
+        "a": "L2-d2",
+        "b": "L2-d3",
+        "stored": [
+          0,
+          4,
+          1,
+          1
+        ],
+        "without_king_shelter": [
+          0,
+          4,
+          1,
+          1
+        ],
+        "restored": true
+      }
+    ]
+  },
+  "read": "H15 SUPPORTED IN OUTCOME, CORRECTED IN MECHANISM. The baseline does not reproduce (9/21 rows differ). The opening book is NOT the cause: runner.py was committed already fixed, in the same commit as the baseline, and the pre-fix book indexing does not reproduce the stored rows either. The dominant cause is king_shelter_score, added to evaluate() after the baseline by the H23 fix: zeroing it restores 7 of the 9 drifting rows EXACTLY (all the material/L2-* pairs). The 2 rows that do not restore (random vs L3, L2-d1 vs L3) BOTH involve L3, whose input width changed after the baseline (TOTAL_CHANNELS(28) -> BINARY_CHANNELS(24)) along with the grad_ctx chain-rule fix; those are the residual, and they are named rather than absorbed. Consequence: the re-baseline boundary is the evaluator change, not the book change.",
+  "provenance": {
+    "script_sha256": "04efafaa831a5713227d625f5e6f7c79fea005eb3a048e6dd0de5cf80385a087",
+    "runtime_seconds": 1127.578410200018
+  }
+}
